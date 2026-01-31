@@ -74,6 +74,20 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "id-watermark",
+        name: {
+            en: "Secure ID Watermarker",
+            cn: "证件安全水印"
+        },
+        description: {
+            en: "Add security watermarks to ID cards locally. Prevent unauthorized use.",
+            cn: "纯本地为身份证/照片添加安全水印，防止被滥用。"
+        },
+        icon: FileText,
+        href: "/tools/id-watermark",
+        popular: true,
+    },
+    {
         id: "more-tools",
         name: {
             en: "More Tools...",
