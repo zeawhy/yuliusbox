@@ -1,5 +1,5 @@
 
-import { pipeline, env } from "@xenova/transformers";
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js';
 
 // Skip local model checks
 env.allowLocalModels = false;
@@ -38,7 +38,6 @@ self.addEventListener("message", async (event) => {
                 stride_length_s: 5,
                 callback_function: () => {
                     // Send partial results if needed
-                    // self.postMessage({ type: "partial", data: _item });
                 }
             });
 

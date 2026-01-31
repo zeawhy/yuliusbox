@@ -58,7 +58,7 @@ export default function AudioToTextPage() {
     useEffect(() => {
         // Initialize Worker
         if (!workerRef.current) {
-            workerRef.current = new Worker(new URL("../../../worker/whisper.worker.js", import.meta.url));
+            workerRef.current = new Worker("/whisper.worker.js", { type: "module" });
 
             workerRef.current.onmessage = (event) => {
                 const { type, data, error } = event.data;
