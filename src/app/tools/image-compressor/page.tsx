@@ -301,6 +301,50 @@ export default function ImageCompressorPage() {
                     </div>
                 )}
             </div>
+
+            {/* SEO Content Section */}
+            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
+                <div className="prose prose-invert">
+                    <h2 className="text-2xl font-bold mb-4">Why compress locally?</h2>
+                    <p className="text-zinc-400 mb-6">
+                        Compressing images locally in your browser ensures maximum privacy and speed.
+                        Your photos never leave your device, eliminating the risk of data breaches.
+                        Because no data is uploaded to a remote server, the compression process is instant and bandwidth-efficient.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">Supported Formats</h2>
+                    <p className="text-zinc-400 mb-6">
+                        YuliusBox Image Compressor supports all major web formats:
+                    </p>
+                    <ul className="text-zinc-400 mb-6 list-disc pl-5">
+                        <li><strong>JPG/JPEG:</strong> Best for photographs and realistic images.</li>
+                        <li><strong>PNG:</strong> Ideal for screenshots and images with transparency.</li>
+                        <li><strong>WebP:</strong> Modern format providing superior compression for web use.</li>
+                    </ul>
+
+                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Is there a file limit?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                No. Unlike other tools (e.g., TinyPNG), YuliusBox runs locally on your device, so there are no arbitrary limits on file size or count.
+                            </p>
+                        </details>
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Is it secure?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Yes, 100% secure. Your images are processed using browser technologies (Canvas/WASM) and never uploaded to any server.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

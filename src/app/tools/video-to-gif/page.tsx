@@ -298,6 +298,51 @@ export default function VideoToGifPage() {
                     </>
                 )}
             </div>
+
+            {/* SEO Content Section */}
+            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
+                <div className="prose prose-invert">
+                    <h2 className="text-2xl font-bold mb-4">Create GIFs from any video</h2>
+                    <p className="text-zinc-400 mb-6">
+                        Convert your MP4, MOV, or WEBM videos into high-quality GIFs in seconds.
+                        Whether you need a reaction GIF for social media or a quick animation for a presentation,
+                        YuliusBox Video to GIF converter delivers professional results directly in your browser.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">Why use WASM?</h2>
+                    <p className="text-zinc-400 mb-6">
+                        We use FFmpeg WASM (WebAssembly) to bring desktop-grade video processing power to the web.
+                        This means:
+                    </p>
+                    <ul className="text-zinc-400 mb-6 list-disc pl-5">
+                        <li><strong>Zero Uploads:</strong> Your private videos are processed on your computer, never sent to the cloud.</li>
+                        <li><strong>Fast performance:</strong> Leverages your device's CPU for conversion.</li>
+                        <li><strong>No server limits:</strong> Convert as many videos as you want without waiting in queues.</li>
+                    </ul>
+
+                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Is there a watermark?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                No. Unlike many "free" tools, we do not add any watermarks to your generated GIFs. The tool is completely free and clean.
+                            </p>
+                        </details>
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Why is there a 10-second limit?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Processing video in the browser is memory-intensive. We limit input to 10 seconds to prevent your browser tab from crashing due to memory exhaustion (OOM).
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
         </div >
     );
 }

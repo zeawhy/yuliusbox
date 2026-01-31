@@ -265,6 +265,49 @@ export default function PDFToolkitPage() {
                     )}
                 </div>
             </div>
+
+            {/* SEO Content Section */}
+            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
+                <div className="prose prose-invert">
+                    <h2 className="text-2xl font-bold mb-4">Secure PDF Manipulation</h2>
+                    <p className="text-zinc-400 mb-6">
+                        YuliusBox PDF Toolkit runs entirely in your browser using WebAssembly.
+                        Unlike other online tools that upload your sensitive documents to a server,
+                        our tool processes everything locally. This guarantees that your contracts,
+                        invoices, and personal files never leave your device.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">How to merge PDFs</h2>
+                    <ol className="text-zinc-400 mb-6 list-decimal pl-5">
+                        <li>Select the "Merge PDF" tab above.</li>
+                        <li>Drag and drop multiple PDF files into the upload area.</li>
+                        <li>Reorder the files by dragging them in the list if needed.</li>
+                        <li>Click "Merge Files" to generate and download the combined PDF.</li>
+                    </ol>
+
+                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Do you save my documents?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Never. All processing is strictly local (client-side). We cannot see, save, or access your files.
+                            </p>
+                        </details>
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Is there a page limit?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Generally no, but performance depends on your device's memory. Merging hundreds of pages is usually fast and stable.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

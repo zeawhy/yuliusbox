@@ -327,6 +327,46 @@ export default function AudioToTextPage() {
                     </div>
                 </div>
             </div>
+
+            {/* SEO Content Section */}
+            <section className="w-full max-w-4xl mt-20 py-10 border-t border-zinc-800">
+                <div className="prose prose-invert">
+                    <h2 className="text-2xl font-bold mb-4">Powered by OpenAI Whisper & WebGPU</h2>
+                    <p className="text-zinc-400 mb-6">
+                        Experience the power of OpenAI's state-of-the-art speech recognition models running directly in your browser.
+                        We use ONNX Runtime and WebAssembly (WASM) to execute the Whisper model on your device's hardware,
+                        delivering fast and accurate transcription without server latency.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">Unlimited & Private</h2>
+                    <p className="text-zinc-400 mb-6">
+                        Because there are no servers involved, there are no limits. Transcribe hours of audio, meetings, or interviews for free.
+                        Most importantly, your audio files never leave your computer, guaranteeing 100% privacy for sensitive recordings.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                How accurate is it?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                We uses the Whisper Tiny/Small models which offer excellent accuracy for English and good performance for 90+ other languages including Chinese.
+                            </p>
+                        </details>
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Support for mobile?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Yes, but it requires a powerful device. For older phones, we recommend using a desktop computer for faster processing.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

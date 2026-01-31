@@ -321,6 +321,46 @@ export default function IDWatermarkPage() {
                     </div>
                 </div>
             </div>
+
+            {/* SEO Content Section */}
+            <section className="w-full max-w-4xl mt-20 py-10 border-t border-zinc-800">
+                <div className="prose prose-invert">
+                    <h2 className="text-2xl font-bold mb-4">Why you must watermark ID photos?</h2>
+                    <p className="text-zinc-400 mb-6">
+                        Identity theft is rising. Unscrupulous agents or data breaches can expose your clear ID photos,
+                        allowing criminals to apply for loans or credit cards in your name. Adding a specific watermark
+                        (e.g., "For Rent Application Only") invalidates the photo for any other use.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">100% Private Processing</h2>
+                    <p className="text-zinc-400 mb-6">
+                        YuliusBox uses HTML5 Canvas technology to process your images directly in your browser.
+                        Your ID card photos are <strong>never uploaded</strong> to our servers. All watermarking happens locally on your device, ensuring maximum security.
+                    </p>
+
+                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                Are photos uploaded?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Absolutely not. You can disconnect your internet and this tool will still work perfectly. That is the best proof of privacy.
+                            </p>
+                        </details>
+                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
+                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
+                                What text should I write?
+                                <span className="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <p className="text-zinc-400 mt-2 text-sm">
+                                Be specific. Include the purpose and date. Example: "Only for House Rental Application 2024. Invalid for other uses."
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }
