@@ -182,112 +182,121 @@ export default function VideoToGifPage() {
 
                 {/* Editor Area */}
                 {loaded && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full animate-in fade-in slide-in-from-bottom-8">
-                        {/* Left Column: Input */}
-                        <div className="space-y-6">
-                            <div className="relative w-full aspect-video bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex flex-col items-center justify-center group">
-                                {videoFile ? (
-                                    <video
-                                        src={URL.createObjectURL(videoFile)}
-                                        controls
-                                        className="w-full h-full object-contain"
-                                    />
-                                ) : (
-                                    <>
-                                        <div className="p-4 rounded-full bg-zinc-800 transition-colors group-hover:bg-zinc-700 text-zinc-400 group-hover:text-zinc-200 mb-4">
-                                            <Film className="w-8 h-8" />
-                                        </div>
-                                        <p className="text-zinc-400 font-medium">{language === "en" ? t.drop.en : t.drop.cn}</p>
-                                        <p className="text-xs text-zinc-600 mt-2">{language === "en" ? t.drag.en : t.drag.cn}</p>
-                                    </>
-                                )}
-                                <input
-                                    type="file"
-                                    accept="video/mp4,video/quicktime"
-                                    onChange={handleFileChange}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                />
+                    <>
+                        {typeof window !== 'undefined' && !window.crossOriginIsolated && (
+                            <div className="w-full p-4 mb-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-yellow-200 text-sm text-center">
+                                ⚠ <strong>Security Requirement Missing</strong><br />
+                                Your browser environment does not support `SharedArrayBuffer` (required for WASM).<br />
+                                If testing on mobile via local network (e.g. 192.168.x.x), this will NOT work because it is not HTTPS.<br />
+                                Please use <strong>localhost</strong> on computer or deploy to <strong>Vercel (HTTPS)</strong>.
                             </div>
-
-                            <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-4">
-                                <div className="flex items-center gap-2 mb-2 text-zinc-300 font-medium">
-                                    <Settings2 className="w-5 h-5" /> {language === "en" ? "Settings" : "设置"}
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400 flex justify-between">
-                                        {language === "en" ? t.settings.fps.en : t.settings.fps.cn}
-                                        <span className="text-indigo-400">{fps}</span>
-                                    </label>
+                        )}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full animate-in fade-in slide-in-from-bottom-8">
+                            {/* Left Column: Input */}
+                            <div className="space-y-6">
+                                <div className="relative w-full aspect-video bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex flex-col items-center justify-center group">
+                                    {videoFile ? (
+                                        <video
+                                            src={URL.createObjectURL(videoFile)}
+                                            controls
+                                            className="w-full h-full object-contain"
+                                        />
+                                    ) : (
+                                        <>
+                                            <div className="p-4 rounded-full bg-zinc-800 transition-colors group-hover:bg-zinc-700 text-zinc-400 group-hover:text-zinc-200 mb-4">
+                                                <Film className="w-8 h-8" />
+                                            </div>
+                                            <p className="text-zinc-400 font-medium">{language === "en" ? t.drop.en : t.drop.cn}</p>
+                                            <p className="text-xs text-zinc-600 mt-2">{language === "en" ? t.drag.en : t.drag.cn}</p>
+                                        </>
+                                    )}
                                     <input
-                                        type="range" min="1" max="30" value={fps}
-                                        onChange={(e) => setFps(parseInt(e.target.value))}
-                                        className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                                        type="file"
+                                        accept="video/mp4,video/quicktime"
+                                        onChange={handleFileChange}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400">
-                                        {language === "en" ? t.settings.width.en : t.settings.width.cn}
-                                    </label>
-                                    <div className="flex items-center gap-2">
+                                <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-4">
+                                    <div className="flex items-center gap-2 mb-2 text-zinc-300 font-medium">
+                                        <Settings2 className="w-5 h-5" /> {language === "en" ? "Settings" : "设置"}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-zinc-400 flex justify-between">
+                                            {language === "en" ? t.settings.fps.en : t.settings.fps.cn}
+                                            <span className="text-indigo-400">{fps}</span>
+                                        </label>
                                         <input
-                                            type="number" value={width}
-                                            onChange={(e) => setWidth(parseInt(e.target.value))}
-                                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                            type="range" min="1" max="30" value={fps}
+                                            onChange={(e) => setFps(parseInt(e.target.value))}
+                                            className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
                                         />
-                                        <span className="text-zinc-600 text-sm">px</span>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-zinc-400">
+                                            {language === "en" ? t.settings.width.en : t.settings.width.cn}
+                                        </label>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="number" value={width}
+                                                onChange={(e) => setWidth(parseInt(e.target.value))}
+                                                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                            />
+                                            <span className="text-zinc-600 text-sm">px</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <button
-                                onClick={convertToGif}
-                                disabled={!videoFile || isProcessing}
-                                className="w-full py-3.5 bg-white text-zinc-950 rounded-xl font-bold hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                            >
-                                {isProcessing ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        {language === "en" ? t.status.converting.en : t.status.converting.cn} {progress}%
-                                    </>
-                                ) : (
-                                    <>
-                                        <Play className="w-5 h-5" /> {language === "en" ? t.convert.en : t.convert.cn}
-                                    </>
-                                )}
-                            </button>
-                        </div>
-
-                        {/* Right Column: Output */}
-                        <div className="flex flex-col gap-4">
-                            <div className="relative w-full aspect-video bg-zinc-900/50 rounded-2xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center overflow-hidden">
-                                {gifUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={gifUrl} alt="GIF Output" className="w-full h-full object-contain" />
-                                ) : (
-                                    <p className="text-zinc-600 text-sm">GIF Preview</p>
-                                )}
-                            </div>
-
-                            {gifUrl && (
-                                <a
-                                    href={gifUrl}
-                                    download={`output-${Date.now()}.gif`}
-                                    className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2"
+                                <button
+                                    onClick={convertToGif}
+                                    disabled={!videoFile || isProcessing}
+                                    className="w-full py-3.5 bg-white text-zinc-950 rounded-xl font-bold hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <Download className="w-5 h-5" /> {language === "en" ? t.download.en : t.download.cn}
-                                </a>
-                            )}
+                                    {isProcessing ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            {language === "en" ? t.status.converting.en : t.status.converting.cn} {progress}%
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Play className="w-5 h-5" /> {language === "en" ? t.convert.en : t.convert.cn}
+                                        </>
+                                    )}
+                                </button>
+                            </div>
 
-                            {/* Log Output (Optional, hidden by default or small) */}
-                            <div className="p-4 rounded-xl bg-black font-mono text-xs text-zinc-500 h-32 overflow-y-auto hidden">
-                                <p ref={messageRef}></p>
+                            {/* Right Column: Output */}
+                            <div className="flex flex-col gap-4">
+                                <div className="relative w-full aspect-video bg-zinc-900/50 rounded-2xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center overflow-hidden">
+                                    {gifUrl ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src={gifUrl} alt="GIF Output" className="w-full h-full object-contain" />
+                                    ) : (
+                                        <p className="text-zinc-600 text-sm">GIF Preview</p>
+                                    )}
+                                </div>
+
+                                {gifUrl && (
+                                    <a
+                                        href={gifUrl}
+                                        download={`output-${Date.now()}.gif`}
+                                        className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Download className="w-5 h-5" /> {language === "en" ? t.download.en : t.download.cn}
+                                    </a>
+                                )}
+
+                                {/* Log Output (Optional, hidden by default or small) */}
+                                <div className="p-4 rounded-xl bg-black font-mono text-xs text-zinc-500 h-32 overflow-y-auto hidden">
+                                    <p ref={messageRef}></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 )}
+                    </div>
             </div>
-        </div>
-    );
+            );
 }
