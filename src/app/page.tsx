@@ -56,7 +56,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="w-full py-12 mt-24 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-6 text-zinc-500">
-        <p className="text-sm">© 2024 YuliusBox. Built by Yulius.</p>
+        <p className="text-sm">© 2026 YuliusBox. Built by Yulius.</p>
         <div className="flex gap-6">
           <Link href="#" className="hover:text-white transition-colors" aria-label="Twitter"><Twitter className="w-5 h-5" /></Link>
           <Link href="mailto:hello@example.com" className="hover:text-white transition-colors" aria-label="Email"><Mail className="w-5 h-5" /></Link>
