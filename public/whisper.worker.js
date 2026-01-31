@@ -4,6 +4,9 @@ import { pipeline, env } from '/transformers.min.js';
 // Skip local model checks
 env.allowLocalModels = false;
 env.useBrowserCache = true;
+// Use HF Mirror for better accessibility in China/Asia
+env.remoteHost = "https://hf-mirror.com";
+env.remoteTemplate = "{model}/resolve/{revision}/{file}";
 
 class Whisper {
     static instance = null;
