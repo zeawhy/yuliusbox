@@ -56,8 +56,8 @@ export const toolsData: Tool[] = [
             cn: "本地合并、拆分和压缩 PDF 文件。"
         },
         icon: FileText,
-        href: "#",
-        comingSoon: true,
+        href: "/tools/pdf-kit",
+        comingSoon: false,
     },
     {
         id: "more-tools",
