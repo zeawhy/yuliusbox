@@ -325,37 +325,48 @@ export default function IDWatermarkPage() {
             {/* SEO Content Section */}
             <section className="w-full max-w-4xl mt-20 py-10 border-t border-zinc-800">
                 <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">Why you must watermark ID photos?</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Why you must watermark ID photos?" : "为什么必须给证件照加水印？"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        Identity theft is rising. Unscrupulous agents or data breaches can expose your clear ID photos,
-                        allowing criminals to apply for loans or credit cards in your name. Adding a specific watermark
-                        (e.g., "For Rent Application Only") invalidates the photo for any other use.
+                        {language === "en"
+                            ? "Identity theft is rising. Unscrupulous agents or data breaches can expose your clear ID photos, allowing criminals to apply for loans or credit cards in your name. Adding a specific watermark (e.g., \"For Rent Application Only\") invalidates the photo for any other use."
+                            : "身份盗窃日益严重。不法中介或数据泄露可能会暴露您的清晰证件照，让不法分子冒用您的名义申请贷款或信用卡。添加特定的水印（例如“仅供租房申请使用”）可以防止照片被挪作他用。"}
                     </p>
 
-                    <h2 className="text-2xl font-bold mb-4">100% Private Processing</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "100% Private Processing" : "100% 隐私保护处理"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        YuliusBox uses HTML5 Canvas technology to process your images directly in your browser.
-                        Your ID card photos are <strong>never uploaded</strong> to our servers. All watermarking happens locally on your device, ensuring maximum security.
+                        {language === "en" ? "YuliusBox uses HTML5 Canvas technology to process your images directly in your browser. Your ID card photos are " : "YuliusBox 使用 HTML5 Canvas 技术直接在您的浏览器中处理图片。您的证件照"}
+                        <strong>{language === "en" ? "never uploaded" : "从未"}</strong>
+                        {language === "en" ? " to our servers. All watermarking happens locally on your device, ensuring maximum security." : "上传到我们的服务器。所有水印处理均在您设备本地完成，确保最高安全性。"}
                     </p>
 
-                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
+                    </h2>
                     <div className="space-y-4">
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                Are photos uploaded?
+                                {language === "en" ? "Are photos uploaded?" : "照片会被上传吗？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                Absolutely not. You can disconnect your internet and this tool will still work perfectly. That is the best proof of privacy.
+                                {language === "en"
+                                    ? "Absolutely not. You can disconnect your internet and this tool will still work perfectly. That is the best proof of privacy."
+                                    : "绝对不会。您可以断开网络连接，此工具仍能完美运行。这就是隐私保护的最佳证明。"}
                             </p>
                         </details>
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                What text should I write?
+                                {language === "en" ? "What text should I write?" : "我应该写什么文字？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                Be specific. Include the purpose and date. Example: "Only for House Rental Application 2024. Invalid for other uses."
+                                {language === "en"
+                                    ? "Be specific. Include the purpose and date. Example: \"Only for House Rental Application 2024. Invalid for other uses.\""
+                                    : "请具体一点。包括用途和日期。例如：“仅供 2024 年租房申请使用。他用无效。”"}
                             </p>
                         </details>
                     </div>

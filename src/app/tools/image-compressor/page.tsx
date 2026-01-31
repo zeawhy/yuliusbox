@@ -305,41 +305,60 @@ export default function ImageCompressorPage() {
             {/* SEO Content Section */}
             <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
                 <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">Why compress locally?</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Why compress locally?" : "为什么选择本地压缩？"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        Compressing images locally in your browser ensures maximum privacy and speed.
-                        Your photos never leave your device, eliminating the risk of data breaches.
-                        Because no data is uploaded to a remote server, the compression process is instant and bandwidth-efficient.
+                        {language === "en"
+                            ? "Compressing images locally in your browser ensures maximum privacy and speed. Your photos never leave your device, eliminating the risk of data breaches. Because no data is uploaded to a remote server, the compression process is instant and bandwidth-efficient."
+                            : "本地压缩不仅能最大程度保护隐私，还能显著提升速度。您的照片从未离开设备，彻底杜绝数据泄露风险。由于无需上传到远程服务器，压缩过程即时完成且不消耗上传带宽。"}
                     </p>
 
-                    <h2 className="text-2xl font-bold mb-4">Supported Formats</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Supported Formats" : "支持的格式"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        YuliusBox Image Compressor supports all major web formats:
+                        {language === "en" ? "YuliusBox Image Compressor supports all major web formats:" : "YuliusBox 图片压缩器支持所有主流 Web 图片格式："}
                     </p>
                     <ul className="text-zinc-400 mb-6 list-disc pl-5">
-                        <li><strong>JPG/JPEG:</strong> Best for photographs and realistic images.</li>
-                        <li><strong>PNG:</strong> Ideal for screenshots and images with transparency.</li>
-                        <li><strong>WebP:</strong> Modern format providing superior compression for web use.</li>
+                        <li>
+                            <strong>JPG/JPEG: </strong>
+                            {language === "en" ? "Best for photographs and realistic images." : "最适合照片和写实图片。"}
+                        </li>
+                        <li>
+                            <strong>PNG: </strong>
+                            {language === "en" ? "Ideal for screenshots and images with transparency." : "最适合截图和透明背景图片。"}
+                        </li>
+                        <li>
+                            <strong>WebP: </strong>
+                            {language === "en" ? "Modern format providing superior compression for web use." : "现代图片格式，提供更优异的 Web 压缩率。"}
+                        </li>
                     </ul>
 
-                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
+                    </h2>
                     <div className="space-y-4">
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                Is there a file limit?
+                                {language === "en" ? "Is there a file limit?" : "有文件大小限制吗？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                No. Unlike other tools (e.g., TinyPNG), YuliusBox runs locally on your device, so there are no arbitrary limits on file size or count.
+                                {language === "en"
+                                    ? "No. Unlike other tools (e.g., TinyPNG), YuliusBox runs locally on your device, so there are no arbitrary limits on file size or count."
+                                    : "没有。与 TinyPNG 等在线工具不同，YuliusBox 在您的设备本地运行，因此对文件大小或数量没有任何人为限制。"}
                             </p>
                         </details>
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                Is it secure?
+                                {language === "en" ? "Is it secure?" : "数据安全吗？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                Yes, 100% secure. Your images are processed using browser technologies (Canvas/WASM) and never uploaded to any server.
+                                {language === "en"
+                                    ? "Yes, 100% secure. Your images are processed using browser technologies (Canvas/WASM) and never uploaded to any server."
+                                    : "是的，100% 安全。您的图片通过浏览器技术（Canvas/WASM）在本地处理，绝不会被上传到任何服务器。"}
                             </p>
                         </details>
                     </div>

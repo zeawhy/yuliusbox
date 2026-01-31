@@ -331,37 +331,48 @@ export default function AudioToTextPage() {
             {/* SEO Content Section */}
             <section className="w-full max-w-4xl mt-20 py-10 border-t border-zinc-800">
                 <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">Powered by OpenAI Whisper & WebGPU</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Powered by OpenAI Whisper & WebGPU" : "由 OpenAI Whisper & WebGPU 驱动"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        Experience the power of OpenAI's state-of-the-art speech recognition models running directly in your browser.
-                        We use ONNX Runtime and WebAssembly (WASM) to execute the Whisper model on your device's hardware,
-                        delivering fast and accurate transcription without server latency.
+                        {language === "en"
+                            ? "Experience the power of OpenAI's state-of-the-art speech recognition models running directly in your browser. We use ONNX Runtime and WebAssembly (WASM) to execute the Whisper model on your device's hardware, delivering fast and accurate transcription without server latency."
+                            : "体验 OpenAI 最先进的语音识别模型直接在您的浏览器中运行的强大功能。我们使用 ONNX Runtime 和 WebAssembly (WASM) 在您的设备硬件上执行 Whisper 模型，提供快速且准确的转录，且无服务器延迟。"}
                     </p>
 
-                    <h2 className="text-2xl font-bold mb-4">Unlimited & Private</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Unlimited & Private" : "无限制 & 隐私保护"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        Because there are no servers involved, there are no limits. Transcribe hours of audio, meetings, or interviews for free.
-                        Most importantly, your audio files never leave your computer, guaranteeing 100% privacy for sensitive recordings.
+                        {language === "en"
+                            ? "Because there are no servers involved, there are no limits. Transcribe hours of audio, meetings, or interviews for free. Most importantly, your audio files never leave your computer, guaranteeing 100% privacy for sensitive recordings."
+                            : "因为不涉及服务器，所以没有任何限制。免费转录数小时的音频、会议或采访。最重要的是，您的音频文件从未离开您的电脑，确保证据敏感录音的 100% 隐私。"}
                     </p>
 
-                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
+                    </h2>
                     <div className="space-y-4">
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                How accurate is it?
+                                {language === "en" ? "How accurate is it?" : "准确率如何？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                We uses the Whisper Tiny/Small models which offer excellent accuracy for English and good performance for 90+ other languages including Chinese.
+                                {language === "en"
+                                    ? "We use the Whisper Tiny/Small models which offer excellent accuracy for English and good performance for 90+ other languages including Chinese."
+                                    : "我们使用 Whisper Tiny/Small 模型，对英语提供出色的准确性，并对包括中文在内的 90 多种其他语言提供良好的性能。"}
                             </p>
                         </details>
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                Support for mobile?
+                                {language === "en" ? "Support for mobile?" : "支持手机使用吗？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                Yes, but it requires a powerful device. For older phones, we recommend using a desktop computer for faster processing.
+                                {language === "en"
+                                    ? "Yes, but it requires a powerful device. For older phones, we recommend using a desktop computer for faster processing."
+                                    : "支持，但需要性能较强的设备。对于较旧的手机，建议使用台式电脑以获得更快的处理速度。"}
                             </p>
                         </details>
                     </div>

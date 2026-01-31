@@ -302,42 +302,60 @@ export default function VideoToGifPage() {
             {/* SEO Content Section */}
             <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
                 <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">Create GIFs from any video</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Create GIFs from any video" : "将任意视频转换为 GIF"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        Convert your MP4, MOV, or WEBM videos into high-quality GIFs in seconds.
-                        Whether you need a reaction GIF for social media or a quick animation for a presentation,
-                        YuliusBox Video to GIF converter delivers professional results directly in your browser.
+                        {language === "en"
+                            ? "Convert your MP4, MOV, or WEBM videos into high-quality GIFs in seconds. Whether you need a reaction GIF for social media or a quick animation for a presentation, YuliusBox Video to GIF converter delivers professional results directly in your browser."
+                            : "几秒钟内将您的 MP4、MOV 或 WEBM 视频转换为高质量 GIF。无论您是需要社交媒体上的表情包还是演示文稿的动画，YuliusBox 视频转 GIF 工具都能直接在您的浏览器中提供专业级的结果。"}
                     </p>
 
-                    <h2 className="text-2xl font-bold mb-4">Why use WASM?</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Why use WASM?" : "为什么使用 WASM？"}
+                    </h2>
                     <p className="text-zinc-400 mb-6">
-                        We use FFmpeg WASM (WebAssembly) to bring desktop-grade video processing power to the web.
-                        This means:
+                        {language === "en" ? "We use FFmpeg WASM (WebAssembly) to bring desktop-grade video processing power to the web. This means:" : "我们使用 FFmpeg WASM (WebAssembly) 将桌面级的视频处理能力带到网页端。这意味着："}
                     </p>
                     <ul className="text-zinc-400 mb-6 list-disc pl-5">
-                        <li><strong>Zero Uploads:</strong> Your private videos are processed on your computer, never sent to the cloud.</li>
-                        <li><strong>Fast performance:</strong> Leverages your device's CPU for conversion.</li>
-                        <li><strong>No server limits:</strong> Convert as many videos as you want without waiting in queues.</li>
+                        <li>
+                            <strong>{language === "en" ? "Zero Uploads:" : "零上传："}</strong>
+                            {language === "en" ? " Your private videos are processed on your computer, never sent to the cloud." : " 您的私密视频完全在您的电脑上处理，从未发送到云端。"}
+                        </li>
+                        <li>
+                            <strong>{language === "en" ? "Fast performance:" : "快速性能："}</strong>
+                            {language === "en" ? " Leverages your device's CPU for conversion." : " 利用您设备的 CPU 进行转换。"}
+                        </li>
+                        <li>
+                            <strong>{language === "en" ? "No server limits:" : "无服务器限制："}</strong>
+                            {language === "en" ? " Convert as many videos as you want without waiting in queues." : " 无需排队，无限量转换视频。"}
+                        </li>
                     </ul>
 
-                    <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <h2 className="text-2xl font-bold mb-4">
+                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
+                    </h2>
                     <div className="space-y-4">
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                Is there a watermark?
+                                {language === "en" ? "Is there a watermark?" : "有水印吗？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                No. Unlike many "free" tools, we do not add any watermarks to your generated GIFs. The tool is completely free and clean.
+                                {language === "en"
+                                    ? "No. Unlike many \"free\" tools, we do not add any watermarks to your generated GIFs. The tool is completely free and clean."
+                                    : "没有。与许多“免费”工具不同，我们不会在您生成的 GIF 上添加任何水印。该工具完全免费且纯净。"}
                             </p>
                         </details>
                         <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                Why is there a 10-second limit?
+                                {language === "en" ? "Why is there a 10-second limit?" : "为什么有 10 秒限制？"}
                                 <span className="transition group-open:rotate-180">▼</span>
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
-                                Processing video in the browser is memory-intensive. We limit input to 10 seconds to prevent your browser tab from crashing due to memory exhaustion (OOM).
+                                {language === "en"
+                                    ? "Processing video in the browser is memory-intensive. We limit input to 10 seconds to prevent your browser tab from crashing due to memory exhaustion (OOM)."
+                                    : "在浏览器中处理视频非常消耗内存。为了防止浏览器标签页因内存耗尽 (OOM) 而崩溃，我们将输入限制为 10 秒。"}
                             </p>
                         </details>
                     </div>
