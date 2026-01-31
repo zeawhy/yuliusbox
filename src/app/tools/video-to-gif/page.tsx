@@ -20,7 +20,7 @@ export default function VideoToGifPage() {
     const [fps, setFps] = useState(10);
     const [width, setWidth] = useState(480);
 
-    const ffmpegRef = useRef(new FFmpeg());
+    const ffmpegRef = useRef<FFmpeg | null>(null);
     const messageRef = useRef<HTMLParagraphElement | null>(null);
 
     // Translations
@@ -48,7 +48,10 @@ export default function VideoToGifPage() {
     };
 
     const load = async () => {
-        const ffmpeg = ffmpegRef.current;
+        if (!ffmpegRef.current) {
+            ffmpegRef.current = new FFmpeg();
+        }
+        const ffmpeg = ffmpegRef.current as FFmpeg;
         ffmpeg.on("log", ({ message }) => {
             if (messageRef.current) messageRef.current.innerHTML = message;
             console.log(message);
@@ -93,7 +96,7 @@ export default function VideoToGifPage() {
     };
 
     const convertToGif = async () => {
-        if (!videoFile || !loaded) return;
+        if (!videoFile || !loaded || !ffmpegRef.current) return;
         setIsProcessing(true);
         setGifUrl(null);
         setProgress(0);
