@@ -60,6 +60,20 @@ export const toolsData: Tool[] = [
         comingSoon: false,
     },
     {
+        id: "video-to-gif",
+        name: {
+            en: "Video to GIF",
+            cn: "视频转 GIF"
+        },
+        description: {
+            en: "Convert MP4/MOV to animated GIF locally using FFmpeg WASM.",
+            cn: "使用 FFmpeg WASM 本地将 MP4/MOV 转换为 GIF 动图。"
+        },
+        icon: Blocks,
+        href: "/tools/video-to-gif",
+        popular: true,
+    },
+    {
         id: "more-tools",
         name: {
             en: "More Tools...",
