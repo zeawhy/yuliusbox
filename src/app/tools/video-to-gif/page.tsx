@@ -295,8 +295,10 @@ export default function VideoToGifPage() {
                                 </div>
                             </div>
                         </div>
-                )}
                     </div>
-            </div>
-            );
+            </>
+                )}
+        </div>
+        </div >
+    );
 }
