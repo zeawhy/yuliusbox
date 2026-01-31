@@ -107,19 +107,18 @@ export default function VideoToGifPage() {
             await ffmpeg.writeFile("input.mp4", await fetchFile(videoFile));
 
             // Command: -i input.mp4 -vf "fps=10,scale=480:-1:flags=lanczos" -c:v gif output.gif
-            await ffmpeg.exec([
+            // Command: Using simple default GIF encoder for stability
+            // -t 10: Limit to 10 seconds to avoid WASM OOM crashes
+            const exitCode = await ffmpeg.exec([
                 "-i", "input.mp4",
-                "-vf", `fps=${fps},scale=${width}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse`,
-                // Note: palettegen improves GIF quality significantly but might be slower.
-                // Simplified: "-vf", `fps=${fps},scale=${width}:-1:flags=lanczos`, "-c:v", "gif",
-                // Let's us the simplified one first for speed, or palette for quality?
-                // User requested: -vf "fps=10,scale=480:-1:flags=lanczos" -c:v gif
-                // We will stick to user request but scale filter syntax is correct.
-                // Wait, for GIF, just setting -c:v gif is okay but palettegen is better.
-                // I'll stick to user logic exactly first.
-                // "-c:v", "gif",
+                "-t", "10",
+                "-vf", `fps=${fps},scale=${width}:-1:flags=lanczos`,
                 "output.gif"
             ]);
+
+            if (exitCode !== 0) {
+                throw new Error(`FFmpeg exited with code ${exitCode}`);
+            }
 
             const data = await ffmpeg.readFile("output.gif");
             // data is Uint8Array or similar
@@ -128,7 +127,17 @@ export default function VideoToGifPage() {
             setGifUrl(URL.createObjectURL(blob));
         } catch (err) {
             console.error("Conversion failed", err);
-            alert("Conversion failed. Check console.");
+            setError("Conversion failed. Video might be too long or complex for browser. Try < 10s video.");
+
+            // Force reload FFmpeg on crash
+            if (ffmpegRef.current) {
+                try {
+                    ffmpegRef.current.terminate();
+                } catch (e) { console.error("Term failed", e); }
+                ffmpegRef.current = null;
+                setLoaded(false);
+                setTimeout(load, 1000); // Try to reload
+            }
         } finally {
             setIsProcessing(false);
         }
@@ -149,6 +158,10 @@ export default function VideoToGifPage() {
                     <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
                         {language === "en" ? t.desc.en : t.desc.cn}
+                        <br />
+                        <span className="text-yellow-500 text-sm">
+                            {language === "en" ? "(Max 10 seconds to prevent browser crash)" : "(为防止浏览器崩溃，限制转换前 10 秒)"}
+                        </span>
                     </p>
                 </div>
 
