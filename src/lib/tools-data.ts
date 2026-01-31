@@ -2,8 +2,14 @@ import { Image, FileText, Blocks, LucideIcon } from "lucide-react";
 
 export interface Tool {
     id: string;
-    name: string;
-    description: string;
+    name: {
+        en: string;
+        cn: string;
+    };
+    description: {
+        en: string;
+        cn: string;
+    };
     icon: LucideIcon;
     href: string;
     comingSoon?: boolean;
@@ -13,33 +19,56 @@ export interface Tool {
 export const toolsData: Tool[] = [
     {
         id: "heic-2-jpg",
-        name: "HEIC to JPG Free",
-        description: "Convert HEIC/WebP photos to JPG instantly in your browser. 100% Local processing via WebAssembly.",
+        name: {
+            en: "HEIC to JPG Free",
+            cn: "HEIC 转 JPG (免费版)"
+        },
+        description: {
+            en: "Convert HEIC/WebP photos to JPG instantly in your browser. 100% Local processing via WebAssembly.",
+            cn: "纯本地将 HEIC/WebP 图片转换为 JPG。基于 WebAssembly，保护隐私，无损转换。"
+        },
         icon: Image,
         href: "https://www.heic2jpg-free.com",
         popular: true,
     },
     {
         id: "image-compressor",
-        name: "Bulk Image Compression",
-        description: "Compress unlimited JPG/PNG/WebP images locally. High efficiency, privacy-first, and 100% free.",
-        icon: Image, // Reusing Image icon or should I use Shrink/Minimize if available? Let's use Image for now as it fits. 
-        // Actually, let's keep it simple.
+        name: {
+            en: "Bulk Image Compression",
+            cn: "批量图片压缩"
+        },
+        description: {
+            en: "Compress unlimited JPG/PNG/WebP images locally. High efficiency, privacy-first, and 100% free.",
+            cn: "无限量图片本地压缩工具。支持 JPG/PNG/WebP，高效率、隐私优先、完全免费。"
+        },
+        icon: Image,
         href: "/tools/image-compressor",
         popular: true,
     },
     {
         id: "pdf-toolkit",
-        name: "PDF Toolkit",
-        description: "Merge, Split, and Compress PDF files locally.",
+        name: {
+            en: "PDF Toolkit",
+            cn: "PDF 工具箱"
+        },
+        description: {
+            en: "Merge, Split, and Compress PDF files locally.",
+            cn: "本地合并、拆分和压缩 PDF 文件。"
+        },
         icon: FileText,
         href: "#",
         comingSoon: true,
     },
     {
         id: "more-tools",
-        name: "More Tools...",
-        description: "I am building new tools every weekend.",
+        name: {
+            en: "More Tools...",
+            cn: "更多工具..."
+        },
+        description: {
+            en: "I am building new tools every weekend.",
+            cn: "我正在每个周末构建新工具。"
+        },
         icon: Blocks,
         href: "#",
         comingSoon: true,

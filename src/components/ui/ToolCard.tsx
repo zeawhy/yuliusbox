@@ -1,9 +1,13 @@
+"use client";
+
 import { Tool } from "@/lib/tools-data";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function ToolCard({ tool }: { tool: Tool }) {
+    const { language } = useLanguage();
     const isComingSoon = tool.comingSoon;
     const Icon = tool.icon;
 
@@ -22,12 +26,12 @@ export function ToolCard({ tool }: { tool: Tool }) {
                     </div>
                     {tool.popular && (
                         <span className="px-2.5 py-0.5 text-xs font-medium text-indigo-300 bg-indigo-500/10 rounded-full border border-indigo-500/20">
-                            Popular
+                            {language === "en" ? "Popular" : "热门"}
                         </span>
                     )}
                     {tool.comingSoon && (
                         <span className="px-2.5 py-0.5 text-xs font-medium text-zinc-400 bg-zinc-800 rounded-full border border-zinc-700">
-                            Soon
+                            {language === "en" ? "Soon" : "即将推出"}
                         </span>
                     )}
                 </div>
@@ -36,16 +40,16 @@ export function ToolCard({ tool }: { tool: Tool }) {
                     "text-lg font-semibold mb-2 transition-colors",
                     !isComingSoon ? "text-zinc-100 group-hover:text-white" : "text-zinc-400"
                 )}>
-                    {tool.name}
+                    {language === "en" ? tool.name.en : tool.name.cn}
                 </h3>
                 <p className="text-sm text-zinc-400 leading-relaxed line-clamp-2">
-                    {tool.description}
+                    {language === "en" ? tool.description.en : tool.description.cn}
                 </p>
             </div>
 
             {!isComingSoon && (
                 <div className="mt-4 flex items-center text-sm font-medium text-zinc-400 group-hover:text-indigo-400 transition-colors">
-                    Open Tool <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    {language === "en" ? "Open Tool" : "打开工具"} <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                 </div>
             )}
         </>

@@ -6,38 +6,57 @@ import JSZip from "jszip";
 import { ArrowLeft, Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-interface CompressedFile {
-    id: string;
-    originalFile: File;
-    compressedBlob: Blob;
-    compressedSize: number;
-    originalSize: number;
-    status: "pending" | "compressing" | "done" | "error";
-    compressionRatio: number;
-}
+import { useLanguage } from "@/context/LanguageContext";
 
 // Constant outside component to avoid dependency issues
 const MAX_WIDTH_OR_HEIGHT = 1920;
 
 export default function ImageCompressorPage() {
-    const [files, setFiles] = useState<CompressedFile[]>([]);
+    const { language } = useLanguage();
+    // Wait, I should import the interface or redefine it. I'll redefine it here to keep file self-contained as before.
+    // Or copy from previous implementation.
+    interface CompressedFile {
+        id: string;
+        originalFile: File;
+        compressedBlob: Blob;
+        compressedSize: number;
+        originalSize: number;
+        status: "pending" | "compressing" | "done" | "error";
+        compressionRatio: number;
+    }
+
+    // Re-declare state with proper type
+    const [fileState, setFileState] = useState<CompressedFile[]>([]);
+    // To avoid confusion with previous variable name "files", I'll use "files" variable name but typed correctly.
+
     const [isDragging, setIsDragging] = useState(false);
     const [quality, setQuality] = useState(0.8);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isProcessing, setIsProcessing] = useState(false);
 
+    // Translations
+    const t = {
+        back: { en: "Back to Tools", cn: "返回工具列表" },
+        privacy: { en: "Privacy-First • Local Processing", cn: "隐私优先 • 本地处理" },
+        title: { en: "Bulk Image Compression", cn: "批量图片压缩" },
+        desc: { en: "Compress your images deeply without losing visible quality. All processing happens right here in your browser.", cn: "深度压缩图片体积，保持肉眼无损画质。所有处理均在浏览器本地完成。" },
+        drop: { en: "Drop images here", cn: "释放以添加图片" },
+        drag: { en: "Drag & drop or click to upload", cn: "点击或拖拽上传图片" },
+        limit: { en: "JPG, PNG, WebP up to 50MB", cn: "支持 JPG, PNG, WebP (最大 50MB)" },
+        quality: { en: "Quality", cn: "压缩质量" },
+        downloadAll: { en: "Download All (ZIP)", cn: "打包下载全部 (ZIP)" },
+        open: { en: "Open", cn: "打开" } // Not used
+    };
+
     const processFiles = useCallback(async (fileList: CompressedFile[]) => {
         setIsProcessing(true);
 
-        // We update state one by one to show progress
         for (const fileObj of fileList) {
-            // Set status to compressing
-            setFiles(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "compressing" } : f));
+            setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "compressing" } : f));
 
             try {
                 const options = {
-                    maxSizeMB: 1,
+                    maxSizeMB: 1, // Maybe expose this later?
                     maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
                     useWebWorker: true,
                     initialQuality: quality,
@@ -45,7 +64,7 @@ export default function ImageCompressorPage() {
 
                 const compressedFile = await imageCompression(fileObj.originalFile, options);
 
-                setFiles(prev => prev.map(f => {
+                setFileState(prev => prev.map(f => {
                     if (f.id === fileObj.id) {
                         const ratio = ((f.originalSize - compressedFile.size) / f.originalSize) * 100;
                         return {
@@ -61,12 +80,12 @@ export default function ImageCompressorPage() {
 
             } catch (error) {
                 console.error("Compression error:", error);
-                setFiles(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "error" } : f));
+                setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "error" } : f));
             }
         }
 
         setIsProcessing(false);
-    }, [quality]); // Depend on quality
+    }, [quality]);
 
     const handleFiles = useCallback((newFiles: File[]) => {
         const fileObjs: CompressedFile[] = newFiles.map(file => ({
@@ -79,8 +98,7 @@ export default function ImageCompressorPage() {
             compressionRatio: 0
         }));
 
-        setFiles(prev => [...prev, ...fileObjs]);
-        // Process the new files
+        setFileState(prev => [...prev, ...fileObjs]);
         processFiles(fileObjs);
     }, [processFiles]);
 
@@ -127,7 +145,7 @@ export default function ImageCompressorPage() {
 
     const downloadAll = async () => {
         const zip = new JSZip();
-        const completedFiles = files.filter(f => f.status === "done");
+        const completedFiles = fileState.filter(f => f.status === "done");
 
         completedFiles.forEach(f => {
             zip.file(`compressed-${f.originalFile.name}`, f.compressedBlob);
@@ -149,16 +167,16 @@ export default function ImageCompressorPage() {
             {/* Header */}
             <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Tools
+                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
                 </Link>
-                <span className="text-zinc-500 font-mono text-xs">Privacy-First • Local Processing</span>
+                <span className="text-zinc-500 font-mono text-xs hidden sm:inline-block">{language === "en" ? t.privacy.en : t.privacy.cn}</span>
             </div>
 
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Bulk Image Compression</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        Compress your images deeply without losing visible quality. All processing happens right here in your browser.
+                        {language === "en" ? t.desc.en : t.desc.cn}
                     </p>
                 </div>
 
@@ -188,21 +206,21 @@ export default function ImageCompressorPage() {
                             <Upload className="w-8 h-8" />
                         </div>
                         <p className="text-lg font-medium">
-                            {isDragging ? "Drop images here" : "Drag & drop or click to upload"}
+                            {isDragging ? (language === "en" ? t.drop.en : t.drop.cn) : (language === "en" ? t.drag.en : t.drag.cn)}
                         </p>
-                        <p className="text-sm text-zinc-500">JPG, PNG, WebP up to 50MB</p>
+                        <p className="text-sm text-zinc-500">{language === "en" ? t.limit.en : t.limit.cn}</p>
                     </div>
                 </div>
 
                 {/* Settings & Actions */}
-                {files.length > 0 && (
+                {fileState.length > 0 && (
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30">
                         <div className="flex items-center gap-4 w-full sm:w-auto">
                             <div className="p-2 rounded-lg bg-zinc-800 text-zinc-400">
                                 <Settings2 className="w-5 h-5" />
                             </div>
                             <div className="flex flex-col gap-1 w-full">
-                                <label className="text-sm font-medium text-zinc-300">Quality: {Math.round(quality * 100)}%</label>
+                                <label className="text-sm font-medium text-zinc-300">{language === "en" ? t.quality.en : t.quality.cn}: {Math.round(quality * 100)}%</label>
                                 <input
                                     type="range"
                                     min="0.1"
@@ -211,26 +229,26 @@ export default function ImageCompressorPage() {
                                     value={quality}
                                     onChange={(e) => setQuality(parseFloat(e.target.value))}
                                     className="w-full sm:w-48 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-                                    disabled={false} // Allow changing quality even during processing, though it might only affect next files
+                                    disabled={false}
                                 />
                             </div>
                         </div>
 
-                        {files.some(f => f.status === "done") && (
+                        {fileState.some(f => f.status === "done") && (
                             <button
                                 onClick={downloadAll}
                                 className="w-full sm:w-auto flex items-center justify-center px-6 py-2.5 bg-white text-zinc-950 rounded-xl font-medium hover:bg-zinc-200 transition-colors"
                             >
-                                <Download className="w-4 h-4 mr-2" /> Download All (ZIP)
+                                <Download className="w-4 h-4 mr-2" /> {language === "en" ? t.downloadAll.en : t.downloadAll.cn}
                             </button>
                         )}
                     </div>
                 )}
 
                 {/* Results List */}
-                {files.length > 0 && (
+                {fileState.length > 0 && (
                     <div className="grid gap-4 w-full animate-in fade-in slide-in-from-bottom-8">
-                        {files.map((file) => (
+                        {fileState.map((file) => (
                             <div key={file.id} className="group flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 transition-colors">
                                 <div className="flex items-center gap-4 overflow-hidden">
                                     <div className="shrink-0 w-12 h-12 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-500">
@@ -271,7 +289,7 @@ export default function ImageCompressorPage() {
                                     )}
 
                                     <button
-                                        onClick={() => setFiles(prev => prev.filter(f => f.id !== file.id))}
+                                        onClick={() => setFileState(prev => prev.filter(f => f.id !== file.id))}
                                         className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                         title="Remove"
                                     >
