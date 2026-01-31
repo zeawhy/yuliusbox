@@ -20,6 +20,15 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "image-compressor",
+        name: "Bulk Image Compression",
+        description: "Compress unlimited JPG/PNG/WebP images locally. High efficiency, privacy-first, and 100% free.",
+        icon: Image, // Reusing Image icon or should I use Shrink/Minimize if available? Let's use Image for now as it fits. 
+        // Actually, let's keep it simple.
+        href: "/tools/image-compressor",
+        popular: true,
+    },
+    {
         id: "pdf-toolkit",
         name: "PDF Toolkit",
         description: "Merge, Split, and Compress PDF files locally.",
