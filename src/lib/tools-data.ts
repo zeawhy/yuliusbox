@@ -88,6 +88,20 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "audio-to-text",
+        name: {
+            en: "Local AI Transcription",
+            cn: "离线语音转文字"
+        },
+        description: {
+            en: "Convert Audio (MP3/WAV) to text locally using OpenAI Whisper (WASM).",
+            cn: "基于 OpenAI Whisper (WASM) 纯本地将语音转换为文字。"
+        },
+        icon: FileText, // Or Mic if imported, but FileText is safe
+        href: "/tools/audio-to-text",
+        popular: true,
+    },
+    {
         id: "more-tools",
         name: {
             en: "More Tools...",
