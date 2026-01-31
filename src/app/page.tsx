@@ -2,9 +2,9 @@
 
 import { toolsData } from "@/lib/tools-data";
 import { ToolCard } from "@/components/ui/ToolCard";
-import { Twitter, Mail } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Home() {
@@ -29,10 +29,6 @@ export default function Home() {
     cta: {
       en: "Explore Tools",
       cn: "探索工具"
-    },
-    footer_built: {
-      en: "Built by Yulius.",
-      cn: "由 Yulius 构建。"
     }
   };
 
@@ -85,13 +81,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-12 mt-24 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center gap-6 text-zinc-500">
-        <p className="text-sm">© 2026 YuliusBox. {language === "en" ? t.footer_built.en : t.footer_built.cn}</p>
-        <div className="flex gap-6">
-          <Link href="#" className="hover:text-white transition-colors" aria-label="Twitter"><Twitter className="w-5 h-5" /></Link>
-          <Link href="mailto:hello@example.com" className="hover:text-white transition-colors" aria-label="Email"><Mail className="w-5 h-5" /></Link>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
