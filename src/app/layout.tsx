@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "YuliusBox - Privacy-First Web Tools",
   description: "A collection of free, client-side, and secure utilities for productivity.",
+  verification: {
+    google: "google95f14743b3772951",
+  },
 };
 
 import { LanguageProvider } from "@/context/LanguageContext";
