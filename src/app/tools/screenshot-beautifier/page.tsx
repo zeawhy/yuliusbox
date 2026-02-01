@@ -23,6 +23,8 @@ export default function ScreenshotBeautifierPage() {
         shadow: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
         windowType: 'mac' | 'win' | 'none';
         scale: number;
+        rotateX: number;
+        rotateY: number;
     }
 
     const [settings, setSettings] = useState<SettingsState>({
@@ -31,7 +33,9 @@ export default function ScreenshotBeautifierPage() {
         borderRadius: 12,
         shadow: 'xl',
         windowType: 'mac',
-        scale: 1
+        scale: 1,
+        rotateX: 0,
+        rotateY: 0
     });
 
     const t = {
@@ -48,7 +52,10 @@ export default function ScreenshotBeautifierPage() {
             radius: { en: "Roundness", cn: "圆角" },
             shadow: { en: "Shadow", cn: "阴影" },
             window: { en: "Window Style", cn: "窗口样式" },
-            scale: { en: "Image Scale", cn: "图片缩放" }
+            scale: { en: "Image Scale", cn: "图片缩放" },
+            perspective: { en: "3D Perspective", cn: "3D 视角" },
+            tiltX: { en: "Tilt X-Axis", cn: "X 轴旋转" },
+            tiltY: { en: "Tilt Y-Axis", cn: "Y 轴旋转" }
         },
         download: { en: "Download Image", cn: "下载图片" },
         processing: { en: "Processing...", cn: "处理中..." }
@@ -217,6 +224,41 @@ export default function ScreenshotBeautifierPage() {
                             />
                         </div>
 
+                        {/* 3D Perspective Controls */}
+                        <div className="pt-4 border-t border-zinc-800 space-y-6">
+                            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block mb-2">{language === "en" ? t.controls.perspective.en : t.controls.perspective.cn}</label>
+
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <label className="text-xs text-zinc-400">{language === "en" ? t.controls.tiltX.en : t.controls.tiltX.cn}</label>
+                                    <span className="text-xs text-zinc-500">{settings.rotateX}°</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="-30"
+                                    max="30"
+                                    value={settings.rotateX}
+                                    onChange={(e) => setSettings(s => ({ ...s, rotateX: parseInt(e.target.value) }))}
+                                    className="w-full accent-emerald-500"
+                                />
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <label className="text-xs text-zinc-400">{language === "en" ? t.controls.tiltY.en : t.controls.tiltY.cn}</label>
+                                    <span className="text-xs text-zinc-500">{settings.rotateY}°</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="-30"
+                                    max="30"
+                                    value={settings.rotateY}
+                                    onChange={(e) => setSettings(s => ({ ...s, rotateY: parseInt(e.target.value) }))}
+                                    className="w-full accent-emerald-500"
+                                />
+                            </div>
+                        </div>
+
                         <div className="space-y-3">
                             <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{language === "en" ? t.controls.shadow.en : t.controls.shadow.cn}</label>
                             <select
@@ -262,6 +304,8 @@ export default function ScreenshotBeautifierPage() {
                                 background: settings.background,
                                 padding: `${settings.padding}px`,
                                 minWidth: '400px', // Ensure it has some width
+                                perspective: '1000px', // Perspective on parent
+                                transformStyle: 'preserve-3d',
                             }}
                             className="transition-all duration-300 ease-in-out"
                         >
@@ -270,7 +314,9 @@ export default function ScreenshotBeautifierPage() {
                                 className={cn("bg-white relative overflow-hidden transition-all duration-300", shadowClasses[settings.shadow])}
                                 style={{
                                     borderRadius: `${settings.borderRadius}px`,
-                                    transform: `scale(${settings.scale})`
+                                    transform: `scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
+                                    transformStyle: 'preserve-3d',
+                                    transition: 'transform 0.3s ease-out',
                                 }}
                             >
                                 {/* Window Header */}
