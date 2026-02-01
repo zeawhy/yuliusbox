@@ -80,8 +80,9 @@ export default function ScreenshotBeautifierPage() {
         try {
             // Using html-to-image which uses SVG foreignObject
             // This is generally more robust for modern CSS than html2canvas
+            // Disable cacheBust because it breaks Blob URLs (adds query param -> 404)
             const dataUrl = await toPng(exportRef.current, {
-                cacheBust: true,
+                cacheBust: false,
                 pixelRatio: 2, // Retina quality
             });
 
