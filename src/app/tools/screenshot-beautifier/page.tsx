@@ -293,10 +293,10 @@ export default function ScreenshotBeautifierPage() {
             </div>
 
             {/* Main Canvas Area */}
-            <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 flex items-center justify-center p-8 lg:p-12 overflow-auto relative">
+            <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 flex items-center justify-center p-12 lg:p-24 overflow-auto relative">
 
                 {image ? (
-                    <div className="relative max-w-full max-h-full flex items-center justify-center shadow-2xl border border-zinc-800/50">
+                    <div className="relative flex items-center justify-center shadow-2xl border border-zinc-800/50">
                         {/* The Export Container */}
                         <div
                             ref={exportRef}
@@ -304,10 +304,10 @@ export default function ScreenshotBeautifierPage() {
                                 background: settings.background,
                                 padding: `${settings.padding}px`,
                                 minWidth: '400px', // Ensure it has some width
-                                perspective: '1000px', // Perspective on parent
+                                perspective: '1200px', // Slightly increased perspective for better depth
                                 transformStyle: 'preserve-3d',
                             }}
-                            className="transition-all duration-300 ease-in-out"
+                            className="transition-all duration-300 ease-in-out overflow-visible"
                         >
                             {/* Window Container */}
                             <div
