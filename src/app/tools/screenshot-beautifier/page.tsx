@@ -94,7 +94,8 @@ export default function ScreenshotBeautifierPage() {
             const dataUrl = await toPng(exportRef.current, {
                 cacheBust: false,
                 pixelRatio: 2, // Retina quality
-            });
+                backgroundColor: settings.background === 'transparent' ? null : undefined, // Force transparency if selected
+            } as any); // Type cast needed for backgroundColor: null in some versions
 
             const link = document.createElement('a');
             link.download = `beautified-screenshot-${Date.now()}.png`;
@@ -109,6 +110,8 @@ export default function ScreenshotBeautifierPage() {
     };
 
     const presets = [
+        // Transparent Preset
+        'transparent',
         // Preset 1 (Aurora)
         'radial-gradient(at 40% 20%, hsla(28,100%,74%,1) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189,100%,56%,1) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,93%,1) 0px, transparent 50%), radial-gradient(at 80% 50%, hsla(340,100%,76%,1) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(22,100%,77%,1) 0px, transparent 50%), radial-gradient(at 80% 100%, hsla(242,100%,70%,1) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(343,100%,76%,1) 0px, transparent 50%)',
         // Preset 2 (Midnight)
@@ -159,12 +162,21 @@ export default function ScreenshotBeautifierPage() {
                                 <button
                                     key={idx}
                                     className={cn(
-                                        "w-full aspect-square rounded-full border-2 transition-all",
+                                        "w-full aspect-square rounded-full border-2 transition-all relative overflow-hidden",
                                         settings.background === bg ? "border-white scale-110" : "border-transparent hover:border-zinc-700"
                                     )}
-                                    style={{ background: bg }}
+                                    style={bg === 'transparent' ? {
+                                        background: 'repeating-conic-gradient(#3f3f46 0% 25%, #27272a 0% 50%) 50% / 10px 10px'
+                                    } : { background: bg }}
                                     onClick={() => setSettings(s => ({ ...s, background: bg }))}
-                                />
+                                    title={bg === 'transparent' ? 'Transparent' : undefined}
+                                >
+                                    {bg === 'transparent' && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                            <div className="w-[1px] h-full bg-red-500/50 rotate-45 transform scale-150" />
+                                        </div>
+                                    )}
+                                </button>
                             ))}
                         </div>
                         <div className="flex items-center justify-between mt-4 bg-zinc-950 p-2 rounded-lg border border-zinc-800">
@@ -324,7 +336,14 @@ export default function ScreenshotBeautifierPage() {
                 {/* 3D Stage: A large area to allow the 3D projection to breath */}
                 <div className="min-w-full min-h-full flex items-center justify-center p-32 lg:p-64" style={{ perspective: '3000px' }}>
                     {image ? (
-                        <div className="relative flex-shrink-0 flex items-center justify-center overflow-visible shadow-2xl border border-zinc-800/50" style={{ transformStyle: 'preserve-3d' }}>
+                        <div
+                            className="relative flex-shrink-0 flex items-center justify-center overflow-visible shadow-2xl border border-zinc-800/50"
+                            style={{
+                                transformStyle: 'preserve-3d',
+                                // Show checkerboard in preview if transparent, otherwise keep it clean
+                                background: settings.background === 'transparent' ? 'repeating-conic-gradient(#1f1f23 0% 25%, #18181b 0% 50%) 50% / 20px 20px' : undefined
+                            }}
+                        >
                             {/* The Export Container */}
                             <div
                                 ref={exportRef}
