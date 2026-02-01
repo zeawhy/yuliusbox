@@ -293,107 +293,108 @@ export default function ScreenshotBeautifierPage() {
             </div>
 
             {/* Main Canvas Area */}
-            <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 flex items-center justify-center p-12 lg:p-24 overflow-auto relative">
-
-                {image ? (
-                    <div className="relative flex items-center justify-center shadow-2xl border border-zinc-800/50">
-                        {/* The Export Container */}
-                        <div
-                            ref={exportRef}
-                            style={{
-                                background: settings.background,
-                                padding: `${settings.padding}px`,
-                                minWidth: '400px', // Ensure it has some width
-                                perspective: '1200px', // Slightly increased perspective for better depth
-                                transformStyle: 'preserve-3d',
-                            }}
-                            className="transition-all duration-300 ease-in-out overflow-visible"
-                        >
-                            {/* Window Container */}
+            <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 overflow-auto relative p-8 lg:p-12">
+                <div className="min-h-full flex items-center justify-center">
+                    {image ? (
+                        <div className="flex-shrink-0 relative shadow-2xl border border-zinc-800/50 overflow-visible">
+                            {/* The Export Container */}
                             <div
-                                className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
+                                ref={exportRef}
                                 style={{
-                                    borderRadius: `${settings.borderRadius}px`,
-                                    transform: `scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
+                                    background: settings.background,
+                                    padding: `${settings.padding}px`,
+                                    minWidth: '400px', // Ensure it has some width
+                                    perspective: '1200px', // Slightly increased perspective for better depth
                                     transformStyle: 'preserve-3d',
-                                    transition: 'transform 0.3s ease-out',
                                 }}
+                                className="transition-all duration-300 ease-in-out overflow-visible"
                             >
-                                {/* Window Header */}
-                                {settings.windowType !== 'none' && (
-                                    <div
-                                        className="h-8 bg-zinc-100 border-b border-zinc-200 flex items-center px-4 gap-2"
-                                        style={{ borderTopLeftRadius: `${settings.borderRadius}px`, borderTopRightRadius: `${settings.borderRadius}px` }}
-                                    >
-                                        {settings.windowType === 'mac' ? (
-                                            <>
-                                                <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
-                                                <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
-                                                <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
-                                            </>
-                                        ) : (
-                                            // Windows Style
-                                            <div className="flex gap-4 ml-auto text-zinc-400">
-                                                <Minus className="w-3 h-3" />
-                                                <Maximize className="w-3 h-3" />
-                                                <X className="w-3 h-3" />
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* Image Wrapper with Border Radius (since we removed overflow-hidden from parent) */}
+                                {/* Window Container */}
                                 <div
-                                    className="relative overflow-hidden"
+                                    className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
                                     style={{
-                                        borderBottomLeftRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
-                                        borderBottomRightRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
-                                        borderRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0'
+                                        borderRadius: `${settings.borderRadius}px`,
+                                        transform: `scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
+                                        transformStyle: 'preserve-3d',
+                                        transition: 'transform 0.3s ease-out',
                                     }}
                                 >
-                                    {/* Image */}
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={image}
-                                        alt="Screenshot preview"
-                                        className="block max-w-full h-auto"
+                                    {/* Window Header */}
+                                    {settings.windowType !== 'none' && (
+                                        <div
+                                            className="h-8 bg-zinc-100 border-b border-zinc-200 flex items-center px-4 gap-2"
+                                            style={{ borderTopLeftRadius: `${settings.borderRadius}px`, borderTopRightRadius: `${settings.borderRadius}px` }}
+                                        >
+                                            {settings.windowType === 'mac' ? (
+                                                <>
+                                                    <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
+                                                    <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
+                                                    <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
+                                                </>
+                                            ) : (
+                                                // Windows Style
+                                                <div className="flex gap-4 ml-auto text-zinc-400">
+                                                    <Minus className="w-3 h-3" />
+                                                    <Maximize className="w-3 h-3" />
+                                                    <X className="w-3 h-3" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Image Wrapper with Border Radius (since we removed overflow-hidden from parent) */}
+                                    <div
+                                        className="relative overflow-hidden"
                                         style={{
-                                            // Specific max dimensions to prevent huge images from overflowing viewport too much during edit
-                                            maxHeight: '70vh',
+                                            borderBottomLeftRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
+                                            borderBottomRightRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
+                                            borderRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0'
                                         }}
-                                    />
+                                    >
+                                        {/* Image */}
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={image}
+                                            alt="Screenshot preview"
+                                            className="block max-w-full h-auto"
+                                            style={{
+                                                // Specific max dimensions to prevent huge images from overflowing viewport too much during edit
+                                                maxHeight: '70vh',
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Clear Button (Floating) */}
-                        <button
-                            onClick={() => setImage(null)}
-                            className="absolute top-4 right-4 p-2 bg-zinc-800 text-zinc-400 rounded-lg hover:text-white hover:bg-red-500/20 hover:text-red-500 transition-colors z-50"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-                    </div>
-                ) : (
-                    /* Initial Upload State */
-                    <div
-                        className="w-full max-w-xl aspect-video border-2 border-dashed border-zinc-800 rounded-3xl flex flex-col items-center justify-center text-center p-8 hover:border-zinc-600 hover:bg-zinc-900/50 transition-all cursor-pointer group"
-                        onClick={() => fileInputRef.current?.click()}
-                    >
-                        <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <Upload className="w-8 h-8 text-zinc-500 group-hover:text-emerald-500 transition-colors" />
+                            {/* Clear Button (Floating) */}
+                            <button
+                                onClick={() => setImage(null)}
+                                className="absolute top-4 right-4 p-2 bg-zinc-800 text-zinc-400 rounded-lg hover:text-white hover:bg-red-500/20 hover:text-red-500 transition-colors z-50"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">{language === "en" ? t.upload.title.en : t.upload.title.cn}</h3>
-                        <p className="text-zinc-500">{language === "en" ? t.upload.subtitle.en : t.upload.subtitle.cn}</p>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleFileUpload}
-                        />
-                    </div>
-                )}
+                    ) : (
+                        /* Initial Upload State */
+                        <div
+                            className="w-full max-w-xl aspect-video border-2 border-dashed border-zinc-800 rounded-3xl flex flex-col items-center justify-center text-center p-8 hover:border-zinc-600 hover:bg-zinc-900/50 transition-all cursor-pointer group"
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            <div className="w-16 h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <Upload className="w-8 h-8 text-zinc-500 group-hover:text-emerald-500 transition-colors" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2">{language === "en" ? t.upload.title.en : t.upload.title.cn}</h3>
+                            <p className="text-zinc-500">{language === "en" ? t.upload.subtitle.en : t.upload.subtitle.cn}</p>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleFileUpload}
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
