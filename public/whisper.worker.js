@@ -37,6 +37,8 @@ self.addEventListener("message", async (event) => {
             const transcriber = await Whisper.getInstance();
 
             const output = await transcriber(audio, {
+                // Explicitly set task to 'transcribe' to prevent translation to English
+                task: 'transcribe',
                 language: language === "auto" ? null : language,
                 chunk_length_s: 30,
                 stride_length_s: 5,
