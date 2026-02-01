@@ -6,13 +6,15 @@ import { pipeline, env } from '/transformers.min.js';
 env.allowLocalModels = true;
 env.allowRemoteModels = false;
 env.localModelPath = "https://assets.zypass.dpdns.org/";
+env.backends.onnx.wasm.wasmPaths = "https://assets.zypass.dpdns.org/wasm/";
 
 class Whisper {
     static instance = null;
 
     static async getInstance(progress_callback = null) {
         if (this.instance === null) {
-            this.instance = await pipeline("automatic-speech-recognition", "Xenova/whisper-tiny", { progress_callback });
+            // Upgraded to whisper-base for better quality in Chinese
+            this.instance = await pipeline("automatic-speech-recognition", "Xenova/whisper-base", { progress_callback });
         }
         return this.instance;
     }
