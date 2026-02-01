@@ -2,11 +2,10 @@
 import { pipeline, env } from '/transformers.min.js';
 
 // Skip local model checks
-env.allowLocalModels = false;
-env.useBrowserCache = true;
-// Use Cloudflare R2 for faster model loading in China
-env.remoteHost = "https://assets.zypass.dpdns.org";
-env.remoteTemplate = "{model}/{file}";
+// Configure as "local" model to bypass Hugging Face URL structure (resolve/main/...)
+env.allowLocalModels = true;
+env.allowRemoteModels = false;
+env.localModelPath = "https://assets.zypass.dpdns.org/";
 
 class Whisper {
     static instance = null;
