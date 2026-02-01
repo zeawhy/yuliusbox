@@ -295,7 +295,7 @@ export default function ScreenshotBeautifierPage() {
             {/* Main Canvas Area */}
             <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 overflow-auto relative">
                 {/* 3D Stage: A large area to allow the 3D projection to breath */}
-                <div className="min-w-full min-h-full flex items-center justify-center p-20 lg:p-40" style={{ perspective: '2000px' }}>
+                <div className="min-w-full min-h-full flex items-center justify-center p-32 lg:p-64" style={{ perspective: '3000px' }}>
                     {image ? (
                         <div className="relative flex-shrink-0 flex items-center justify-center overflow-visible shadow-2xl border border-zinc-800/50" style={{ transformStyle: 'preserve-3d' }}>
                             {/* The Export Container */}
@@ -317,7 +317,7 @@ export default function ScreenshotBeautifierPage() {
                                     className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
                                     style={{
                                         borderRadius: `${settings.borderRadius}px`,
-                                        transform: `scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
+                                        transform: `perspective(2000px) translate3d(0, 0, 100px) scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
                                         transformStyle: 'preserve-3d',
                                         transition: 'transform 0.3s ease-out',
                                     }}
