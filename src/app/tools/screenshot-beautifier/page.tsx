@@ -293,21 +293,24 @@ export default function ScreenshotBeautifierPage() {
             </div>
 
             {/* Main Canvas Area */}
-            <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 overflow-auto relative p-8 lg:p-12">
-                <div className="min-h-full flex items-center justify-center">
+            <div className="flex-1 bg-[url('/grid.svg')] bg-zinc-950 overflow-auto relative">
+                {/* 3D Stage: A large area to allow the 3D projection to breath */}
+                <div className="min-w-full min-h-full flex items-center justify-center p-20 lg:p-40" style={{ perspective: '2000px' }}>
                     {image ? (
-                        <div className="flex-shrink-0 relative shadow-2xl border border-zinc-800/50 overflow-visible">
+                        <div className="relative flex-shrink-0 flex items-center justify-center overflow-visible shadow-2xl border border-zinc-800/50" style={{ transformStyle: 'preserve-3d' }}>
                             {/* The Export Container */}
                             <div
                                 ref={exportRef}
                                 style={{
                                     background: settings.background,
                                     padding: `${settings.padding}px`,
-                                    minWidth: '400px', // Ensure it has some width
-                                    perspective: '1200px', // Slightly increased perspective for better depth
+                                    minWidth: '400px',
+                                    perspective: '1200px',
                                     transformStyle: 'preserve-3d',
+                                    // Hardware acceleration and overflow safety
+                                    backfaceVisibility: 'hidden',
                                 }}
-                                className="transition-all duration-300 ease-in-out overflow-visible"
+                                className="transition-all duration-300 ease-in-out"
                             >
                                 {/* Window Container */}
                                 <div
