@@ -4,9 +4,9 @@ import { pipeline, env } from '/transformers.min.js';
 // Skip local model checks
 env.allowLocalModels = false;
 env.useBrowserCache = true;
-// Revert HF Mirror as it caused issues. Defaulting to huggingface.co
-// env.remoteHost = "https://hf-mirror.com";
-// env.remoteTemplate = "{model}/resolve/{revision}/{file}";
+// Use Cloudflare R2 for faster model loading in China
+env.remoteHost = "https://assets.zypass.dpdns.org";
+env.remoteTemplate = "{model}/{file}";
 
 class Whisper {
     static instance = null;
