@@ -25,17 +25,19 @@ export default function ScreenshotBeautifierPage() {
         scale: number;
         rotateX: number;
         rotateY: number;
+        showNoise: boolean;
     }
 
     const [settings, setSettings] = useState<SettingsState>({
-        background: 'linear-gradient(135deg, #FF6B6B 0%, #556270 100%)',
+        background: 'radial-gradient(at 40% 20%, hsla(28,100%,74%,1) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189,100%,56%,1) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,93%,1) 0px, transparent 50%), radial-gradient(at 80% 50%, hsla(340,100%,76%,1) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(22,100%,77%,1) 0px, transparent 50%), radial-gradient(at 80% 100%, hsla(242,100%,70%,1) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(343,100%,76%,1) 0px, transparent 50%)',
         padding: 40,
         borderRadius: 12,
         shadow: 'xl',
         windowType: 'mac',
         scale: 1,
         rotateX: 0,
-        rotateY: 0
+        rotateY: 0,
+        showNoise: true
     });
 
     const t = {
@@ -55,7 +57,8 @@ export default function ScreenshotBeautifierPage() {
             scale: { en: "Image Scale", cn: "图片缩放" },
             perspective: { en: "3D Perspective", cn: "3D 视角" },
             tiltX: { en: "Tilt X-Axis", cn: "X 轴旋转" },
-            tiltY: { en: "Tilt Y-Axis", cn: "Y 轴旋转" }
+            tiltY: { en: "Tilt Y-Axis", cn: "Y 轴旋转" },
+            noise: { en: "Noise Texture", cn: "颗粒质感" }
         },
         download: { en: "Download Image", cn: "下载图片" },
         processing: { en: "Processing...", cn: "处理中..." }
@@ -106,13 +109,22 @@ export default function ScreenshotBeautifierPage() {
     };
 
     const presets = [
-        'linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%)',
-        'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
-        'linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)',
-        'linear-gradient(to right, #43e97b 0%, #38f9d7 100%)',
-        'linear-gradient(to right, #fa709a 0%, #fee140 100%)',
-        'linear-gradient(to top, #30cfd0 0%, #330867 100%)',
-        '#18181b', // zinc-900 like
+        // Preset 1 (Aurora)
+        'radial-gradient(at 40% 20%, hsla(28,100%,74%,1) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189,100%,56%,1) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,93%,1) 0px, transparent 50%), radial-gradient(at 80% 50%, hsla(340,100%,76%,1) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(22,100%,77%,1) 0px, transparent 50%), radial-gradient(at 80% 100%, hsla(242,100%,70%,1) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(343,100%,76%,1) 0px, transparent 50%)',
+        // Preset 2 (Midnight)
+        'radial-gradient(at top left, rgba(37, 38, 44, 0.8), transparent), radial-gradient(at top right, rgba(37, 38, 44, 0.8), transparent), radial-gradient(at bottom left, rgba(72, 74, 85, 0.8), transparent)',
+        // Preset 3 (Cotton Candy)
+        'linear-gradient(135deg, #FDEB71 10%, #F8D800 40%, #03C8A7 80%, #02735E 100%)',
+        // Preset 4 (Sunset Mesh)
+        'radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%)',
+        // Preset 5 (Deep Purple Mesh)
+        'radial-gradient(at 74% 94%, hsla(180,91%,71%,1) 0px, transparent 50%), radial-gradient(at 73% 20%, hsla(254,82%,73%,1) 0px, transparent 50%), radial-gradient(at 9% 73%, hsla(343,92%,63%,1) 0px, transparent 50%)',
+        // Preset 6 (Oceanic)
+        'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
+        // Preset 7 (Peach Flow)
+        'linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 99%, #FAD0C4 100%)',
+        // Preset 8 (Minimal Slate)
+        'linear-gradient(135deg, #232526 0%, #414345 100%)',
     ];
 
     const shadowClasses = {
@@ -154,6 +166,21 @@ export default function ScreenshotBeautifierPage() {
                                     onClick={() => setSettings(s => ({ ...s, background: bg }))}
                                 />
                             ))}
+                        </div>
+                        <div className="flex items-center justify-between mt-4 bg-zinc-950 p-2 rounded-lg border border-zinc-800">
+                            <span className="text-xs text-zinc-400">{language === "en" ? t.controls.noise.en : t.controls.noise.cn}</span>
+                            <button
+                                className={cn(
+                                    "w-8 h-4 rounded-full transition-colors relative",
+                                    settings.showNoise ? "bg-emerald-500" : "bg-zinc-700"
+                                )}
+                                onClick={() => setSettings(s => ({ ...s, showNoise: !s.showNoise }))}
+                            >
+                                <div className={cn(
+                                    "absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all",
+                                    settings.showNoise ? "right-0.5" : "left-0.5"
+                                )} />
+                            </button>
                         </div>
                     </div>
 
@@ -310,8 +337,17 @@ export default function ScreenshotBeautifierPage() {
                                     // Hardware acceleration and overflow safety
                                     backfaceVisibility: 'hidden',
                                 }}
-                                className="transition-all duration-300 ease-in-out"
+                                className="transition-all duration-300 ease-in-out relative overflow-hidden"
                             >
+                                {/* Noise Overlay */}
+                                {settings.showNoise && (
+                                    <div
+                                        className="absolute inset-0 pointer-events-none opacity-[0.08] mix-blend-overlay"
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+                                        }}
+                                    />
+                                )}
                                 {/* Window Container */}
                                 <div
                                     className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
