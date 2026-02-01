@@ -5,7 +5,7 @@ import { ArrowLeft, Download, Upload, Image as ImageIcon, Settings, Maximize, Mi
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 
 export default function ScreenshotBeautifierPage() {
     const { language } = useLanguage();
@@ -78,20 +78,20 @@ export default function ScreenshotBeautifierPage() {
         if (!exportRef.current || !image) return;
         setIsExporting(true);
         try {
-            // Wait for images to load if necessary, though ObjectURL is usually instant.
-            const canvas = await html2canvas(exportRef.current, {
-                scale: 2, // Retina quality
-                useCORS: true,
-                backgroundColor: null,
-                logging: false,
+            // Using html-to-image which uses SVG foreignObject
+            // This is generally more robust for modern CSS than html2canvas
+            const dataUrl = await toPng(exportRef.current, {
+                cacheBust: true,
+                pixelRatio: 2, // Retina quality
             });
+
             const link = document.createElement('a');
             link.download = `beautified-screenshot-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png');
+            link.href = dataUrl;
             link.click();
-        } catch (err) {
-            console.error(err);
-            alert("Failed to export image");
+        } catch (err: any) {
+            console.error("Export failed:", err);
+            alert("Export Failed: " + (err.message || err));
         } finally {
             setIsExporting(false);
         }
