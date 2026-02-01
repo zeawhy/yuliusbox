@@ -311,7 +311,7 @@ export default function ScreenshotBeautifierPage() {
                         >
                             {/* Window Container */}
                             <div
-                                className={cn("bg-white relative overflow-hidden transition-all duration-300", shadowClasses[settings.shadow])}
+                                className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
                                 style={{
                                     borderRadius: `${settings.borderRadius}px`,
                                     transform: `scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
@@ -321,7 +321,10 @@ export default function ScreenshotBeautifierPage() {
                             >
                                 {/* Window Header */}
                                 {settings.windowType !== 'none' && (
-                                    <div className="h-8 bg-zinc-100 border-b border-zinc-200 flex items-center px-4 gap-2">
+                                    <div
+                                        className="h-8 bg-zinc-100 border-b border-zinc-200 flex items-center px-4 gap-2"
+                                        style={{ borderTopLeftRadius: `${settings.borderRadius}px`, borderTopRightRadius: `${settings.borderRadius}px` }}
+                                    >
                                         {settings.windowType === 'mac' ? (
                                             <>
                                                 <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
@@ -339,17 +342,27 @@ export default function ScreenshotBeautifierPage() {
                                     </div>
                                 )}
 
-                                {/* Image */}
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                    src={image}
-                                    alt="Screenshot preview"
-                                    className="block max-w-full h-auto"
+                                {/* Image Wrapper with Border Radius (since we removed overflow-hidden from parent) */}
+                                <div
+                                    className="relative overflow-hidden"
                                     style={{
-                                        // Specific max dimensions to prevent huge images from overflowing viewport too much during edit
-                                        maxHeight: '70vh',
+                                        borderBottomLeftRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
+                                        borderBottomRightRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
+                                        borderRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0'
                                     }}
-                                />
+                                >
+                                    {/* Image */}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={image}
+                                        alt="Screenshot preview"
+                                        className="block max-w-full h-auto"
+                                        style={{
+                                            // Specific max dimensions to prevent huge images from overflowing viewport too much during edit
+                                            maxHeight: '70vh',
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
 
