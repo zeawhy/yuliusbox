@@ -434,9 +434,13 @@ export default function ScreenshotBeautifierPage() {
                                         }}
                                     />
                                 )}
-                                {/* Tilted Wrapper for 3D Transforms */}
+                                {/* Tilted Wrapper for 3D Transforms (Post Card Container) */}
                                 <div
-                                    className="relative flex flex-col transition-all duration-300 ease-out origin-center"
+                                    className={cn(
+                                        "relative flex flex-col transition-all duration-300 ease-out origin-center",
+                                        settings.showHeader ? "bg-zinc-950 border border-white/10 p-6 rounded-2xl" : "",
+                                        settings.showHeader ? shadowClasses[settings.shadow] : ""
+                                    )}
                                     style={{
                                         transform: `perspective(2000px) translate3d(0, 0, 100px) scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
                                         transformStyle: 'preserve-3d',
@@ -444,7 +448,7 @@ export default function ScreenshotBeautifierPage() {
                                 >
                                     {/* Social Header */}
                                     {settings.showHeader && (
-                                        <div className="w-full mb-6 flex items-start gap-4 p-5 bg-zinc-950 text-white rounded-xl border border-zinc-800 shadow-2xl relative z-10" style={{ backfaceVisibility: 'hidden' }}>
+                                        <div className="w-full mb-4 flex items-start gap-4 text-white relative z-10" style={{ backfaceVisibility: 'hidden' }}>
                                             <div className="w-12 h-12 rounded-full bg-zinc-800 flex-shrink-0 overflow-hidden border-2 border-zinc-700/50">
                                                 {settings.socialAvatar ? (
                                                     /* eslint-disable-next-line @next/next/no-img-element */
@@ -473,7 +477,10 @@ export default function ScreenshotBeautifierPage() {
 
                                     {/* Window Container */}
                                     <div
-                                        className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
+                                        className={cn(
+                                            "bg-white relative transition-all duration-300",
+                                            settings.showHeader ? "" : shadowClasses[settings.shadow] // Remove shadow if inside Post Card
+                                        )}
                                         style={{
                                             borderRadius: `${settings.borderRadius}px`,
                                             // Transform logic moved to parent wrapper
