@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ArrowLeft, Download, Upload, Image as ImageIcon, Settings, Maximize, Minus, X } from "lucide-react";
+import { ArrowLeft, Download, Upload, Image as ImageIcon, Settings, Maximize, Minus, X, User } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -26,6 +26,10 @@ export default function ScreenshotBeautifierPage() {
         rotateX: number;
         rotateY: number;
         showNoise: boolean;
+        showHeader: boolean;
+        socialName: string;
+        socialHandle: string;
+        socialAvatar: string;
     }
 
     const [settings, setSettings] = useState<SettingsState>({
@@ -37,7 +41,11 @@ export default function ScreenshotBeautifierPage() {
         scale: 1,
         rotateX: 0,
         rotateY: 0,
-        showNoise: true
+        showNoise: true,
+        showHeader: false,
+        socialName: 'Yulius',
+        socialHandle: '@yuliusbox',
+        socialAvatar: ''
     });
 
     const t = {
@@ -58,7 +66,12 @@ export default function ScreenshotBeautifierPage() {
             perspective: { en: "3D Perspective", cn: "3D 视角" },
             tiltX: { en: "Tilt X-Axis", cn: "X 轴旋转" },
             tiltY: { en: "Tilt Y-Axis", cn: "Y 轴旋转" },
-            noise: { en: "Noise Texture", cn: "颗粒质感" }
+            noise: { en: "Noise Texture", cn: "颗粒质感" },
+            social: { en: "Social Mockup", cn: "社交媒体样机" },
+            showHeader: { en: "Show Header", cn: "显示头部" },
+            name: { en: "Name", cn: "名称" },
+            handle: { en: "Handle", cn: "账号" },
+            avatar: { en: "Avatar URL", cn: "头像链接" }
         },
         download: { en: "Download Image", cn: "下载图片" },
         processing: { en: "Processing...", cn: "处理中..." }
@@ -193,6 +206,60 @@ export default function ScreenshotBeautifierPage() {
                                     settings.showNoise ? "right-0.5" : "left-0.5"
                                 )} />
                             </button>
+                        </div>
+                    </div>
+                    {/* Social Mockup Settings */}
+                    <div className="space-y-3">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{language === "en" ? t.controls.social.en : t.controls.social.cn}</label>
+                        <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-zinc-300">{language === "en" ? t.controls.showHeader.en : t.controls.showHeader.cn}</span>
+                                <button
+                                    className={cn(
+                                        "w-10 h-6 rounded-full transition-colors relative",
+                                        settings.showHeader ? "bg-emerald-500" : "bg-zinc-700"
+                                    )}
+                                    onClick={() => setSettings(s => ({ ...s, showHeader: !s.showHeader }))}
+                                >
+                                    <div className={cn(
+                                        "absolute top-1 w-4 h-4 bg-white rounded-full transition-all",
+                                        settings.showHeader ? "right-1" : "left-1"
+                                    )} />
+                                </button>
+                            </div>
+
+                            {settings.showHeader && (
+                                <div className="space-y-3 pt-2 border-t border-zinc-800/50">
+                                    <div className="space-y-1">
+                                        <label className="text-xs text-zinc-500">{language === "en" ? t.controls.name.en : t.controls.name.cn}</label>
+                                        <input
+                                            type="text"
+                                            value={settings.socialName}
+                                            onChange={(e) => setSettings(s => ({ ...s, socialName: e.target.value }))}
+                                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs text-zinc-500">{language === "en" ? t.controls.handle.en : t.controls.handle.cn}</label>
+                                        <input
+                                            type="text"
+                                            value={settings.socialHandle}
+                                            onChange={(e) => setSettings(s => ({ ...s, socialHandle: e.target.value }))}
+                                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs text-zinc-500">{language === "en" ? t.controls.avatar.en : t.controls.avatar.cn}</label>
+                                        <input
+                                            type="text"
+                                            value={settings.socialAvatar}
+                                            onChange={(e) => setSettings(s => ({ ...s, socialAvatar: e.target.value }))}
+                                            placeholder="https://..."
+                                            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -367,59 +434,95 @@ export default function ScreenshotBeautifierPage() {
                                         }}
                                     />
                                 )}
-                                {/* Window Container */}
+                                {/* Tilted Wrapper for 3D Transforms */}
                                 <div
-                                    className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
+                                    className="relative flex flex-col transition-all duration-300 ease-out origin-center"
                                     style={{
-                                        borderRadius: `${settings.borderRadius}px`,
                                         transform: `perspective(2000px) translate3d(0, 0, 100px) scale(${settings.scale}) rotateX(${settings.rotateX}deg) rotateY(${settings.rotateY}deg)`,
                                         transformStyle: 'preserve-3d',
-                                        transition: 'transform 0.3s ease-out',
                                     }}
                                 >
-                                    {/* Window Header */}
-                                    {settings.windowType !== 'none' && (
-                                        <div
-                                            className="h-8 bg-zinc-100 border-b border-zinc-200 flex items-center px-4 gap-2"
-                                            style={{ borderTopLeftRadius: `${settings.borderRadius}px`, borderTopRightRadius: `${settings.borderRadius}px` }}
-                                        >
-                                            {settings.windowType === 'mac' ? (
-                                                <>
-                                                    <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
-                                                    <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
-                                                    <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
-                                                </>
-                                            ) : (
-                                                // Windows Style
-                                                <div className="flex gap-4 ml-auto text-zinc-400">
-                                                    <Minus className="w-3 h-3" />
-                                                    <Maximize className="w-3 h-3" />
-                                                    <X className="w-3 h-3" />
+                                    {/* Social Header */}
+                                    {settings.showHeader && (
+                                        <div className="w-full mb-6 flex items-start gap-4 p-5 bg-zinc-950 text-white rounded-xl border border-zinc-800 shadow-2xl relative z-10" style={{ backfaceVisibility: 'hidden' }}>
+                                            <div className="w-12 h-12 rounded-full bg-zinc-800 flex-shrink-0 overflow-hidden border-2 border-zinc-700/50">
+                                                {settings.socialAvatar ? (
+                                                    /* eslint-disable-next-line @next/next/no-img-element */
+                                                    <img src={settings.socialAvatar} alt="" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-zinc-500">
+                                                        <User className="w-6 h-6" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1 min-w-0 pt-0.5">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex flex-col">
+                                                        <h3 className="font-bold text-lg leading-tight text-white truncate">{settings.socialName}</h3>
+                                                        <p className="text-zinc-500 text-sm mt-0.5 truncate">{settings.socialHandle}</p>
+                                                    </div>
+                                                    <div className="text-zinc-600">
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 transform opacity-50">
+                                                            <g><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></g>
+                                                        </svg>
+                                                    </div>
                                                 </div>
-                                            )}
+                                            </div>
                                         </div>
                                     )}
 
-                                    {/* Image Wrapper with Border Radius (since we removed overflow-hidden from parent) */}
+                                    {/* Window Container */}
                                     <div
-                                        className="relative overflow-hidden"
+                                        className={cn("bg-white relative transition-all duration-300", shadowClasses[settings.shadow])}
                                         style={{
-                                            borderBottomLeftRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
-                                            borderBottomRightRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
-                                            borderRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0'
+                                            borderRadius: `${settings.borderRadius}px`,
+                                            // Transform logic moved to parent wrapper
                                         }}
                                     >
-                                        {/* Image */}
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img
-                                            src={image}
-                                            alt="Screenshot preview"
-                                            className="block max-w-full h-auto"
+                                        {/* Window Header */}
+                                        {settings.windowType !== 'none' && (
+                                            <div
+                                                className="h-8 bg-zinc-100 border-b border-zinc-200 flex items-center px-4 gap-2"
+                                                style={{ borderTopLeftRadius: `${settings.borderRadius}px`, borderTopRightRadius: `${settings.borderRadius}px` }}
+                                            >
+                                                {settings.windowType === 'mac' ? (
+                                                    <>
+                                                        <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
+                                                        <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
+                                                        <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
+                                                    </>
+                                                ) : (
+                                                    // Windows Style
+                                                    <div className="flex gap-4 ml-auto text-zinc-400">
+                                                        <Minus className="w-3 h-3" />
+                                                        <Maximize className="w-3 h-3" />
+                                                        <X className="w-3 h-3" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Image Wrapper with Border Radius (since we removed overflow-hidden from parent) */}
+                                        <div
+                                            className="relative overflow-hidden"
                                             style={{
-                                                // Specific max dimensions to prevent huge images from overflowing viewport too much during edit
-                                                maxHeight: '70vh',
+                                                borderBottomLeftRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
+                                                borderBottomRightRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0',
+                                                borderRadius: settings.windowType === 'none' ? `${settings.borderRadius}px` : '0'
                                             }}
-                                        />
+                                        >
+                                            {/* Image */}
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img
+                                                src={image}
+                                                alt="Screenshot preview"
+                                                className="block max-w-full h-auto"
+                                                style={{
+                                                    // Specific max dimensions to prevent huge images from overflowing viewport too much during edit
+                                                    maxHeight: '70vh',
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -454,6 +557,6 @@ export default function ScreenshotBeautifierPage() {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
