@@ -19,16 +19,21 @@ export default {
                 case 'email': // Use xAI (Grok) for Native English Tone
                     providerConfig = {
                         url: "https://api.x.ai/v1/chat/completions",
-                        apiKey: env.XAI_API_KEY,
-                        model: "grok-beta",
+                        apiKey: env.XAI_API_KEY || "", // Ensure apiKey is not undefined
+                        model: "grok-beta", // Revert: Some users report 404 with grok-2-latest, trying grok-beta again with better error logging
                         systemPrompt: "You are a professional business communication expert. Rewrite the draft to be polite and professional. Return ONLY the rewritten text."
                     };
+
+                    // Debugging Check:
+                    if (!providerConfig.apiKey) {
+                        return new Response(JSON.stringify({ error: "Missing XAI_API_KEY in Cloudflare Worker secrets." }), { status: 500, headers: corsHeaders });
+                    }
                     break;
 
                 case 'excel': // Use Qwen for Logic/Code
                     providerConfig = {
                         url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-                        apiKey: env.QWEN_API_KEY,
+                        apiKey: env.QWEN_API_KEY || "",
                         model: "qwen-turbo",
                         systemPrompt: "You are an Excel expert. Convert the user request into a formula. Return ONLY the formula code."
                     };
@@ -37,7 +42,7 @@ export default {
                 case 'regex': // Use Qwen for Logic/Code
                     providerConfig = {
                         url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-                        apiKey: env.QWEN_API_KEY,
+                        apiKey: env.QWEN_API_KEY || "",
                         model: "qwen-turbo",
                         systemPrompt: "You are a Regex expert. Provide the regex pattern. Return ONLY the regex code."
                     };
@@ -64,15 +69,33 @@ export default {
                 })
             });
 
-            const data = await response.json();
-            const resultText = data.choices?.[0]?.message?.content || "Error generating response";
+            // Parse response JSON correctly, handling potential errors
+            let data;
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                return new Response(JSON.stringify({ error: `Failed to parse API response: ${jsonError.message}` }), { status: 500, headers: corsHeaders });
+            }
+
+            // Check for upstream API error status
+            if (!response.ok) {
+                const errorMsg = data.error?.message || JSON.stringify(data) || "Unknown Upstream API Error";
+                return new Response(JSON.stringify({ error: `API Error: ${errorMsg}` }), { status: response.status, headers: corsHeaders });
+            }
+
+            // Check for "choices" array content
+            const resultText = data.choices?.[0]?.message?.content;
+
+            if (!resultText) {
+                return new Response(JSON.stringify({ error: "No content generated. Full response: " + JSON.stringify(data) }), { status: 500, headers: corsHeaders });
+            }
 
             return new Response(JSON.stringify({ result: resultText }), {
                 headers: { "Content-Type": "application/json", ...corsHeaders }
             });
 
         } catch (err) {
-            return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders });
+            return new Response(JSON.stringify({ error: `Worker Exception: ${err.message}` }), { status: 500, headers: corsHeaders });
         }
     }
 };

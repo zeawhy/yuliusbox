@@ -66,11 +66,17 @@ export default function RegexGeneratorPage() {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to process regex request");
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                throw new Error(`Server Error: ${response.status} ${response.statusText}`);
             }
 
-            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || `Request failed: ${response.status} ${response.statusText}`);
+            }
+
             if (data.error) throw new Error(data.error);
 
             // Clean up result (remove markdown blocks if present for generation mode, keep for explain)

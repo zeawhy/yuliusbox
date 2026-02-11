@@ -59,11 +59,17 @@ export default function ExcelFormulaBotPage() {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to generate formula");
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                throw new Error(`Server Error: ${response.status} ${response.statusText}`);
             }
 
-            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || `Request failed: ${response.status} ${response.statusText}`);
+            }
+
             if (data.error) throw new Error(data.error);
 
             // Clean up the result to remove markdown code blocks if present
