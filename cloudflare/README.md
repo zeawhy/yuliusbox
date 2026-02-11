@@ -47,6 +47,12 @@ This directory contains the serverless backend code for YuliusBox's AI tools. It
     NEXT_PUBLIC_CF_WORKER_URL=https://yuliusbox-ai-backend.your-subdomain.workers.dev
     ```
 
+    **Important for Production (Vercel)**:
+    When deploying to Vercel, you must add this environment variable in your project settings:
+    1. Go to Vercel Dashboard > Project > **Settings** > **Environment Variables**.
+    2. Add `NEXT_PUBLIC_CF_WORKER_URL` with your worker URL.
+    3. Redeploy your application.
+
 ## API Usage
 
 The worker accepts `POST` requests with the following JSON body:
