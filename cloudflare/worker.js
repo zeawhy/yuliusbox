@@ -10,6 +10,43 @@ export default {
         if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
         if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
 
+        // === NEW: Rate Limiting Block (Insert Here) ===
+        const clientIP = request.headers.get("CF-Connecting-IP") || "unknown";
+        const RATE_LIMIT = 10;  // Limit: 10 requests
+        const WINDOW_SEC = 60;  // Window: 60 seconds
+
+        // Only limit POST requests (the actual API calls)
+        if (request.method === "POST") {
+            try {
+                const key = `rate_limit_${clientIP}`;
+
+                // 1. Check Count (env.LIMITER must be bound)
+                if (env.LIMITER) {
+                    let count = await env.LIMITER.get(key);
+                    count = count ? parseInt(count) : 0;
+
+                    if (count >= RATE_LIMIT) {
+                        return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
+                            status: 429,
+                            headers: { "Content-Type": "application/json", ...corsHeaders }
+                        });
+                    }
+
+                    // 2. Increment Count (Non-blocking)
+                    // Use ctx.waitUntil so this doesn't slow down the AI response
+                    ctx.waitUntil(
+                        env.LIMITER.put(key, count + 1, { expirationTtl: WINDOW_SEC })
+                    );
+                } else {
+                    console.warn("LIMITER KV not bound. Skipping rate limit check.");
+                }
+            } catch (err) {
+                // Fail Open: If KV errors, log it but allow the request to proceed
+                console.error("Rate Limit Error:", err);
+            }
+        }
+        // === End of Rate Limiting Block ===
+
         try {
             const { type, userInput, language } = await request.json();
             const langInstruction = language === 'cn' ? " in Simplified Chinese" : " in English";

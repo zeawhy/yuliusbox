@@ -53,6 +53,25 @@ This directory contains the serverless backend code for YuliusBox's AI tools. It
     2. Add `NEXT_PUBLIC_CF_WORKER_URL` with your worker URL.
     3. Redeploy your application.
 
+6.  **Enable Rate Limiting (Recommended)**:
+    To prevent abuse, the worker includes a rate limiter (10 requests/minute per IP). You need to create a Cloudflare KV namespace for this.
+
+    1.  **Create KV Namespace**:
+        ```bash
+        npx wrangler kv:namespace create LIMITER
+        ```
+        This will output a binding configuration like `{ binding = "LIMITER", id = "..." }`.
+
+    2.  **Update `wrangler.toml`**:
+        Add the `kv_namespaces` block to your `wrangler.toml` file (create one if it doesn't exist, or just configure it in the Cloudflare Dashboard > Worker > Settings > Variables > KV Namespace Bindings).
+        - **Variable Name**: `LIMITER`
+        - **Namespace**: Select the one you just created.
+
+    3.  **Redeploy**:
+        ```bash
+        npx wrangler deploy
+        ```
+
 ## API Usage
 
 The worker accepts `POST` requests with the following JSON body:
