@@ -11,7 +11,8 @@ export default {
         if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
 
         try {
-            const { type, userInput } = await request.json();
+            const { type, userInput, language } = await request.json();
+            const langInstruction = language === 'cn' ? " in Simplified Chinese" : " in English";
             let providerConfig = {};
 
             // 2. Model Routing Strategy
@@ -20,8 +21,8 @@ export default {
                     providerConfig = {
                         url: "https://api.x.ai/v1/chat/completions",
                         apiKey: env.XAI_API_KEY || "", // Ensure apiKey is not undefined
-                        model: "grok-beta", // Revert: Some users report 404 with grok-2-latest, trying grok-beta again with better error logging
-                        systemPrompt: "You are a professional business communication expert. Rewrite the draft to be polite and professional. Return ONLY the rewritten text."
+                        model: "grok-3", // Update: "grok-beta" deprecated, using "grok-3"
+                        systemPrompt: "You are a professional business communication expert. Rewrite the draft to be polite and professional. Keep the same language as the input (e.g., if input is Chinese, output Chinese; if English, output English). Return ONLY the rewritten text."
                     };
 
                     // Debugging Check:
@@ -44,7 +45,7 @@ export default {
                         url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
                         apiKey: env.QWEN_API_KEY || "",
                         model: "qwen-turbo",
-                        systemPrompt: "You are a Regex expert. Provide the regex pattern. Return ONLY the regex code."
+                        systemPrompt: `You are a Regex expert. If the user asks to generate a regex, return ONLY the regex pattern code. If the user asks to explain a regex, provide a clear, concise explanation${langInstruction}.`
                     };
                     break;
 

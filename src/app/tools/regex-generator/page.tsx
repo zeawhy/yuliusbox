@@ -62,7 +62,8 @@ export default function RegexGeneratorPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     type: "regex",
-                    userInput: finalPrompt
+                    userInput: finalPrompt,
+                    language: language
                 })
             });
 

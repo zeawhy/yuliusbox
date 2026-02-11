@@ -55,7 +55,8 @@ export default function ExcelFormulaBotPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     type: "excel",
-                    userInput: `Platform: ${platform === 'excel' ? 'Excel' : 'Google Sheets'}. Question: ${prompt}`
+                    userInput: `Platform: ${platform === 'excel' ? 'Excel' : 'Google Sheets'}. Question: ${prompt}`,
+                    language: language
                 })
             });
 
