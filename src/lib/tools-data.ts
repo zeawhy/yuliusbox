@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code } from "lucide-react";
 
 export interface Tool {
     id: string;
@@ -113,6 +113,48 @@ export const toolsData: Tool[] = [
         },
         icon: FileText, // Or Mic if imported, but FileText is safe
         href: "/tools/audio-to-text",
+        popular: true,
+    },
+    {
+        id: "excel-formula-bot",
+        name: {
+            en: "Excel Formula Bot",
+            cn: "Excel 公式生成器"
+        },
+        description: {
+            en: "Convert natural language to complex Excel/Google Sheets formulas instantly.",
+            cn: "用大白话生成 Excel/Google Sheets 复杂公式，不再需要死记硬背。"
+        },
+        icon: Table,
+        href: "/tools/excel-formula-bot",
+        popular: true,
+    },
+    {
+        id: "email-paraphraser",
+        name: {
+            en: "Polite Email Paraphraser",
+            cn: "职场邮件润色"
+        },
+        description: {
+            en: "Rewrite your emails to be professional, polite, and persuasive.",
+            cn: "一键将草稿润色为得体、专业的商务英语邮件。"
+        },
+        icon: Mail,
+        href: "/tools/email-paraphraser",
+        popular: true,
+    },
+    {
+        id: "regex-generator",
+        name: {
+            en: "AI Regex Generator",
+            cn: "正则生成器 & 解释器"
+        },
+        description: {
+            en: "Generate and explain complex Regular Expressions using AI.",
+            cn: "用 AI 生成和解释复杂的正则表达式，程序员必备神器。"
+        },
+        icon: Code,
+        href: "/tools/regex-generator",
         popular: true,
     },
     {
