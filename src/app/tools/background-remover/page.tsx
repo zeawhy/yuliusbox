@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import BackgroundRemover from "@/components/tools/BackgroundRemover";
+import BackgroundRemoverWrapper from "@/components/tools/BackgroundRemoverWrapper";
 
 export const metadata: Metadata = {
     title: "Free AI Online Background Remover - 100% Private (No Uploads)",
@@ -29,7 +29,7 @@ export default function BackgroundRemoverPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <BackgroundRemover />
+            <BackgroundRemoverWrapper />
         </div>
     );
 }

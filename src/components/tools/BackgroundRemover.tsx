@@ -47,9 +47,7 @@ export default function BackgroundRemover() {
         setProgress(0);
 
         try {
-            // Bypass Turbopack static analysis using eval
-            const mod = await (eval('import("@imgly/background-removal")') as Promise<any>);
-            const removeBackground = mod.removeBackground;
+            const { removeBackground } = await import("@imgly/background-removal");
 
             const config: any = {
                 progress: (p: any) => {
