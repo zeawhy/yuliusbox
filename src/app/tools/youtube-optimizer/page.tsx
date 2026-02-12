@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Youtube, Sparkles, Copy, Loader2, Hash, Type } from "lucide-react";
-import { useLanguage } from "@/components/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface OptimizationResult {
     titles: string[];

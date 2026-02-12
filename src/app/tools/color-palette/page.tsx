@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Upload, Copy, Check, Info, Palette } from "lucide-react";
 import ColorThief from "color-thief-react";
 import Image from "next/image";
-import { useLanguage } from "@/components/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ColorPaletteGenerator() {
     const { language } = useLanguage();

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Upload, Monitor, Download, Smartphone } from "lucide-react";
 import Image from "next/image";
-import { useLanguage } from "@/components/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Platform = "tiktok" | "reels" | "shorts";
 
