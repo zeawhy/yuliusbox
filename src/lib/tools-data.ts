@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -213,6 +213,21 @@ export const toolsData: Tool[] = [
         },
         icon: Clock,
         href: "/tools/cron-generator",
+        popular: true,
+    },
+    {
+        id: "privacy-generator",
+        category: "developer",
+        name: {
+            en: "Privacy & Terms",
+            cn: "隐私协议生成器"
+        },
+        description: {
+            en: "Generate standard legal documents for your apps instantly.",
+            cn: "一键生成符合 App Store 要求的隐私政策和服务条款。"
+        },
+        icon: Shield,
+        href: "/tools/privacy-generator",
         popular: true,
     },
     {
