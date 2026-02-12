@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Upload, Copy, Check, Info, Palette } from "lucide-react";
-import ColorThief from "color-thief-react";
+import ColorThief, { Palette as ColorPalette } from "color-thief-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -131,12 +131,12 @@ export default function ColorPaletteGenerator() {
                                 )}
                             </ColorThief>
 
-                            <ColorThief src={image} crossOrigin="anonymous" format="hex" colorCount={5}>
+                            <ColorPalette src={image} crossOrigin="anonymous" format="hex" colorCount={5}>
                                 {({ data: palette }) => (
                                     <div className="space-y-3">
                                         <h3 className="text-zinc-400 font-medium text-sm uppercase tracking-wider">{t.palette}</h3>
                                         <div className="grid grid-cols-5 gap-4">
-                                            {palette?.map((color, index) => (
+                                            {palette?.map((color: string, index: number) => (
                                                 <div
                                                     key={index}
                                                     onClick={() => copyToClipboard(color)}
@@ -153,7 +153,7 @@ export default function ColorPaletteGenerator() {
                                         </div>
                                     </div>
                                 )}
-                            </ColorThief>
+                            </ColorPalette>
                         </div>
                     ) : (
                         // Empty State
