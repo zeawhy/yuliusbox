@@ -47,9 +47,9 @@ export default function BackgroundRemover() {
         setProgress(0);
 
         try {
-            // Use CDN ESM import with webpackIgnore to avoid all bundler/build-time resolution issues
+            // Use esm.sh which automatically resolves deep dependencies like onnxruntime-web
             // @ts-ignore
-            const module = await (import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs') as any);
+            const module = await (import(/* webpackIgnore: true */ 'https://esm.sh/@imgly/background-removal@1.7.0') as any);
             const removeBackground = module.removeBackground;
 
             const config: any = {
