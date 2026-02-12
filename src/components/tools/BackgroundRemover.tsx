@@ -48,12 +48,14 @@ export default function BackgroundRemover() {
 
         try {
             // Use esm.sh which automatically resolves deep dependencies like onnxruntime-web
+            // Doungraded to v1.4.5 because data package on npm only goes up to 1.4.5
             // @ts-ignore
-            const module = await (import(/* webpackIgnore: true */ 'https://esm.sh/@imgly/background-removal@1.7.0') as any);
+            const module = await (import(/* webpackIgnore: true */ 'https://esm.sh/@imgly/background-removal@1.4.5') as any);
             const removeBackground = module.removeBackground;
 
             const config: any = {
-                publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/',
+                // Point to the matching data package version
+                publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.4.5/dist/',
                 progress: (p: any) => {
                     if (typeof p === 'number') setProgress(Math.round((p as number) * 100));
                 },
