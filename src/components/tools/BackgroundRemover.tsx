@@ -54,8 +54,8 @@ export default function BackgroundRemover() {
             const removeBackground = module.removeBackground;
 
             const config: any = {
-                // Point to the matching data package version
-                publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.4.5/dist/',
+                // Use local assets since CDNs (jsDelivr, unpkg) were unreliable/blocked
+                publicPath: '/models/',
                 progress: (p: any) => {
                     if (typeof p === 'number') setProgress(Math.round((p as number) * 100));
                 },
