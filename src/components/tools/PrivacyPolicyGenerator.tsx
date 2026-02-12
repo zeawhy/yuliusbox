@@ -29,6 +29,10 @@ export default function PrivacyPolicyGenerator() {
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
         title: { en: "Privacy & Terms Generator", cn: "隐私协议 & 服务条款生成器" },
+        subtitle: {
+            en: "Create standard, professional legal documents for your indie apps or websites in seconds. Completely free and no sign-up required.",
+            cn: "一键生成符合 App Store 要求的隐私政策和服务条款。100% 免费，无需注册。"
+        },
         inputs: { en: "Configuration", cn: "配置信息" },
         preview: { en: "Document Preview", cn: "文档预览" },
         company: { en: "Company / Developer Name", cn: "公司 / 开发者名称" },
@@ -154,12 +158,25 @@ If you have any questions or suggestions about the Terms and Conditions, do not 
     };
 
     return (
-        <div className="w-full">
-            {/* Back Button */}
-            <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors w-fit">
+        <div className="w-full max-w-7xl mx-auto">
+            {/* Header / Back Button */}
+            <div className="w-full mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
+                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors w-fit mb-8">
                     <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
                 </Link>
+
+                <div className="flex flex-col items-start text-left">
+                    <div className="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 mb-6 shadow-xl">
+                        <Shield className="w-10 h-10 text-blue-500" />
+                    </div>
+                    <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 text-left">
+                        {language === "en" ? "Privacy & Terms " : "隐私协议 & "}
+                        <span className="text-zinc-500 font-medium">{language === "en" ? "Generator" : "服务条款生成器"}</span>
+                    </h1>
+                    <p className="text-zinc-400 text-lg max-w-2xl text-left">
+                        {language === "en" ? t.subtitle.en : t.subtitle.cn}
+                    </p>
+                </div>
             </div>
 
             <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
