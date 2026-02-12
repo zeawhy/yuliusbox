@@ -54,8 +54,8 @@ export default function BackgroundRemover() {
             const removeBackground = module.removeBackground;
 
             const config: any = {
-                // Use local assets since CDNs (jsDelivr, unpkg) were unreliable/blocked
-                publicPath: '/models/',
+                // Use absolute path for local assets to avoid "Invalid base URL" errors
+                publicPath: `${window.location.protocol}//${window.location.host}/models/`,
                 progress: (p: any) => {
                     if (typeof p === 'number') setProgress(Math.round((p as number) * 100));
                 },
