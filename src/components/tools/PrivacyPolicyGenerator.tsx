@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Copy, Check, FileText, Shield, User, Mail, Globe, Apple, Smartphone, Layout, Send } from "lucide-react";
+import { Copy, Check, FileText, Shield, User, Mail, Globe, Apple, Smartphone, Layout, Send, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -26,6 +27,7 @@ export default function PrivacyPolicyGenerator() {
     const [copied, setCopied] = useState(false);
 
     const t = {
+        back: { en: "Back to Tools", cn: "返回工具列表" },
         title: { en: "Privacy & Terms Generator", cn: "隐私协议 & 服务条款生成器" },
         inputs: { en: "Configuration", cn: "配置信息" },
         preview: { en: "Document Preview", cn: "文档预览" },
@@ -152,135 +154,144 @@ If you have any questions or suggestions about the Terms and Conditions, do not 
     };
 
     return (
-        <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
-            {/* Left: Inputs */}
-            <div className="w-full lg:w-1/3 flex flex-col gap-6 animate-in fade-in slide-in-from-left-4 duration-500">
-                <div className="bg-zinc-900/50 rounded-3xl border border-zinc-800 p-6 shadow-xl">
-                    <div className="flex items-center gap-2 mb-6 text-zinc-400">
-                        <Smartphone className="w-4 h-4" />
-                        <h2 className="font-bold uppercase tracking-widest text-[10px]">{language === "en" ? t.inputs.en : t.inputs.cn}</h2>
-                    </div>
-
-                    <div className="flex flex-col gap-4">
-                        <div className="space-y-2">
-                            <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.company.en : t.company.cn}</label>
-                            <input
-                                type="text"
-                                value={state.companyName}
-                                onChange={e => setState(s => ({ ...s, companyName: e.target.value }))}
-                                placeholder="e.g. YuliusBox Dev"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.app.en : t.app.cn}</label>
-                            <input
-                                type="text"
-                                value={state.appName}
-                                onChange={e => setState(s => ({ ...s, appName: e.target.value }))}
-                                placeholder="e.g. Photo Master"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.email.en : t.email.cn}</label>
-                            <input
-                                type="email"
-                                value={state.contactEmail}
-                                onChange={e => setState(s => ({ ...s, contactEmail: e.target.value }))}
-                                placeholder="support@yuliusbox.com"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium"
-                            />
-                        </div>
-
-                        <div className="space-y-3 mt-2">
-                            <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.platform.en : t.platform.cn}</label>
-                            <div className="flex flex-wrap gap-2">
-                                {["iOS", "Android", "Web"].map(p => (
-                                    <button
-                                        key={p}
-                                        onClick={() => togglePlatform(p)}
-                                        className={cn(
-                                            "flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all",
-                                            state.platforms.includes(p)
-                                                ? "bg-blue-500/10 border-blue-500 text-blue-400"
-                                                : "bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700"
-                                        )}
-                                    >
-                                        {p === "iOS" && <Apple className="w-3 h-3" />}
-                                        {p === "Android" && <Smartphone className="w-3 h-3" />}
-                                        {p === "Web" && <Globe className="w-3 h-3" />}
-                                        {p}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="space-y-3 mt-2">
-                            <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.ads.en : t.ads.cn}</label>
-                            <div className="flex flex-wrap gap-2">
-                                {["AdMob", "Facebook"].map(n => (
-                                    <button
-                                        key={n}
-                                        onClick={() => toggleAdNetwork(n)}
-                                        className={cn(
-                                            "px-3 py-1.5 rounded-lg border text-xs font-bold transition-all",
-                                            state.adNetworks.includes(n)
-                                                ? "bg-emerald-500/10 border-emerald-500 text-emerald-400"
-                                                : "bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700"
-                                        )}
-                                    >
-                                        {n}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div className="w-full">
+            {/* Back Button */}
+            <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors w-fit">
+                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
+                </Link>
             </div>
 
-            {/* Right: Preview */}
-            <div className="w-full lg:w-2/3 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-500 delay-100">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-zinc-900/50 p-2 rounded-2xl border border-zinc-800 shadow-xl">
-                    <div className="flex gap-1">
-                        <button
-                            onClick={() => setActiveTab("privacy")}
-                            className={cn(
-                                "px-4 py-2 rounded-xl text-xs font-bold transition-all",
-                                activeTab === "privacy" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
-                            )}
-                        >
-                            Privacy Policy
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("terms")}
-                            className={cn(
-                                "px-4 py-2 rounded-xl text-xs font-bold transition-all",
-                                activeTab === "terms" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
-                            )}
-                        >
-                            Terms & Conditions
-                        </button>
-                    </div>
+            <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
+                {/* Left: Inputs */}
+                <div className="w-full lg:w-1/3 flex flex-col gap-6 animate-in fade-in slide-in-from-left-4 duration-500">
+                    <div className="bg-zinc-900/50 rounded-3xl border border-zinc-800 p-6 shadow-xl">
+                        <div className="flex items-center gap-2 mb-6 text-zinc-400">
+                            <Smartphone className="w-4 h-4" />
+                            <h2 className="font-bold uppercase tracking-widest text-[10px]">{language === "en" ? t.inputs.en : t.inputs.cn}</h2>
+                        </div>
 
-                    <button
-                        onClick={handleCopy}
-                        className="flex items-center gap-2 px-4 py-2 bg-white text-black text-xs font-black rounded-xl hover:bg-zinc-200 transition-all shadow-lg active:scale-95"
-                    >
-                        {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
-                        {language === "en" ? t.copy.en : t.copy.cn}
-                    </button>
+                        <div className="flex flex-col gap-4">
+                            <div className="space-y-2">
+                                <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.company.en : t.company.cn}</label>
+                                <input
+                                    type="text"
+                                    value={state.companyName}
+                                    onChange={e => setState(s => ({ ...s, companyName: e.target.value }))}
+                                    placeholder="e.g. YuliusBox Dev"
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.app.en : t.app.cn}</label>
+                                <input
+                                    type="text"
+                                    value={state.appName}
+                                    onChange={e => setState(s => ({ ...s, appName: e.target.value }))}
+                                    placeholder="e.g. Photo Master"
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.email.en : t.email.cn}</label>
+                                <input
+                                    type="email"
+                                    value={state.contactEmail}
+                                    onChange={e => setState(s => ({ ...s, contactEmail: e.target.value }))}
+                                    placeholder="support@yuliusbox.com"
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium"
+                                />
+                            </div>
+
+                            <div className="space-y-3 mt-2">
+                                <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.platform.en : t.platform.cn}</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {["iOS", "Android", "Web"].map(p => (
+                                        <button
+                                            key={p}
+                                            onClick={() => togglePlatform(p)}
+                                            className={cn(
+                                                "flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all",
+                                                state.platforms.includes(p)
+                                                    ? "bg-blue-500/10 border-blue-500 text-blue-400"
+                                                    : "bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700"
+                                            )}
+                                        >
+                                            {p === "iOS" && <Apple className="w-3 h-3" />}
+                                            {p === "Android" && <Smartphone className="w-3 h-3" />}
+                                            {p === "Web" && <Globe className="w-3 h-3" />}
+                                            {p}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-3 mt-2">
+                                <label className="text-xs text-zinc-500 font-medium">{language === "en" ? t.ads.en : t.ads.cn}</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {["AdMob", "Facebook"].map(n => (
+                                        <button
+                                            key={n}
+                                            onClick={() => toggleAdNetwork(n)}
+                                            className={cn(
+                                                "px-3 py-1.5 rounded-lg border text-xs font-bold transition-all",
+                                                state.adNetworks.includes(n)
+                                                    ? "bg-emerald-500/10 border-emerald-500 text-emerald-400"
+                                                    : "bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700"
+                                            )}
+                                        >
+                                            {n}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-8 sm:p-12 h-[600px] overflow-y-auto custom-scrollbar relative">
-                    <div className="prose prose-invert prose-blue max-w-none text-zinc-400 whitespace-pre-wrap font-sans">
-                        {activeTab === "privacy" ? templates.privacy : templates.terms}
+                {/* Right: Preview */}
+                <div className="w-full lg:w-2/3 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-500 delay-100">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-zinc-900/50 p-2 rounded-2xl border border-zinc-800 shadow-xl">
+                        <div className="flex gap-1">
+                            <button
+                                onClick={() => setActiveTab("privacy")}
+                                className={cn(
+                                    "px-4 py-2 rounded-xl text-xs font-bold transition-all",
+                                    activeTab === "privacy" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+                                )}
+                            >
+                                Privacy Policy
+                            </button>
+                            <button
+                                onClick={() => setActiveTab("terms")}
+                                className={cn(
+                                    "px-4 py-2 rounded-xl text-xs font-bold transition-all",
+                                    activeTab === "terms" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+                                )}
+                            >
+                                Terms & Conditions
+                            </button>
+                        </div>
+
+                        <button
+                            onClick={handleCopy}
+                            className="flex items-center gap-2 px-4 py-2 bg-white text-black text-xs font-black rounded-xl hover:bg-zinc-200 transition-all shadow-lg active:scale-95"
+                        >
+                            {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                            {language === "en" ? t.copy.en : t.copy.cn}
+                        </button>
                     </div>
 
-                    {/* Fading bottom overlay */}
-                    <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none" />
+                    <div className="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-8 sm:p-12 h-[600px] overflow-y-auto custom-scrollbar relative">
+                        <div className="prose prose-invert prose-blue max-w-none text-zinc-400 whitespace-pre-wrap font-sans">
+                            {activeTab === "privacy" ? templates.privacy : templates.terms}
+                        </div>
+
+                        {/* Fading bottom overlay */}
+                        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none" />
+                    </div>
                 </div>
             </div>
         </div>
