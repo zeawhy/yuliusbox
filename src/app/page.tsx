@@ -1,14 +1,22 @@
 "use client";
 
-import { toolsData } from "@/lib/tools-data";
+import { useState, useMemo } from "react";
+import { toolsData, ToolCategory } from "@/lib/tools-data";
 import { ToolCard } from "@/components/ui/ToolCard";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useLanguage } from "@/context/LanguageContext";
+import { CategoryTabs } from "@/components/ui/CategoryTabs";
 
 export default function Home() {
   const { language } = useLanguage();
+  const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
+
+  const filteredTools = useMemo(() => {
+    if (activeCategory === "all") return toolsData;
+    return toolsData.filter((tool) => tool.category === activeCategory);
+  }, [activeCategory]);
 
   const t = {
     title: {
@@ -17,10 +25,7 @@ export default function Home() {
     },
     subtitle: {
       en: "for Productivity.",
-      cn: "" // Combined in title for CN or just leave empty part? 
-      // User request: "Privacy-First Web Tools for Productivity" -> "隐私优先的 Web 生产力工具箱"
-      // My UI splits it: "Privacy-First Web Tools" <br> <span>"for Productivity"</span>
-      // Let's adjust for CN.
+      cn: ""
     },
     description: {
       en: "A collection of free, client-side, and secure utilities. No ads, no tracking, just useful tools that respect your data.",
@@ -70,13 +75,26 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Tools Grid */}
+        {/* Tools Section */}
         <section id="tools" className="w-full scroll-mt-32 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {toolsData.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
+          <CategoryTabs
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-500">
+            {filteredTools.map((tool) => (
+              <div key={tool.id} className="animate-in fade-in zoom-in-95 duration-500">
+                <ToolCard tool={tool} />
+              </div>
             ))}
           </div>
+
+          {filteredTools.length === 0 && (
+            <div className="w-full py-24 text-center text-zinc-500 font-mono text-sm border border-dashed border-zinc-800 rounded-3xl">
+              -- Result set empty --
+            </div>
+          )}
         </section>
       </main>
 
@@ -85,3 +103,4 @@ export default function Home() {
     </div>
   );
 }
+

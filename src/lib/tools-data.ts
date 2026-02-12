@@ -1,7 +1,10 @@
 import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson } from "lucide-react";
 
+export type ToolCategory = "developer" | "media" | "productivity";
+
 export interface Tool {
     id: string;
+    category: ToolCategory;
     name: {
         en: string;
         cn: string;
@@ -19,6 +22,7 @@ export interface Tool {
 export const toolsData: Tool[] = [
     {
         id: "screenshot-beautifier",
+        category: "media",
         name: {
             en: "Screenshot Beautifier",
             cn: "截图美化工具"
@@ -33,6 +37,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "heic-2-jpg",
+        category: "media",
         name: {
             en: "HEIC to JPG Free",
             cn: "HEIC 转 JPG (免费版)"
@@ -47,6 +52,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "image-compressor",
+        category: "media",
         name: {
             en: "Bulk Image Compression",
             cn: "批量图片压缩"
@@ -61,6 +67,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "pdf-toolkit",
+        category: "productivity",
         name: {
             en: "PDF Toolkit",
             cn: "PDF 工具箱"
@@ -75,6 +82,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "video-to-gif",
+        category: "media",
         name: {
             en: "Video to GIF",
             cn: "视频转 GIF"
@@ -89,6 +97,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "id-watermark",
+        category: "productivity",
         name: {
             en: "Secure ID Watermarker",
             cn: "证件安全水印"
@@ -103,6 +112,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "audio-to-text",
+        category: "productivity",
         name: {
             en: "Local AI Transcription",
             cn: "离线语音转文字"
@@ -117,6 +127,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "excel-formula-bot",
+        category: "productivity",
         name: {
             en: "Excel Formula Bot",
             cn: "Excel 公式生成器"
@@ -131,6 +142,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "email-paraphraser",
+        category: "productivity",
         name: {
             en: "Polite Email Paraphraser",
             cn: "职场邮件润色"
@@ -145,6 +157,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "regex-generator",
+        category: "developer",
         name: {
             en: "AI Regex Generator",
             cn: "正则生成器 & 解释器"
@@ -159,6 +172,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "json-to-code",
+        category: "developer",
         name: {
             en: "JSON to Code",
             cn: "JSON 转代码"
@@ -173,6 +187,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "sql-builder",
+        category: "developer",
         name: {
             en: "AI SQL Builder",
             cn: "AI SQL 生成器"
@@ -187,6 +202,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "cron-generator",
+        category: "developer",
         name: {
             en: "AI Cron Generator",
             cn: "AI Cron 表达式"
@@ -201,6 +217,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "safe-zone-overlay",
+        category: "media",
         name: {
             en: "Social Media Safe Zone",
             cn: "社媒安全区域检测"
@@ -215,6 +232,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "youtube-optimizer",
+        category: "media",
         name: {
             en: "YouTube Title Optimizer",
             cn: "YouTube 标题优化"
@@ -229,6 +247,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "color-palette",
+        category: "media",
         name: {
             en: "Color Palette Generator",
             cn: "AI 调色板生成器"
@@ -243,6 +262,7 @@ export const toolsData: Tool[] = [
     },
     {
         id: "more-tools",
+        category: "productivity",
         name: {
             en: "More Tools...",
             cn: "更多工具..."
