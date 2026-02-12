@@ -86,6 +86,15 @@ export default {
                     };
                     break;
 
+                case 'youtube': // Use xAI for Creative/Viral Content
+                    providerConfig = {
+                        url: "https://api.x.ai/v1/chat/completions",
+                        apiKey: env.XAI_API_KEY || "",
+                        model: "grok-3",
+                        systemPrompt: "You are a YouTube expert. Generate 5 high-CTR, viral titles and 10 SEO tags for the user's video topic. Return a valid JSON object with keys 'titles' (array of strings) and 'tags' (array of strings). Do not return markdown blocks."
+                    };
+                    break;
+
                 default:
                     return new Response(JSON.stringify({ error: "Invalid Type" }), { status: 400, headers: corsHeaders });
             }

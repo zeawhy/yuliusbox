@@ -158,6 +158,48 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "safe-zone-overlay",
+        name: {
+            en: "Social Media Safe Zone",
+            cn: "社媒安全区域检测"
+        },
+        description: {
+            en: "Preview TikTok/Reels/Shorts overlays to avoid blocked content.",
+            cn: "预览 TikTok/Reels/Shorts 界面遮挡，确保关键内容可见。"
+        },
+        icon: Image,
+        href: "/tools/safe-zone-overlay",
+        popular: true,
+    },
+    {
+        id: "youtube-optimizer",
+        name: {
+            en: "YouTube Title Optimizer",
+            cn: "YouTube 标题优化"
+        },
+        description: {
+            en: "Generate viral, high-CTR titles and SEO tags with AI.",
+            cn: "AI 生成高点击率爆款标题和 SEO 标签。"
+        },
+        icon: Blocks,
+        href: "/tools/youtube-optimizer",
+        popular: true,
+    },
+    {
+        id: "color-palette",
+        name: {
+            en: "Color Palette Generator",
+            cn: "AI 调色板生成器"
+        },
+        description: {
+            en: "Extract perfect color palettes from any image instantly.",
+            cn: "从图片中提取完美配色方案，一键复制 HEX 代码。"
+        },
+        icon: Table,
+        href: "/tools/color-palette",
+        popular: true,
+    },
+    {
         id: "more-tools",
         name: {
             en: "More Tools...",
