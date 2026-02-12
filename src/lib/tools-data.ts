@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson } from "lucide-react";
 
 export interface Tool {
     id: string;
@@ -155,6 +155,48 @@ export const toolsData: Tool[] = [
         },
         icon: Code,
         href: "/tools/regex-generator",
+        popular: true,
+    },
+    {
+        id: "json-to-code",
+        name: {
+            en: "JSON to Code",
+            cn: "JSON 转代码"
+        },
+        description: {
+            en: "Convert JSON to TypeScript, Go, or Dart models instantly.",
+            cn: "将 JSON 瞬间转换为 TypeScript、Go 或 Dart 模型类。"
+        },
+        icon: FileJson,
+        href: "/tools/json-to-code",
+        popular: true,
+    },
+    {
+        id: "sql-builder",
+        name: {
+            en: "AI SQL Builder",
+            cn: "AI SQL 生成器"
+        },
+        description: {
+            en: "Generate optimized SQL queries from natural language.",
+            cn: "支持 MySQL/PostgreSQL，通过自然语言生成 SQL。"
+        },
+        icon: Database,
+        href: "/tools/sql-builder",
+        popular: true,
+    },
+    {
+        id: "cron-generator",
+        name: {
+            en: "AI Cron Generator",
+            cn: "AI Cron 表达式"
+        },
+        description: {
+            en: "Convert natural language to Cron expressions easily.",
+            cn: "通过自然语言快速生成 Cron 定时任务表达式。"
+        },
+        icon: Clock,
+        href: "/tools/cron-generator",
         popular: true,
     },
     {
