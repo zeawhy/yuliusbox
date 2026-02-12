@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Upload, Copy, Check, Info, Palette } from "lucide-react";
+import { Upload, Copy, Check, Info, Palette, ArrowLeft } from "lucide-react";
 import ColorThief, { Palette as ColorPalette } from "color-thief-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
 
 export default function ColorPaletteGenerator() {
     const { language } = useLanguage();
@@ -50,8 +51,15 @@ export default function ColorPaletteGenerator() {
             <div className="container mx-auto px-4 py-12 max-w-5xl">
 
                 {/* Header */}
-                <div className="text-center mb-16 space-y-4">
-                    <div className="inline-flex items-center justify-center p-3 bg-purple-500/10 rounded-2xl mb-4 ring-1 ring-purple-500/20">
+                <div className="text-center mb-16 space-y-4 relative">
+                    <div className="absolute left-0 top-0">
+                        <Link href="/" className="inline-flex items-center text-zinc-400 hover:text-white transition-colors">
+                            <ArrowLeft className="w-5 h-5 mr-2" />
+                            {language === 'cn' ? "返回工具箱" : "Back to Tools"}
+                        </Link>
+                    </div>
+
+                    <div className="inline-flex items-center justify-center p-3 bg-purple-500/10 rounded-2xl mb-4 ring-1 ring-purple-500/20 mt-8 md:mt-0">
                         <Palette className="w-8 h-8 text-purple-400" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400">

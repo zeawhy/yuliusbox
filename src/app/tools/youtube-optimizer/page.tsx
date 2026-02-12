@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Youtube, Sparkles, Copy, Loader2, Hash, Type } from "lucide-react";
+import { Youtube, Sparkles, Copy, Loader2, Hash, Type, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
 
 interface OptimizationResult {
     titles: string[];
@@ -95,8 +96,15 @@ export default function YoutubeOptimizer() {
             <div className="container mx-auto px-4 py-12 max-w-4xl">
 
                 {/* Header */}
-                <div className="text-center mb-12 space-y-4">
-                    <div className="inline-flex items-center justify-center p-3 bg-red-600/10 rounded-2xl mb-4 ring-1 ring-red-600/20">
+                <div className="text-center mb-12 space-y-4 relative">
+                    <div className="absolute left-0 top-0">
+                        <Link href="/" className="inline-flex items-center text-zinc-400 hover:text-white transition-colors">
+                            <ArrowLeft className="w-5 h-5 mr-2" />
+                            {language === 'cn' ? "返回工具箱" : "Back to Tools"}
+                        </Link>
+                    </div>
+
+                    <div className="inline-flex items-center justify-center p-3 bg-red-600/10 rounded-2xl mb-4 ring-1 ring-red-600/20 mt-8 md:mt-0">
                         <Youtube className="w-8 h-8 text-red-500" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-500">

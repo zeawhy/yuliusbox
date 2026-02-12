@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Upload, Monitor, Download, Smartphone } from "lucide-react";
+import { Upload, Monitor, Download, Smartphone, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
 
 type Platform = "tiktok" | "reels" | "shorts";
 
@@ -118,8 +119,15 @@ export default function SafeZoneOverlay() {
             <div className="container mx-auto px-4 py-12 max-w-5xl">
 
                 {/* Header */}
-                <div className="text-center mb-12 space-y-4">
-                    <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-2xl mb-4 ring-1 ring-blue-500/20">
+                <div className="text-center mb-12 space-y-4 relative">
+                    <div className="absolute left-0 top-0">
+                        <Link href="/" className="inline-flex items-center text-zinc-400 hover:text-white transition-colors">
+                            <ArrowLeft className="w-5 h-5 mr-2" />
+                            {language === 'cn' ? "返回工具箱" : "Back to Tools"}
+                        </Link>
+                    </div>
+
+                    <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-2xl mb-4 ring-1 ring-blue-500/20 mt-8 md:mt-0">
                         <Smartphone className="w-8 h-8 text-blue-400" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
