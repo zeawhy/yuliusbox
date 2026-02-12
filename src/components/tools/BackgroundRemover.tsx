@@ -56,8 +56,30 @@ export default function BackgroundRemover() {
             const config: any = {
                 // Use absolute path for local assets to avoid "Invalid base URL" errors
                 publicPath: `${window.location.protocol}//${window.location.host}/models/`,
-                progress: (p: any) => {
-                    if (typeof p === 'number') setProgress(Math.round((p as number) * 100));
+                progress: (key: any, current?: any, total?: any) => {
+                    let p = 0;
+
+                    // Handle (key, current, total) signature
+                    if (typeof current === 'number' && typeof total === 'number' && total > 0) {
+                        p = current / total;
+                    }
+                    // Handle single number signature
+                    else if (typeof key === 'number') {
+                        p = key;
+                    }
+                    // Handle string signature like "download: 0.5"
+                    else if (typeof key === 'string') {
+                        const match = key.match(/(\d+(\.\d+)?)/);
+                        if (match) {
+                            const val = parseFloat(match[0]);
+                            if (val <= 1) p = val;
+                            else if (val <= 100) p = val / 100;
+                        }
+                    }
+
+                    if (p > 0) {
+                        setProgress(Math.round(p * 100));
+                    }
                 },
                 output: {
                     format: "image/png",
