@@ -47,7 +47,10 @@ export default function BackgroundRemover() {
         setProgress(0);
 
         try {
-            const { removeBackground } = await import("@imgly/background-removal");
+            // Use CDN ESM import with webpackIgnore to avoid all bundler/build-time resolution issues
+            // @ts-ignore
+            const module = await (import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/index.mjs') as any);
+            const removeBackground = module.removeBackground;
 
             const config: any = {
                 progress: (p: any) => {
