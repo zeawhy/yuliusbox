@@ -111,7 +111,7 @@ export default {
                         url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
                         apiKey: env.QWEN_API_KEY || "",
                         model: "qwen-turbo",
-                        systemPrompt: "You are a Cron Job expert. Convert the natural language requirement into a Cron expression. Return ONLY the cron expression (e.g. '*/5 * * * *')."
+                        systemPrompt: "You are a Cron Job expert. Convert the natural language requirement into a Cron expression and a human-readable explanation. Return a valid JSON object with keys 'expression' (e.g. '*/5 * * * *') and 'description' (in the user's language). No markdown blocks."
                     };
                     break;
 
