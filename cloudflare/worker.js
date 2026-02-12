@@ -8,6 +8,28 @@ export default {
         };
 
         if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+        // === Speed Test Endpoints ===
+        const url = new URL(request.url);
+
+        // 1. Download Test (Generate random data)
+        if (url.pathname === '/api/speed/download') {
+            const size = 1024 * 1024 * 5; // 5MB chunks
+            const garbage = new Uint8Array(size).fill(65); // Fill with 'A'
+            return new Response(garbage, { headers: { ...corsHeaders, "Content-Type": "application/octet-stream" } });
+        }
+
+        // 2. Upload Test (Accept data and discard)
+        if (url.pathname === '/api/speed/upload' && request.method === 'POST') {
+            await request.arrayBuffer();
+            return new Response("OK", { headers: corsHeaders });
+        }
+
+        // 3. Ping Test (Lightweight)
+        if (url.pathname === '/api/speed/ping' || url.pathname === '/api/speed/ping/') {
+            return new Response("pong", { headers: corsHeaders });
+        }
+
         if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
 
         // === NEW: Rate Limiting Block (Insert Here) ===

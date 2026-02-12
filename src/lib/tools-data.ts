@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -273,6 +273,51 @@ export const toolsData: Tool[] = [
         },
         icon: Table,
         href: "/tools/color-palette",
+        popular: true,
+    },
+    {
+        id: "background-remover",
+        category: "media",
+        name: {
+            en: "AI Background Remover",
+            cn: "AI 智能抠图"
+        },
+        description: {
+            en: "Remove image backgrounds instantly in the browser. 100% Private.",
+            cn: "纯本地 AI 智能抠图。隐私安全，一键去除背景。"
+        },
+        icon: Eraser,
+        href: "/tools/background-remover",
+        popular: true,
+    },
+    {
+        id: "image-editor",
+        category: "media",
+        name: {
+            en: "Image Resizer & Crop",
+            cn: "图片转换与裁剪"
+        },
+        description: {
+            en: "Resize, crop, and convert image formats locally in your browser.",
+            cn: "纯本地调整图片大小、裁剪区块及转换格式（JPG/PNG/WebP）。"
+        },
+        icon: Scissors,
+        href: "/tools/image-editor",
+        popular: true,
+    },
+    {
+        id: "speed-test",
+        category: "productivity",
+        name: {
+            en: "Internet Speed Test",
+            cn: "网速测试"
+        },
+        description: {
+            en: "Check your internet ping, download, and upload speeds.",
+            cn: "测试网络延迟、下载与上传速度，Cloudflare 节点优化。"
+        },
+        icon: Zap,
+        href: "/tools/speed-test",
         popular: true,
     },
     {
