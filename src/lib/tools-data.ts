@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -318,6 +318,21 @@ export const toolsData: Tool[] = [
         },
         icon: Zap,
         href: "/tools/speed-test",
+        popular: true,
+    },
+    {
+        id: "video-downloader",
+        category: "media",
+        name: {
+            en: "Social Media Video Downloader",
+            cn: "无水印视频解析下载"
+        },
+        description: {
+            en: "Extract and download videos from YouTube, TikTok, Instagram, Twitter, etc. without watermarks.",
+            cn: "免费解析下载 YouTube, TikTok, Instagram, Twitter 等社交媒体的高清无水印视频。"
+        },
+        icon: FileVideo,
+        href: "/tools/video-downloader",
         popular: true,
     },
     {
