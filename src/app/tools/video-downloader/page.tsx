@@ -61,43 +61,39 @@ export default function VideoDownloader() {
         const filename = `yuliusbox_video_${Date.now()}.mp4`;
 
         try {
-            // 1. 尝试直接通过 <a> 标签下载 (适用于同源或允许跨域的链接)
-            const link = document.createElement('a');
-            link.href = videoUrl;
-            link.download = filename;
-            link.target = "_blank";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // 这里的逻辑有点 tricky：如果是跨域链接，浏览器通常只会打开新标签页播放而不是下载
-            // 所以我们设置一个简单的延时，如果用户觉得没下载，可以手动右键保存，或者我们提供一个 Force Download 按钮
-
-        } catch (e) {
-            console.error("Direct download failed, trying fetch blob...");
-        }
-
-        // 如果需要强制下载流（绕过浏览器预览），可以使用 fetch blob 方案
-        // 但注意：这会消耗用户浏览器内存，对于大视频可能导致崩溃
-        // 此处作为备选方案提供
-        /*
-        try {
+            // 1. 优先尝试 fetch blob 方案 (能强制下载并重命名)
+            // 注意：这要求目标 CDN 支持 CORS (Access-Control-Allow-Origin: *)
             const response = await fetch(videoUrl);
+            if (!response.ok) throw new Error("Network response was not ok");
+
             const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
+            const blobUrl = window.URL.createObjectURL(blob);
+
             const a = document.createElement('a');
             a.style.display = 'none';
-            a.href = url;
+            a.href = blobUrl;
             a.download = filename;
             document.body.appendChild(a);
             a.click();
-            window.URL.revokeObjectURL(url);
-        } catch (err) {
-            alert("Download failed. Please right-click the video and 'Save As'.");
-        }
-        */
 
-        setTimeout(() => setDownloading(false), 2000);
+            // 清理
+            window.URL.revokeObjectURL(blobUrl);
+            document.body.removeChild(a);
+        } catch (e) {
+            console.error("Blob download failed (likely CORS), falling back to direct link:", e);
+
+            // 2. 降级方案：直接创建 <a> 标签点击
+            // 对于跨域链接，download 属性会被忽略，浏览器可能会直接播放视频
+            const link = document.createElement('a');
+            link.href = videoUrl;
+            link.download = filename;
+            link.target = "_blank"; // 在新标签页打开，防止当前页被覆盖
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } finally {
+            setDownloading(false);
+        }
     };
 
     return (
