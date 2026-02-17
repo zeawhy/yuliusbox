@@ -66,19 +66,28 @@ export async function POST(req: NextRequest) {
 
         const data = await response.json();
 
-        // 4. 解析成功，写入 Redis 缓存 (TTL: 2小时 = 7200秒)
-        if (data && (data.videoUrl || data.url)) { // Adapt to potential API response structure
-            await redis.set(cacheKey, JSON.stringify(data), { ex: 7200 });
+        // 4. 检查 VPS 是否真正解析成功
+        if (!data.success || !data.videoUrl) {
+            console.error("VPS returned unsuccessful response:", data);
+            return NextResponse.json({
+                success: false,
+                error: data.error || "Failed to extract video URL"
+            }, { status: 400 });
         }
 
+        // 5. 解析成功，写入 Redis 缓存 (TTL: 2小时 = 7200秒)
+        await redis.set(cacheKey, JSON.stringify(data), { ex: 7200 });
+
         return NextResponse.json({
-            success: true,
             ...data,
             fromCache: false
         });
 
     } catch (error) {
         console.error("Extract Video Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({
+            success: false,
+            error: "Internal Server Error"
+        }, { status: 500 });
     }
 }
