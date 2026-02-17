@@ -61,38 +61,20 @@ export default function VideoDownloader() {
         const filename = `yuliusbox_video_${Date.now()}.mp4`;
 
         try {
-            // 1. 优先尝试 fetch blob 方案 (能强制下载并重命名)
-            // 注意：这要求目标 CDN 支持 CORS (Access-Control-Allow-Origin: *)
-            const response = await fetch(videoUrl);
-            if (!response.ok) throw new Error("Network response was not ok");
+            // 1. 优先尝试使用 Vercel Proxy 下载 (绕过 CORS，并强制下载)
+            const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(videoUrl)}&filename=${filename}`;
 
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+            // 使用 window.location.href 触发下载，比创建 <a> 标签更直接
+            // 如果后端正确返回了 Content-Disposition: attachment，浏览器会弹出保存对话框
+            window.location.href = proxyUrl;
 
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = blobUrl;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-
-            // 清理
-            window.URL.revokeObjectURL(blobUrl);
-            document.body.removeChild(a);
         } catch (e) {
-            console.error("Blob download failed (likely CORS), falling back to direct link:", e);
-
-            // 2. 降级方案：直接创建 <a> 标签点击
-            // 对于跨域链接，download 属性会被忽略，浏览器可能会直接播放视频
-            const link = document.createElement('a');
-            link.href = videoUrl;
-            link.download = filename;
-            link.target = "_blank"; // 在新标签页打开，防止当前页被覆盖
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            console.error("Proxy download failed:", e);
+            // 2. 降级方案：直接打开链接
+            window.open(videoUrl, '_blank');
         } finally {
-            setDownloading(false);
+            // 给一点时间让浏览器弹出，不用过早结束 loading 状态
+            setTimeout(() => setDownloading(false), 2000);
         }
     };
 
