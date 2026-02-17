@@ -54,23 +54,41 @@ export default function VideoDownloader() {
 
     // 客户端强制下载逻辑
     const handleDownload = async () => {
-        if (!result?.videoUrl) return;
+        if (!result?.videoUrl) {
+            console.error("handleDownload: No videoUrl available");
+            return;
+        }
 
+        console.log("[Download] Starting download for:", result.videoUrl);
         setDownloading(true);
         const videoUrl = result.videoUrl;
         const filename = `yuliusbox_video_${Date.now()}.mp4`;
 
         try {
             // 1. 优先尝试使用 Vercel Proxy 下载 (绕过 CORS，并强制下载)
-            const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(videoUrl)}&filename=${filename}`;
+            const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(videoUrl)}&filename=${encodeURIComponent(filename)}`;
+            console.log("[Download] Proxy URL:", proxyUrl);
 
-            // 使用 window.location.href 触发下载，比创建 <a> 标签更直接
-            // 如果后端正确返回了 Content-Disposition: attachment，浏览器会弹出保存对话框
-            window.location.href = proxyUrl;
+            // 使用 <a> 标签触发下载（比 window.location.href 更可靠）
+            const link = document.createElement('a');
+            link.href = proxyUrl;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+
+            console.log("[Download] Triggering click on download link...");
+            link.click();
+
+            // 清理
+            setTimeout(() => {
+                document.body.removeChild(link);
+                console.log("[Download] Link cleaned up");
+            }, 100);
 
         } catch (e) {
-            console.error("Proxy download failed:", e);
+            console.error("[Download] Proxy download failed:", e);
             // 2. 降级方案：直接打开链接
+            console.log("[Download] Fallback: opening direct URL");
             window.open(videoUrl, '_blank');
         } finally {
             // 给一点时间让浏览器弹出，不用过早结束 loading 状态
