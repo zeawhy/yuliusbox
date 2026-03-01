@@ -17,6 +17,7 @@ export default function ImageGridSplitterPage() {
     const [previewUrl, setPreviewUrl] = useState<string>("");
     const [rows, setRows] = useState(3);
     const [columns, setColumns] = useState(3);
+    const [insetPercent, setInsetPercent] = useState(1);
     const [status, setStatus] = useState<"idle" | "splitting" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -116,32 +117,44 @@ export default function ImageGridSplitterPage() {
             // Draw original image exactly 1:1
             masterCtx.drawImage(img, 0, 0);
 
+            // Calculate active area inside the slice based on inset (Edge Trim)
+            const insetX = Math.floor(sliceWidth * (insetPercent / 100));
+            const insetY = Math.floor(sliceHeight * (insetPercent / 100));
+
+            const activeWidth = Math.floor(sliceWidth - insetX * 2);
+            const activeHeight = Math.floor(sliceHeight - insetY * 2);
+
+            if (activeWidth <= 0 || activeHeight <= 0) {
+                throw new Error("Edge Trim is too large, image area is zero.");
+            }
+
             // Temporary Canvas for slicing
             const sliceCanvas = document.createElement("canvas");
-            sliceCanvas.width = sliceWidth;
-            sliceCanvas.height = sliceHeight;
+            sliceCanvas.width = activeWidth;
+            sliceCanvas.height = activeHeight;
             const sliceCtx = sliceCanvas.getContext("2d", { willReadFrequently: true });
             if (!sliceCtx) throw new Error("Could not get 2D context for slice");
 
-            // For true lossless, we force PNG output
-            const outputMime = "image/png";
-            const outputExt = "png";
+            // Maintain input format dynamically for smaller exports, force PNG if transparent
+            const isPngOrWebp = file.type === "image/png" || file.type === "image/webp";
+            const outputMime = isPngOrWebp ? "image/png" : "image/jpeg";
+            const outputExt = isPngOrWebp ? "png" : "jpg";
 
             // 5. Loop and extract exact pixel slices
             const blobPromises: Promise<void>[] = [];
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < columns; c++) {
-                    const sourceX = c * sliceWidth;
-                    const sourceY = r * sliceHeight;
+                    const sourceX = Math.floor(c * sliceWidth + insetX);
+                    const sourceY = Math.floor(r * sliceHeight + insetY);
 
-                    // Extract exact pixel data without any coordinate interpolations
-                    const pixelData = masterCtx.getImageData(sourceX, sourceY, sliceWidth, sliceHeight);
+                    // Extract exact pixel data from the calculated inner region
+                    const pixelData = masterCtx.getImageData(sourceX, sourceY, activeWidth, activeHeight);
 
-                    // Put exact pixels
+                    // Put exact pixels directly into the slice
                     sliceCtx.putImageData(pixelData, 0, 0);
 
-                    // Convert to lossless PNG Blob
+                    // Convert to Blob (1.0 Quality for JPEG, lossless for PNG)
                     const promise = new Promise<void>((resolve, reject) => {
                         sliceCanvas.toBlob((blob) => {
                             if (blob) {
@@ -152,7 +165,7 @@ export default function ImageGridSplitterPage() {
                             } else {
                                 reject(new Error(`Failed to create blob for slice ${r}, ${c}`));
                             }
-                        }, outputMime);
+                        }, outputMime, outputMime === "image/jpeg" ? 1.0 : undefined);
                     });
 
                     blobPromises.push(promise);
@@ -234,6 +247,20 @@ export default function ImageGridSplitterPage() {
                                         value={rows}
                                         onChange={(e) => setRows(parseInt(e.target.value) || 1)}
                                         className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        disabled={!file}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-sm text-zinc-400 mb-1.5 flex justify-between">
+                                        <span>{language === "en" ? "Edge Trim (Remove Border)" : "边界内缩 (去白边/黑框)"}</span>
+                                        <span className="text-zinc-500">{insetPercent}%</span>
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min="0" max="10" step="0.5"
+                                        value={insetPercent}
+                                        onChange={(e) => setInsetPercent(parseFloat(e.target.value) || 0)}
+                                        className="w-full accent-indigo-500"
                                         disabled={!file}
                                     />
                                 </div>
