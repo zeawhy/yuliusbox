@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3 } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -393,6 +393,21 @@ export const toolsData: Tool[] = [
         },
         icon: Globe,
         href: "/tools/url-to-pdf",
+        popular: true,
+    },
+    {
+        id: "image-grid-joiner",
+        category: "media",
+        name: {
+            en: "Image Grid Joiner",
+            cn: "图片拼图与网格拼接器"
+        },
+        description: {
+            en: "Combine multiple images into a seamless grid instantly. 100% processing locally on your device.",
+            cn: "瞬间将多张图片拼接到无缝网格中，纯本地处理。"
+        },
+        icon: Grid3X3,
+        href: "/tools/image-grid-joiner",
         popular: true,
     },
     {

@@ -1,0 +1,79 @@
+
+> yuliusbox@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/zeawhy/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/zeawhy/development/yuliusbox/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 43s
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+  Generating static pages using 3 workers (0/35) ...
+[Upstash Redis] The 'url' property is missing or undefined in your Redis config.
+[Upstash Redis] The 'token' property is missing or undefined in your Redis config.
+  Generating static pages using 3 workers (8/35) 
+  Generating static pages using 3 workers (17/35) 
+  Generating static pages using 3 workers (26/35) 
+✓ Generating static pages using 3 workers (35/35) in 1670.5ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/extract-video
+├ ƒ /api/proxy-download
+├ ƒ /api/tools/excel-to-pdf
+├ ƒ /api/tools/ppt-to-pdf
+├ ƒ /api/tools/url-to-pdf
+├ ƒ /api/tools/word-to-pdf
+├ ○ /sitemap.xml
+├ ○ /tools/audio-to-text
+├ ○ /tools/background-remover
+├ ○ /tools/color-palette
+├ ○ /tools/cron-generator
+├ ○ /tools/email-paraphraser
+├ ○ /tools/excel-formula-bot
+├ ○ /tools/excel-to-pdf
+├ ○ /tools/id-watermark
+├ ○ /tools/image-compressor
+├ ○ /tools/image-editor
+├ ○ /tools/json-to-code
+├ ○ /tools/pdf-kit
+├ ○ /tools/ppt-to-pdf
+├ ○ /tools/privacy-generator
+├ ○ /tools/regex-generator
+├ ○ /tools/safe-zone-overlay
+├ ○ /tools/screenshot-beautifier
+├ ○ /tools/speed-test
+├ ○ /tools/sql-builder
+├ ○ /tools/url-to-pdf
+├ ○ /tools/video-downloader
+├ ○ /tools/video-to-gif
+├ ○ /tools/word-to-pdf
+└ ○ /tools/youtube-optimizer
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
