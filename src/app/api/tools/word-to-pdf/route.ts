@@ -1,7 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
+
+// Initialize Redis for rate limiting
+const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+// Configure Rate Limiting: 3 requests per 1 minute
+const ratelimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(3, "1 m"),
+    analytics: true,
+});
 
 export async function POST(req: NextRequest) {
     try {
+        // --- 1. Rate Limiting Check ---
+        // Get the real IP of the client (works on Vercel and Cloudflare)
+        const ip = req.ip || req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
+        const { success } = await ratelimit.limit(`word_to_pdf_${ip}`);
+
+        if (!success) {
+            return NextResponse.json(
+                { error: "You have reached the conversion limit. Please try again in a minute." },
+                { status: 429 }
+            );
+        }
+
+        // --- 2. Process File ---
         const formData = await req.formData();
         const file = formData.get("file");
 

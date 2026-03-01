@@ -70,6 +70,14 @@ export default function WordToPdfPage() {
 
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
+
+                // Specific handler for 429 Rate Limiting
+                if (response.status === 429) {
+                    throw new Error(language === "en"
+                        ? "You have reached the conversion limit (3 per minute). Please wait a moment."
+                        : "转换已达上限 (每分钟 3 次)。请稍后再试。");
+                }
+
                 throw new Error(errData.error || `HTTP error! status: ${response.status}`);
             }
 
