@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     try {
         // --- 1. Rate Limiting Check ---
         // Get the real IP of the client (works on Vercel and Cloudflare)
-        const ip = req.ip || req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
         const { success } = await ratelimit.limit(`word_to_pdf_${ip}`);
 
         if (!success) {

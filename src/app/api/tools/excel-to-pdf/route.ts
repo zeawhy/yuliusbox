@@ -15,7 +15,7 @@ const ratelimit = new Ratelimit({
 
 export async function POST(req: NextRequest) {
     try {
-        const ip = req.ip || req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
         const { success } = await ratelimit.limit(`yuliusbox_excel_pdf_${ip}`);
 
         if (!success) {
