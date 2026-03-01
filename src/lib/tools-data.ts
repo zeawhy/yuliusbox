@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -348,6 +348,51 @@ export const toolsData: Tool[] = [
         },
         icon: FileText,
         href: "/tools/word-to-pdf",
+        popular: true,
+    },
+    {
+        id: "excel-to-pdf",
+        category: "productivity",
+        name: {
+            en: "Excel to PDF Converter",
+            cn: "Excel 转 PDF"
+        },
+        description: {
+            en: "Convert Excel spreadsheets (.xlsx, .csv) to PDF format securely in the cloud.",
+            cn: "快速、精准、安全地将 Excel 表格转换为 PDF 格式。"
+        },
+        icon: Table,
+        href: "/tools/excel-to-pdf",
+        popular: true,
+    },
+    {
+        id: "ppt-to-pdf",
+        category: "productivity",
+        name: {
+            en: "PPT to PDF Converter",
+            cn: "PPT 转 PDF"
+        },
+        description: {
+            en: "Convert PowerPoint presentations (.pptx, .ppt) to PDF format securely.",
+            cn: "快速、精准、安全地将幻灯片转换为 PDF 格式。"
+        },
+        icon: FileText,
+        href: "/tools/ppt-to-pdf",
+        popular: true,
+    },
+    {
+        id: "url-to-pdf",
+        category: "productivity",
+        name: {
+            en: "URL to PDF Converter",
+            cn: "网页转 PDF"
+        },
+        description: {
+            en: "Convert any public website or URL into a high-quality PDF document.",
+            cn: "将任何公开的网页链接快速转换并保存为高质量的 PDF 文档。"
+        },
+        icon: Globe,
+        href: "/tools/url-to-pdf",
         popular: true,
     },
     {
