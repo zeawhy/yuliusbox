@@ -336,6 +336,21 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "word-to-pdf",
+        category: "productivity",
+        name: {
+            en: "Word to PDF Converter",
+            cn: "Word 转 PDF"
+        },
+        description: {
+            en: "Convert Word documents (.doc, .docx) to PDF format securely in the cloud.",
+            cn: "快速、精准、安全地将 Word 文档 (.doc, .docx) 转换为 PDF 格式。"
+        },
+        icon: FileText,
+        href: "/tools/word-to-pdf",
+        popular: true,
+    },
+    {
         id: "more-tools",
         category: "productivity",
         name: {
