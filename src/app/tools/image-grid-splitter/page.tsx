@@ -106,46 +106,45 @@ export default function ImageGridSplitterPage() {
             const zip = new JSZip();
             const originalBaseName = file.name.replace(/\.[^/.]+$/, "");
 
-            // 4. Temporary Canvas for slicing
-            const canvas = document.createElement("canvas");
-            canvas.width = sliceWidth;
-            canvas.height = sliceHeight;
-            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            // 4. Create Master Canvas to read actual pixels
+            const masterCanvas = document.createElement("canvas");
+            masterCanvas.width = img.naturalWidth;
+            masterCanvas.height = img.naturalHeight;
+            const masterCtx = masterCanvas.getContext("2d", { willReadFrequently: true });
+            if (!masterCtx) throw new Error("Could not get 2D context for master image");
 
-            if (!ctx) throw new Error("Could not get 2D context");
+            // Draw original image exactly 1:1
+            masterCtx.drawImage(img, 0, 0);
 
-            // Define the output format based on input. Default to png if transparent, else jpeg.
-            // For simplicity, we preserve PNG to avoid black backgrounds on transparent images.
-            const isPngOrWebp = file.type === "image/png" || file.type === "image/webp";
-            const outputMime = isPngOrWebp ? "image/png" : "image/jpeg";
-            const outputExt = isPngOrWebp ? "png" : "jpg";
+            // Temporary Canvas for slicing
+            const sliceCanvas = document.createElement("canvas");
+            sliceCanvas.width = sliceWidth;
+            sliceCanvas.height = sliceHeight;
+            const sliceCtx = sliceCanvas.getContext("2d", { willReadFrequently: true });
+            if (!sliceCtx) throw new Error("Could not get 2D context for slice");
 
-            // 5. Loop and extract slices
+            // For true lossless, we force PNG output
+            const outputMime = "image/png";
+            const outputExt = "png";
+
+            // 5. Loop and extract exact pixel slices
             const blobPromises: Promise<void>[] = [];
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < columns; c++) {
-
-                    // Clear canvas
-                    ctx.clearRect(0, 0, sliceWidth, sliceHeight);
-
-                    // If jpeg, fill white background to prevent transparent artifacts
-                    if (outputMime === "image/jpeg") {
-                        ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(0, 0, sliceWidth, sliceHeight);
-                    }
-
                     const sourceX = c * sliceWidth;
                     const sourceY = r * sliceHeight;
 
-                    // Draw the specific chunk
-                    ctx.drawImage(img, sourceX, sourceY, sliceWidth, sliceHeight, 0, 0, sliceWidth, sliceHeight);
+                    // Extract exact pixel data without any coordinate interpolations
+                    const pixelData = masterCtx.getImageData(sourceX, sourceY, sliceWidth, sliceHeight);
 
-                    // Convert to Blob and add to Zip
+                    // Put exact pixels
+                    sliceCtx.putImageData(pixelData, 0, 0);
+
+                    // Convert to lossless PNG Blob
                     const promise = new Promise<void>((resolve, reject) => {
-                        canvas.toBlob((blob) => {
+                        sliceCanvas.toBlob((blob) => {
                             if (blob) {
-                                // Naming convention: 1-indexed, left-to-right, top-to-bottom. Or row_col.
                                 const index = (r * columns) + c + 1;
                                 const filename = `${originalBaseName}_part_${index.toString().padStart(2, '0')}.${outputExt}`;
                                 zip.file(filename, blob);
@@ -153,7 +152,7 @@ export default function ImageGridSplitterPage() {
                             } else {
                                 reject(new Error(`Failed to create blob for slice ${r}, ${c}`));
                             }
-                        }, outputMime, 0.95);
+                        }, outputMime);
                     });
 
                     blobPromises.push(promise);
@@ -164,7 +163,7 @@ export default function ImageGridSplitterPage() {
 
             // 6. Generate and download zip
             const zipBlob = await zip.generateAsync({ type: "blob" });
-            saveAs(zipBlob, `${originalBaseName}_split_${columns}x${rows}.zip`);
+            saveAs(zipBlob, `${originalBaseName}_split_${columns}x${rows}_lossless.zip`);
 
             setStatus("success");
 
