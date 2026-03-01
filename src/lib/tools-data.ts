@@ -411,6 +411,21 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "image-grid-splitter",
+        category: "media",
+        name: {
+            en: "Image Grid Splitter",
+            cn: "图片网格切分器"
+        },
+        description: {
+            en: "Split a single image into a grid of smaller pieces (e.g., 3x3). 100% local processing.",
+            cn: "纯本地将单张图片切分为九宫格等多个等分小图，隐私安全。"
+        },
+        icon: Blocks, // Or any appropriate icon already imported
+        href: "/tools/image-grid-splitter",
+        popular: true,
+    },
+    {
         id: "more-tools",
         category: "productivity",
         name: {

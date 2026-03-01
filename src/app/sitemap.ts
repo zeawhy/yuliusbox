@@ -160,5 +160,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.8,
         },
+        {
+            url: `${baseUrl}/tools/image-grid-splitter`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        },
     ]
 }
