@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Excel to PDF Converter - Secure Cloud Processing | YuliusBox",
-    description: "Convert Excel spreadsheets (.xlsx, .xls, .csv) to PDF format securely in the cloud. No files are stored permanently. Fast, free, and precise formatting retention.",
-    keywords: ["excel to pdf", "xlsx to pdf", "csv to pdf", "convert spreadsheet to pdf online", "free pdf converter privacy"],
+    title: "Social Media Video Downloader - No Watermark | YuliusBox",
+    description: "Download videos from YouTube, TikTok, Instagram, Twitter, and more without watermarks. Free, private, browser-based processing.",
+    keywords: ["video downloader", "tiktok downloader no watermark", "youtube video download", "instagram reels downloader"],
     alternates: {
-        canonical: "/tools/excel-to-pdf",
+        canonical: "/tools/video-downloader",
     },
     openGraph: {
-        url: "/tools/excel-to-pdf",
+        url: "/tools/video-downloader",
         siteName: "YuliusBox",
         type: "website",
     },
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Excel to PDF Converter",
-    "url": "https://www.yuliusbox.com/tools/excel-to-pdf",
-    "description": "Convert Excel spreadsheets (.xlsx, .xls, .csv) to PDF format securely in the cloud. Fast, free, and precise formatting retention.",
+    "name": "Social Media Video Downloader",
+    "url": "https://www.yuliusbox.com/tools/video-downloader",
+    "description": "Download videos from YouTube, TikTok, Instagram, Twitter, and more without watermarks.",
     "applicationCategory": "Utility",
     "operatingSystem": "Any",
     "offers": {

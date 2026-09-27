@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "JSON to Code Converter - TypeScript, Go, Dart | YuliusBox",
     description: "Convert JSON to TypeScript Interfaces, Go Structs, or Dart Classes instantly. Local, secure, and fast developer tool.",
     keywords: ["json to typescript", "json to go struct", "json to dart class", "json converter", "developer tools"],
+    alternates: {
+        canonical: "/tools/json-to-code",
+    },
+    openGraph: {
+        url: "/tools/json-to-code",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

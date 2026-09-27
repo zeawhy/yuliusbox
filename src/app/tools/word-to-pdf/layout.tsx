@@ -4,6 +4,14 @@ export const metadata: Metadata = {
     title: "Word to PDF Converter - Secure Cloud Processing | YuliusBox",
     description: "Convert Word documents (.doc, .docx) to PDF format securely in the cloud. No files are stored permanently. Fast, free, and precise formatting retention.",
     keywords: ["word to pdf", "doc to pdf", "docx to pdf", "convert document to pdf online", "free pdf converter privacy"],
+    alternates: {
+        canonical: "/tools/word-to-pdf",
+    },
+    openGraph: {
+        url: "/tools/word-to-pdf",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: "Screenshot Beautifier - Create Stunning Mockups | YuliusBox",
     description: "Transform boring screenshots into beautiful product showcases. Add 3D tilts, shadows, backgrounds, and social media mockups instantly.",
     keywords: ["screenshot mockup", "product showcase", "beautify screenshot", "social media image maker", "3d screenshot generator"],
+    alternates: {
+        canonical: "/tools/screenshot-beautifier",
+    },
+    openGraph: {
+        url: "/tools/screenshot-beautifier",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

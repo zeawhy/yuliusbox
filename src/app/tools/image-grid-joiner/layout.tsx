@@ -4,6 +4,14 @@ export const metadata: Metadata = {
     title: "Image Grid Joiner - Combine Multiple Images into a Seamless Grid | YuliusBox",
     description: "Combine multiple images into a single grid picture instantly. 100% free, private browser-based processing. Drag and drop to reorder images seamlessly.",
     keywords: ["image grid maker", "combine pictures into grid", "stitch images online", "photo grid generator", "local image processing"],
+    alternates: {
+        canonical: "/tools/image-grid-joiner",
+    },
+    openGraph: {
+        url: "/tools/image-grid-joiner",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

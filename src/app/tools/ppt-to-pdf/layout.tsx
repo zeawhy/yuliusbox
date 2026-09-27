@@ -4,6 +4,14 @@ export const metadata: Metadata = {
     title: "PowerPoint to PDF Converter - Secure Cloud Processing | YuliusBox",
     description: "Convert PowerPoint presentations (.pptx, .ppt) to PDF format securely in the cloud. No files are stored permanently. Fast, free, and precise formatting retention.",
     keywords: ["ppt to pdf", "pptx to pdf", "powerpoint to pdf", "convert ppt to pdf online", "free pdf converter privacy"],
+    alternates: {
+        canonical: "/tools/ppt-to-pdf",
+    },
+    openGraph: {
+        url: "/tools/ppt-to-pdf",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

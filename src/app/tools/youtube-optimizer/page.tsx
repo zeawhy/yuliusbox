@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "Free YouTube Title Generator & SEO Optimizer (AI Powered) | YuliusBox",
     description: "Generate viral, high-CTR video titles and SEO tags for YouTube using AI. Improve your views and ranking instantly.",
     keywords: ["youtube title generator", "video tag finder", "clickbait title maker", "youtube seo tool"],
+    alternates: {
+        canonical: "/tools/youtube-optimizer",
+    },
+    openGraph: {
+        url: "/tools/youtube-optimizer",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

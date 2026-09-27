@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "AI Regex Generator & Explainer | YuliusBox",
     description: "Generate regular expressions from plain English or explain complex regex patterns instantly. Free AI-powered regex tool.",
     keywords: ["regex generator", "regular expression explainer", "ai regex tool", "regex cheat sheet"],
+    alternates: {
+        canonical: "/tools/regex-generator",
+    },
+    openGraph: {
+        url: "/tools/regex-generator",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

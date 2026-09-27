@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "Social Media Safe Zone Overlay - TikTok, Reels & Shorts Preview | YuliusBox",
     description: "Check if your subtitles are blocked by UI icons. Free safe zone overlay tool for TikTok, Instagram Reels, and YouTube Shorts. No app download required.",
     keywords: ["tiktok safe zone", "reels overlay preview", "shorts ui template", "video safe area checker"],
+    alternates: {
+        canonical: "/tools/safe-zone-overlay",
+    },
+    openGraph: {
+        url: "/tools/safe-zone-overlay",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {
