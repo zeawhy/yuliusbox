@@ -48,10 +48,10 @@ export function Footer() {
                     © 2026 YuliusBox. {language === "en" ? t.built.en : t.built.cn}
                 </p>
                 <div className="flex gap-6">
-                    <Link href="#" className="hover:text-white transition-colors" aria-label="Twitter">
+                    <a href="https://x.com/yuliuslux" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="X (Twitter)">
                         <Twitter className="w-5 h-5" />
-                    </Link>
-                    <Link href="mailto:hello@example.com" className="hover:text-white transition-colors" aria-label="Email">
+                    </a>
+                    <Link href="mailto:yuliuslux@outlook.com" className="hover:text-white transition-colors" aria-label="Email">
                         <Mail className="w-5 h-5" />
                     </Link>
                 </div>
