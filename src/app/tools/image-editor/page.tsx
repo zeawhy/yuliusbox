@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: "AI Online Image Resizer & Cropper - Edit Photos Instantly",
     description: "Resize, crop, and convert images (JPG, PNG, WebP) online. Fast, private, and free. No uploads to servers.",
     keywords: ["image resizer", "image cropper", "edit photo online", "convert jpg to webp", "resize png", "crop image"],
+    alternates: {
+        canonical: "/tools/image-editor",
+    },
+    openGraph: {
+        url: "/tools/image-editor",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 export default function ImageEditorPage() {

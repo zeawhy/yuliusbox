@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "AI Cron Expression Generator - Natural Language to Cron | YuliusBox",
     description: "Convert natural language descriptions into valid Cron expressions instantly. AI-powered cron job maker with clear explanations.",
     keywords: ["cron generator", "cron expression maker", "ai-cron", "crontab generator", "natural language to cron"],
+    alternates: {
+        canonical: "/tools/cron-generator",
+    },
+    openGraph: {
+        url: "/tools/cron-generator",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

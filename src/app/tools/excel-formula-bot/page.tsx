@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "Free Excel Formula Generator & AI Bot | YuliusBox",
     description: "Describe your problem in plain English, and AI will generate the formula. Supports Microsoft Excel and Google Sheets.",
     keywords: ["excel formula generator", "spreadsheet ai", "google sheets formula maker", "excel bot"],
+    alternates: {
+        canonical: "/tools/excel-formula-bot",
+    },
+    openGraph: {
+        url: "/tools/excel-formula-bot",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

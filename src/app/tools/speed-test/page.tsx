@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: "Free Online Internet Speed Test - Check Your Connection Speed",
     description: "Fast and accurate internet speed test. Measure your ping, download, and upload speeds in seconds. 100% free and private.",
     keywords: ["speed test", "internet speed test", "check internet speed", "ping test", "download speed", "upload speed"],
+    alternates: {
+        canonical: "/tools/speed-test",
+    },
+    openGraph: {
+        url: "/tools/speed-test",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 export default function SpeedTestPage() {

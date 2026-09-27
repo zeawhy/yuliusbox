@@ -6,8 +6,25 @@ import clsx from "clsx";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.yuliusbox.com"),
   title: "YuliusBox - Privacy-First Web Tools",
   description: "A collection of free, client-side, and secure utilities for productivity.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "YuliusBox",
+    title: "YuliusBox - Privacy-First Web Tools",
+    description: "A collection of free, client-side, and secure utilities for productivity.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "YuliusBox - Privacy-First Web Tools",
+    description: "A collection of free, client-side, and secure utilities for productivity.",
+  },
   verification: {
     google: "ZJjClxLHZ6bdUogWf-dZvE5ggE74X6GK4gCkHpDMPxI",
   },

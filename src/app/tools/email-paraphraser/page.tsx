@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "AI Email Rewriter & Politeness Checker | YuliusBox",
     description: "Rewrite your emails to be professional, polite, and persuasive. AI-powered email assistant for better business communication.",
     keywords: ["email rewriter", "polite email generator", "professional email paraphraser", "ai email tool"],
+    alternates: {
+        canonical: "/tools/email-paraphraser",
+    },
+    openGraph: {
+        url: "/tools/email-paraphraser",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

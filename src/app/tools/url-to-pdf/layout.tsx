@@ -4,6 +4,14 @@ export const metadata: Metadata = {
     title: "Website URL to PDF Converter - High Quality Render | YuliusBox",
     description: "Convert any public website or URL into a high-quality PDF document. Powered by Chromium for accurate CSS and JavaScript rendering. Free and secure.",
     keywords: ["url to pdf", "website to pdf", "webpage to pdf converter", "save website as pdf", "html to pdf url"],
+    alternates: {
+        canonical: "/tools/url-to-pdf",
+    },
+    openGraph: {
+        url: "/tools/url-to-pdf",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

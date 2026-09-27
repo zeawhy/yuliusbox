@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "Free Privacy Policy Generator for Apps & Websites (No Sign-up)",
     description: "Generate standard Privacy Policy and Terms of Service for your iOS/Android app or website instantly. GDPR compliant templates. 100% Free.",
     keywords: ["privacy policy generator", "terms of service generator", "app privacy policy", "gdpr privacy policy template", "free legal document generator"],
+    alternates: {
+        canonical: "/tools/privacy-generator",
+    },
+    openGraph: {
+        url: "/tools/privacy-generator",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 export default function PrivacyGeneratorPage() {

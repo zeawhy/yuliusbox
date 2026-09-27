@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "Online Image Color Picker & Palette Generator | Export to CSS/Tailwind",
     description: "Upload any image to extract the dominant color palette. Get HEX, RGB, and Tailwind CSS codes instantly. Free and private.",
     keywords: ["image to hex", "color palette generator", "extract colors from image", "online color picker"],
+    alternates: {
+        canonical: "/tools/color-palette",
+    },
+    openGraph: {
+        url: "/tools/color-palette",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: "Local AI Audio Transcription - Free Speech to Text | YuliusBox",
     description: "Convert audio to text offline using OpenAI Whisper model in your browser. Unlimited free transcription.",
     keywords: ["audio to text", "whisper web", "offline transcription", "speech to text free"],
+    alternates: {
+        canonical: "/tools/audio-to-text",
+    },
+    openGraph: {
+        url: "/tools/audio-to-text",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

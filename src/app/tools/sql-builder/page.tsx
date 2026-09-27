@@ -6,6 +6,14 @@ export const metadata: Metadata = {
     title: "AI SQL Query Builder - Natural Language to SQL | YuliusBox",
     description: "Generate MySQL, PostgreSQL, and SQLite queries instantly using AI. Convert natural language into optimized SQL code.",
     keywords: ["sql builder", "natural language to sql", "ai sql generator", "mysql query maker", "postgresql query generator"],
+    alternates: {
+        canonical: "/tools/sql-builder",
+    },
+    openGraph: {
+        url: "/tools/sql-builder",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 const jsonLd = {

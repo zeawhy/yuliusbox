@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: "Free AI Online Background Remover - 100% Private (No Uploads)",
     description: "Remove the background from any image instantly using AI. Local browser-based processing ensures absolute privacy. 100% Free and no sign-up required.",
     keywords: ["background remover", "remove bg", "ai background removal", "remove photo background", "transparent background generator", "free ai tool"],
+    alternates: {
+        canonical: "/tools/background-remover",
+    },
+    openGraph: {
+        url: "/tools/background-remover",
+        siteName: "YuliusBox",
+        type: "website",
+    },
 };
 
 export default function BackgroundRemoverPage() {
