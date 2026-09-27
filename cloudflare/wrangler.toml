@@ -1,0 +1,15 @@
+name = "yuliusbox-ai-backend"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+
+# Observability
+[observability]
+enabled = true
+
+# Optional: Bindings for rate limiting KV namespace.
+# You can uncomment and specify your KV ID here, or bind it directly
+# in the Cloudflare Dashboard under: Worker -> Settings -> Variables and Secrets -> KV Namespace Bindings.
+#
+# [[kv_namespaces]]
+# binding = "LIMITER"
+# id = "your_kv_namespace_id_here"
