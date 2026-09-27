@@ -1,13 +1,50 @@
 export default {
     async fetch(request, env, ctx) {
-        // 1. CORS & Method Check
+        // 1. Dynamic CORS Protection with Strict Hostname Validation
+        const origin = request.headers.get("Origin") || "";
+        
+        const isAllowedOrigin = (orig) => {
+            if (!orig) return true;
+            try {
+                const { hostname, protocol } = new URL(orig);
+                if (protocol !== "http:" && protocol !== "https:") return false;
+
+                // Match yuliusbox.com or exact subdomains (e.g. www.yuliusbox.com)
+                if (hostname === "yuliusbox.com" || hostname.endsWith(".yuliusbox.com")) {
+                    return true;
+                }
+                // Match local development
+                if (hostname === "localhost" || hostname === "127.0.0.1") {
+                    return true;
+                }
+                // Match Vercel preview & production deployments
+                if (hostname.endsWith(".vercel.app")) {
+                    return true;
+                }
+                return false;
+            } catch {
+                return false;
+            }
+        };
+
+        const allowed = isAllowedOrigin(origin);
         const corsHeaders = {
-            "Access-Control-Allow-Origin": "*", // Allow all for dev
+            "Access-Control-Allow-Origin": allowed && origin ? origin : "https://www.yuliusbox.com",
             "Access-Control-Allow-Methods": "POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type",
         };
 
-        if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+        if (request.method === "OPTIONS") {
+            return new Response(null, { headers: corsHeaders });
+        }
+
+        // Block unauthorized third-party cross-origin requests
+        if (origin && !allowed) {
+            return new Response(JSON.stringify({ error: "Forbidden origin" }), {
+                status: 403,
+                headers: { "Content-Type": "application/json" }
+            });
+        }
 
         // === Speed Test Endpoints ===
         const url = new URL(request.url);
@@ -30,19 +67,19 @@ export default {
             return new Response("pong", { headers: corsHeaders });
         }
 
-        if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+        if (request.method !== "POST") {
+            return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+        }
 
-        // === NEW: Rate Limiting Block (Insert Here) ===
+        // === Rate Limiting Block ===
         const clientIP = request.headers.get("CF-Connecting-IP") || "unknown";
         const RATE_LIMIT = 10;  // Limit: 10 requests
         const WINDOW_SEC = 60;  // Window: 60 seconds
 
-        // Only limit POST requests (the actual API calls)
         if (request.method === "POST") {
             try {
                 const key = `rate_limit_${clientIP}`;
 
-                // 1. Check Count (env.LIMITER must be bound)
                 if (env.LIMITER) {
                     let count = await env.LIMITER.get(key);
                     count = count ? parseInt(count) : 0;
@@ -54,8 +91,7 @@ export default {
                         });
                     }
 
-                    // 2. Increment Count (Non-blocking)
-                    // Use ctx.waitUntil so this doesn't slow down the AI response
+                    // Increment Count non-blocking
                     ctx.waitUntil(
                         env.LIMITER.put(key, count + 1, { expirationTtl: WINDOW_SEC })
                     );
@@ -63,15 +99,30 @@ export default {
                     console.warn("LIMITER KV not bound. Skipping rate limit check.");
                 }
             } catch (err) {
-                // Fail Open: If KV errors, log it but allow the request to proceed
                 console.error("Rate Limit Error:", err);
             }
         }
-        // === End of Rate Limiting Block ===
 
         try {
-            const requestBody = await request.json();
+            const requestBody = await request.json().catch(() => ({}));
             const { type, userInput, language } = requestBody;
+
+            // Input payload validation
+            if (!userInput || typeof userInput !== "string") {
+                return new Response(JSON.stringify({ error: "Missing or invalid 'userInput'" }), {
+                    status: 400,
+                    headers: { "Content-Type": "application/json", ...corsHeaders }
+                });
+            }
+
+            // Guard against prompt injection / abuse length
+            if (userInput.length > 4000) {
+                return new Response(JSON.stringify({ error: "Input is too long (max 4000 characters)" }), {
+                    status: 400,
+                    headers: { "Content-Type": "application/json", ...corsHeaders }
+                });
+            }
+
             const langInstruction = language === 'cn' ? " in Simplified Chinese" : " in English";
             let providerConfig = {};
 
@@ -80,12 +131,11 @@ export default {
                 case 'email': // Use xAI (Grok) for Native English Tone
                     providerConfig = {
                         url: "https://api.x.ai/v1/chat/completions",
-                        apiKey: env.XAI_API_KEY || "", // Ensure apiKey is not undefined
-                        model: "grok-3", // Update: "grok-beta" deprecated, using "grok-3"
+                        apiKey: env.XAI_API_KEY || "",
+                        model: "grok-3",
                         systemPrompt: "You are a professional business communication expert. Rewrite the draft to be polite and professional. Keep the same language as the input (e.g., if input is Chinese, output Chinese; if English, output English). Return ONLY the rewritten text."
                     };
 
-                    // Debugging Check:
                     if (!providerConfig.apiKey) {
                         return new Response(JSON.stringify({ error: "Missing XAI_API_KEY in Cloudflare Worker secrets." }), { status: 500, headers: corsHeaders });
                     }
@@ -141,9 +191,13 @@ export default {
                     return new Response(JSON.stringify({ error: "Invalid Type" }), { status: 400, headers: corsHeaders });
             }
 
-            // 3. Unified API Call
+            // 3. Upstream Call with 25s timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 25000);
+
             const response = await fetch(providerConfig.url, {
                 method: "POST",
+                signal: controller.signal,
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${providerConfig.apiKey}`
@@ -158,7 +212,8 @@ export default {
                 })
             });
 
-            // Parse response JSON correctly, handling potential errors
+            clearTimeout(timeoutId);
+
             let data;
             try {
                 data = await response.json();
@@ -166,13 +221,11 @@ export default {
                 return new Response(JSON.stringify({ error: `Failed to parse API response: ${jsonError.message}` }), { status: 500, headers: corsHeaders });
             }
 
-            // Check for upstream API error status
             if (!response.ok) {
                 const errorMsg = data.error?.message || JSON.stringify(data) || "Unknown Upstream API Error";
                 return new Response(JSON.stringify({ error: `API Error: ${errorMsg}` }), { status: response.status, headers: corsHeaders });
             }
 
-            // Check for "choices" array content
             const resultText = data.choices?.[0]?.message?.content;
 
             if (!resultText) {
@@ -184,6 +237,9 @@ export default {
             });
 
         } catch (err) {
+            if (err.name === "AbortError") {
+                return new Response(JSON.stringify({ error: "AI upstream generation timed out." }), { status: 504, headers: corsHeaders });
+            }
             return new Response(JSON.stringify({ error: `Worker Exception: ${err.message}` }), { status: 500, headers: corsHeaders });
         }
     }
