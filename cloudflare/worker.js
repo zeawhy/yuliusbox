@@ -1,16 +1,35 @@
 export default {
     async fetch(request, env, ctx) {
-        // 1. Dynamic CORS Protection
+        // 1. Dynamic CORS Protection with Strict Hostname Validation
         const origin = request.headers.get("Origin") || "";
-        const isAllowedOrigin =
-            !origin ||
-            origin.includes("yuliusbox.com") ||
-            origin.includes("localhost") ||
-            origin.includes("127.0.0.1") ||
-            origin.endsWith(".vercel.app");
+        
+        const isAllowedOrigin = (orig) => {
+            if (!orig) return true;
+            try {
+                const { hostname, protocol } = new URL(orig);
+                if (protocol !== "http:" && protocol !== "https:") return false;
 
+                // Match yuliusbox.com or exact subdomains (e.g. www.yuliusbox.com)
+                if (hostname === "yuliusbox.com" || hostname.endsWith(".yuliusbox.com")) {
+                    return true;
+                }
+                // Match local development
+                if (hostname === "localhost" || hostname === "127.0.0.1") {
+                    return true;
+                }
+                // Match Vercel preview & production deployments
+                if (hostname.endsWith(".vercel.app")) {
+                    return true;
+                }
+                return false;
+            } catch {
+                return false;
+            }
+        };
+
+        const allowed = isAllowedOrigin(origin);
         const corsHeaders = {
-            "Access-Control-Allow-Origin": isAllowedOrigin && origin ? origin : "https://www.yuliusbox.com",
+            "Access-Control-Allow-Origin": allowed && origin ? origin : "https://www.yuliusbox.com",
             "Access-Control-Allow-Methods": "POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type",
         };
@@ -20,7 +39,7 @@ export default {
         }
 
         // Block unauthorized third-party cross-origin requests
-        if (origin && !isAllowedOrigin) {
+        if (origin && !allowed) {
             return new Response(JSON.stringify({ error: "Forbidden origin" }), {
                 status: 403,
                 headers: { "Content-Type": "application/json" }
