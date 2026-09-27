@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "YuliusBox - Privacy-First Web Tools",
   description: "A collection of free, client-side, and secure utilities for productivity.",
   alternates: {
+    // NOTE: this canonical only applies to "/". Every route that wants to be
+    // indexed must define its own `alternates.canonical`, otherwise it will
+    // silently inherit "/" and tell Google it's a duplicate of the homepage.
     canonical: "/",
   },
   openGraph: {
@@ -21,9 +24,11 @@ export const metadata: Metadata = {
     description: "A collection of free, client-side, and secure utilities for productivity.",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "YuliusBox - Privacy-First Web Tools",
-    description: "A collection of free, client-side, and secure utilities for productivity.",
+    // Keep only `card` here on purpose: no title/description, so each page's
+    // Twitter card falls back to its own openGraph/metadata title instead of
+    // inheriting the generic site-wide copy. Also "summary" (not
+    // "summary_large_image") because the site has no OG images yet.
+    card: "summary",
   },
   verification: {
     google: "ZJjClxLHZ6bdUogWf-dZvE5ggE74X6GK4gCkHpDMPxI",
