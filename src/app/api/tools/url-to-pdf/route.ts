@@ -58,16 +58,11 @@ export async function POST(req: NextRequest) {
         const gotenbergFormData = new FormData();
         gotenbergFormData.append("url", validation.parsedUrl.toString());
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s for web render
-
         const response = await fetch(`${gotenbergUrl}/forms/chromium/convert/url`, {
             method: "POST",
             body: gotenbergFormData,
-            signal: controller.signal,
+            signal: AbortSignal.timeout(45000), // 45s native timeout
         });
-
-        clearTimeout(timeoutId);
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -97,8 +92,8 @@ export async function POST(req: NextRequest) {
             }
         });
 
-    } catch (error: any) {
-        if (error.name === "AbortError") {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
             return NextResponse.json({ error: "Webpage rendering timed out." }, { status: 504 });
         }
         console.error("URL to PDF API Error:", error);

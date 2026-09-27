@@ -5,20 +5,26 @@ const nextConfig: NextConfig = {
     return [
       // 1. Immutable caching for content-hashed AI models & WASM runtimes (Fixes max-age=0 bandwidth waste)
       {
-        source: "/models/resources.json",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=300, must-revalidate",
-          },
-        ],
-      },
-      {
         source: "/models/:file*",
         headers: [
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
+          },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "cross-origin",
+          },
+        ],
+      },
+      // Note: resources.json must be placed AFTER /models/:file* so Next.js "last header wins"
+      // ensures the manifest gets a short revalidation cache rather than 1-year immutable caching.
+      {
+        source: "/models/resources.json",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=300, must-revalidate",
           },
           {
             key: "Cross-Origin-Resource-Policy",
@@ -39,17 +45,8 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        source: "/transformers.min.js",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
 
-      // 2. Global Security Headers (without aggressive COEP)
+      // 2. Global Security Headers (without aggressive site-wide COEP)
       {
         source: "/(.*)",
         headers: [

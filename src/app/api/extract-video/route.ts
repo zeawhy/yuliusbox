@@ -72,9 +72,6 @@ export async function POST(req: NextRequest) {
             proxy: process.env.RESIDENTIAL_PROXY_URL || undefined,
         };
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s timeout
-
         const response = await fetch(vpsApiUrl, {
             method: "POST",
             headers: {
@@ -82,10 +79,8 @@ export async function POST(req: NextRequest) {
                 "X-API-Key": vpsApiKey,
             },
             body: JSON.stringify(requestBody),
-            signal: controller.signal,
+            signal: AbortSignal.timeout(35000), // 35s native timeout
         });
-
-        clearTimeout(timeoutId);
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -120,8 +115,8 @@ export async function POST(req: NextRequest) {
             fromCache: false
         });
 
-    } catch (error: any) {
-        if (error.name === "AbortError") {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
             return NextResponse.json({ error: "Video extraction timed out. Please try again." }, { status: 504 });
         }
         console.error("Extract Video Error:", error);

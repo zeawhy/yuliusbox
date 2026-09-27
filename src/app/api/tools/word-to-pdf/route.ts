@@ -53,16 +53,11 @@ export async function POST(req: NextRequest) {
         const originalName = (file as unknown as File).name || "document.docx";
         gotenbergFormData.append("files", file, originalName);
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
-
         const response = await fetch(`${gotenbergUrl}/forms/libreoffice/convert`, {
             method: "POST",
             body: gotenbergFormData,
-            signal: controller.signal,
+            signal: AbortSignal.timeout(60000), // 60s native timeout
         });
-
-        clearTimeout(timeoutId);
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -85,8 +80,8 @@ export async function POST(req: NextRequest) {
             }
         });
 
-    } catch (error: any) {
-        if (error.name === "AbortError") {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
             return NextResponse.json({ error: "Document conversion timed out." }, { status: 504 });
         }
         console.error("Word to PDF API Error:", error);

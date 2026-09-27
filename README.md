@@ -88,7 +88,7 @@ YuliusBox leverages a hybrid computing model to maximize client-side privacy whi
 
 ### Prerequisites
 
-- Node.js 18.18+ (Node 20+ recommended)
+- Node.js 20.9.0+ (required by Next.js 16)
 - npm, pnpm, or bun
 
 ### Installation

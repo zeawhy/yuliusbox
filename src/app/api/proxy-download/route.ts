@@ -18,22 +18,31 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
     });
 }
 
-// Allowed CDN and video media domain patterns
+// Allowed CDN and video media domain patterns (supports subdomains & root domains)
 const ALLOWED_VIDEO_HOSTS = [
-    /\.tiktokcdn\.com$/,
-    /\.douyinpic\.com$/,
-    /\.snssdk\.com$/,
-    /\.amemv\.com$/,
-    /\.douyinvod\.com$/,
-    /\.ixigua\.com$/,
-    /\.googlevideo\.com$/,
-    /\.ytimg\.com$/,
-    /\.twimg\.com$/,
-    /\.cdninstagram\.com$/,
-    /\.fbcdn\.net$/,
-    /\.akamaized\.net$/,
-    /\.bilivideo\.com$/,
-    /\.hdslb\.com$/,
+    /(^|\.)tiktokcdn\.com$/,
+    /(^|\.)tiktokcdn-us\.com$/,
+    /(^|\.)tiktokv\.com$/,
+    /(^|\.)muscdn\.com$/,
+    /(^|\.)douyin\.com$/,
+    /(^|\.)douyinpic\.com$/,
+    /(^|\.)snssdk\.com$/,
+    /(^|\.)amemv\.com$/,
+    /(^|\.)douyinvod\.com$/,
+    /(^|\.)ixigua\.com$/,
+    /(^|\.)byteicdn\.com$/,
+    /(^|\.)byteimg\.com$/,
+    /(^|\.)pstatp\.com$/,
+    /(^|\.)kwaicdn\.com$/,
+    /(^|\.)xhscdn\.com$/,
+    /(^|\.)googlevideo\.com$/,
+    /(^|\.)ytimg\.com$/,
+    /(^|\.)twimg\.com$/,
+    /(^|\.)cdninstagram\.com$/,
+    /(^|\.)fbcdn\.net$/,
+    /(^|\.)akamaized\.net$/,
+    /(^|\.)bilivideo\.com$/,
+    /(^|\.)hdslb\.com$/,
 ];
 
 // Max file download limit: 150 MB
@@ -75,18 +84,23 @@ export async function GET(request: NextRequest) {
     const cleanFilename = sanitizeFilename(rawFilename, "video.mp4");
 
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
-
         const response = await fetch(validation.parsedUrl.toString(), {
-            signal: controller.signal,
+            signal: AbortSignal.timeout(30000), // 30s timeout without timer leak
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
                 "Referer": "https://www.douyin.com/",
             },
         });
 
-        clearTimeout(timeoutId);
+        // 3. Prevent Open Redirect escape: verify the final destination host after redirects
+        const finalUrl = new URL(response.url);
+        const finalHost = finalUrl.hostname.toLowerCase();
+        if (!ALLOWED_VIDEO_HOSTS.some(p => p.test(finalHost))) {
+            return NextResponse.json(
+                { error: "Target redirected to an untrusted domain" },
+                { status: 403 }
+            );
+        }
 
         if (!response.ok) {
             return NextResponse.json(
@@ -135,8 +149,8 @@ export async function GET(request: NextRequest) {
             headers,
         });
 
-    } catch (error: any) {
-        if (error.name === "AbortError") {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
             return NextResponse.json({ error: "Download request timed out" }, { status: 504 });
         }
         console.error("Proxy download error:", error);

@@ -15,13 +15,15 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="YuliusBox Video Extractor Microservice")
 
+import hmac
+
 # --- 鉴权配置 ---
 # 优先从环境变量读取密钥，避免源码明文泄露
 SECRET_API_KEY = os.getenv("VPS_API_KEY", "change_this_secret_in_env")
 
 async def verify_api_key(x_api_key: str = Header(...)):
-    if x_api_key != SECRET_API_KEY:
-        logger.warning(f"Unauthorized access attempt with invalid API Key")
+    if not hmac.compare_digest(x_api_key, SECRET_API_KEY):
+        logger.warning("Unauthorized access attempt with invalid API Key")
         raise HTTPException(status_code=403, detail="Invalid API Key")
 
 # --- 请求模型 ---
