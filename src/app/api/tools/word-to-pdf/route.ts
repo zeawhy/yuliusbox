@@ -1,40 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { getClientIp } from "@/lib/server-security";
 
-// Initialize Redis for rate limiting
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL!,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+let ratelimit: Ratelimit | null = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = new Redis({
+        url: process.env.UPSTASH_REDIS_REST_URL,
+        token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    ratelimit = new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(5, "1 m"),
+        analytics: true,
+        prefix: "@yuliusbox/word-to-pdf",
+    });
+}
 
-// Configure Rate Limiting: 3 requests per 1 minute
-const ratelimit = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(3, "1 m"),
-    analytics: true,
-});
+const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
 
 export async function POST(req: NextRequest) {
     try {
-        // --- 1. Rate Limiting Check ---
-        // Get the real IP of the client (works on Vercel and Cloudflare)
-        const ip = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
-        const { success } = await ratelimit.limit(`word_to_pdf_${ip}`);
-
-        if (!success) {
-            return NextResponse.json(
-                { error: "You have reached the conversion limit. Please try again in a minute." },
-                { status: 429 }
-            );
+        if (ratelimit) {
+            const ip = getClientIp(req);
+            const { success } = await ratelimit.limit(`word_pdf_${ip}`);
+            if (!success) {
+                return NextResponse.json(
+                    { error: "You have reached the conversion limit. Please try again in a minute." },
+                    { status: 429 }
+                );
+            }
         }
 
-        // --- 2. Process File ---
         const formData = await req.formData();
         const file = formData.get("file");
 
         if (!file || !(file instanceof Blob)) {
             return NextResponse.json({ error: "No file provided or invalid file format" }, { status: 400 });
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json({ error: "File exceeds the 30MB maximum size limit" }, { status: 413 });
         }
 
         const gotenbergUrl = process.env.GOTENBERG_URL;
@@ -43,7 +49,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
         }
 
-        // Construct a new FormData with the key 'files' required by Gotenberg's LibreOffice endpoint
         const gotenbergFormData = new FormData();
         const originalName = (file as unknown as File).name || "document.docx";
         gotenbergFormData.append("files", file, originalName);
@@ -51,30 +56,34 @@ export async function POST(req: NextRequest) {
         const response = await fetch(`${gotenbergUrl}/forms/libreoffice/convert`, {
             method: "POST",
             body: gotenbergFormData,
-            // Do NOT set Content-Type manually when submitting FormData via fetch.
+            signal: AbortSignal.timeout(60000), // 60s native timeout
         });
 
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`Gotenberg API Error (${response.status}):`, errorText);
-            return NextResponse.json({ error: `Conversion failed with status: ${response.status}` }, { status: response.status });
+            return NextResponse.json(
+                { error: "Document conversion failed. Please ensure the file is a valid Word document." },
+                { status: response.status >= 500 ? 502 : response.status }
+            );
         }
 
-        // Return the converted PDF blob to the client
         const convertedBlob = await response.blob();
-
-        // Extract base filename without extension
         const baseName = originalName.replace(/\.[^/.]+$/, "");
 
         return new NextResponse(convertedBlob, {
             status: 200,
             headers: {
                 "Content-Type": "application/pdf",
-                "Content-Disposition": `attachment; filename="${encodeURIComponent(baseName)}.pdf"; filename*=UTF-8''${encodeURIComponent(baseName)}.pdf`
+                "Content-Disposition": `attachment; filename="${encodeURIComponent(baseName)}.pdf"; filename*=UTF-8''${encodeURIComponent(baseName)}.pdf`,
+                "X-Content-Type-Options": "nosniff",
             }
         });
 
-    } catch (error) {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
+            return NextResponse.json({ error: "Document conversion timed out." }, { status: 504 });
+        }
         console.error("Word to PDF API Error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }

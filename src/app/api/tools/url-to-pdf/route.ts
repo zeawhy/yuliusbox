@@ -1,28 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { validateSafeUrl, getClientIp } from "@/lib/server-security";
 
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL!,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
-
-const ratelimit = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(5, "1 m"), // URL to PDF limit: 5 req/min
-    analytics: true,
-});
+let ratelimit: Ratelimit | null = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = new Redis({
+        url: process.env.UPSTASH_REDIS_REST_URL,
+        token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    ratelimit = new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(5, "1 m"), // 5 req/min
+        analytics: true,
+        prefix: "@yuliusbox/url-to-pdf",
+    });
+}
 
 export async function POST(req: NextRequest) {
     try {
-        const ip = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "anonymous_ip";
-        const { success } = await ratelimit.limit(`yuliusbox_url_pdf_${ip}`);
+        // 1. Safe Rate Limiting Check
+        if (ratelimit) {
+            const ip = getClientIp(req);
+            const { success } = await ratelimit.limit(`url_pdf_${ip}`);
 
-        if (!success) {
-            return NextResponse.json(
-                { error: "You have reached the conversion limit. Please try again in a minute." },
-                { status: 429 }
-            );
+            if (!success) {
+                return NextResponse.json(
+                    { error: "You have reached the conversion limit. Please try again in a minute." },
+                    { status: 429 }
+                );
+            }
         }
 
         const formData = await req.formData();
@@ -30,6 +37,15 @@ export async function POST(req: NextRequest) {
 
         if (!urlParam || typeof urlParam !== "string") {
             return NextResponse.json({ error: "No URL provided or invalid format" }, { status: 400 });
+        }
+
+        // 2. SSRF Protection: Ensure URL does not point to internal/loopback or metadata IPs
+        const validation = await validateSafeUrl(urlParam);
+        if (!validation.safe || !validation.parsedUrl) {
+            return NextResponse.json(
+                { error: validation.error || "The provided URL is forbidden or invalid." },
+                { status: 400 }
+            );
         }
 
         const gotenbergUrl = process.env.GOTENBERG_URL;
@@ -40,17 +56,21 @@ export async function POST(req: NextRequest) {
 
         // Chromium expects the `url` key in form data
         const gotenbergFormData = new FormData();
-        gotenbergFormData.append("url", urlParam);
+        gotenbergFormData.append("url", validation.parsedUrl.toString());
 
         const response = await fetch(`${gotenbergUrl}/forms/chromium/convert/url`, {
             method: "POST",
             body: gotenbergFormData,
+            signal: AbortSignal.timeout(45000), // 45s native timeout
         });
 
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`Gotenberg URL API Error (${response.status}):`, errorText);
-            return NextResponse.json({ error: `Conversion failed with status: ${response.status}` }, { status: response.status });
+            return NextResponse.json(
+                { error: "Failed to convert URL to PDF. Please ensure the target website is publicly accessible." },
+                { status: response.status >= 500 ? 502 : response.status }
+            );
         }
 
         const convertedBlob = await response.blob();
@@ -58,19 +78,24 @@ export async function POST(req: NextRequest) {
         // Extract a safe filename from the URL domain
         let baseName = "website";
         try {
-            const parsedUrl = new URL(urlParam);
-            baseName = parsedUrl.hostname.replace(/[^a-zA-Z0-9_-]/g, '_');
-        } catch (e) { /* ignore invalid url parse error for filename */ }
+            baseName = validation.parsedUrl.hostname.replace(/[^a-zA-Z0-9_-]/g, "_");
+        } catch {
+            // fallback to default
+        }
 
         return new NextResponse(convertedBlob, {
             status: 200,
             headers: {
                 "Content-Type": "application/pdf",
-                "Content-Disposition": `attachment; filename="${encodeURIComponent(baseName)}.pdf"; filename*=UTF-8''${encodeURIComponent(baseName)}.pdf`
+                "Content-Disposition": `attachment; filename="${encodeURIComponent(baseName)}.pdf"; filename*=UTF-8''${encodeURIComponent(baseName)}.pdf`,
+                "X-Content-Type-Options": "nosniff",
             }
         });
 
-    } catch (error) {
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
+            return NextResponse.json({ error: "Webpage rendering timed out." }, { status: 504 });
+        }
         console.error("URL to PDF API Error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
