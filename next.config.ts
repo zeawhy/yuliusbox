@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        // 裸域 301 跳转到 www，避免 www 与裸域双版本重复内容
+        source: "/:path*",
+        has: [{ type: "host", value: "yuliusbox.com" }],
+        destination: "https://www.yuliusbox.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
