@@ -1,4 +1,4 @@
-name = "yuliusbox-ai-backend"
+name = "yuliusbox-ai"
 main = "worker.js"
 compatibility_date = "2024-09-23"
 
