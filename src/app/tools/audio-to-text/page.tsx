@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Mic, FileAudio, Loader2, Copy, Download, Square, Languages } from "lucide-react";
+import { ArrowLeft, Mic, FileAudio, Loader2, Copy, Download, Square, Languages, Cpu } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -15,11 +15,33 @@ export default function AudioToTextPage() {
     const [transcription, setTranscription] = useState("");
     const [audioFile, setAudioFile] = useState<File | null>(null);
     const [isRecording, setIsRecording] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState<string>("auto");
+    // 语言默认：优先用用户上次的选择，其次按浏览器语言推导（短语音走 auto 检测极易误判）
+    const getInitialLang = () => {
+        if (typeof window !== "undefined") {
+            const saved = localStorage.getItem("yuliusbox-audio-lang");
+            if (saved) return saved;
+            const nav = (navigator.language || "").toLowerCase();
+            if (nav.startsWith("zh")) return "zh";
+            if (nav.startsWith("en")) return "en";
+        }
+        return "auto";
+    };
+    const [selectedLanguage, setSelectedLanguage] = useState<string>(getInitialLang);
+    const [shortWarn, setShortWarn] = useState<string | null>(null);
+    // 模型档位：tiny 快速 / base 均衡（默认）/ small 高精度；记住用户选择
+    const TIER_LABEL: Record<string, string> = { tiny: "快速", base: "均衡", small: "高精度" };
+    const [modelTier, setModelTier] = useState<string>(() => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("yuliusbox-audio-model") || "base";
+        }
+        return "base";
+    });
+    const [modelNotice, setModelNotice] = useState<string | null>(null);
 
     // Refs
     const workerRef = useRef<Worker | null>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const recordStartRef = useRef<number>(0);
     const audioChunksRef = useRef<Blob[]>([]);
 
     // Translations
@@ -58,10 +80,10 @@ export default function AudioToTextPage() {
     useEffect(() => {
         // Initialize Worker
         if (!workerRef.current) {
-            workerRef.current = new Worker("/whisper.worker.js?v=r2_fix_5_lib_update", { type: "module" });
+            workerRef.current = new Worker("/whisper.worker.js?v=models_v1_tiers", { type: "module" });
 
             workerRef.current.onmessage = (event) => {
-                const { type, data, error } = event.data;
+                const { type, data, error, requested, used } = event.data;
                 if (type === "progress") {
                     // Check if data has status properties typical for transformers.js
                     // Usually: { status: 'progress', file: '...', progress: 45, ... }
@@ -77,6 +99,8 @@ export default function AudioToTextPage() {
                 } else if (type === "complete") {
                     setTranscription(data.text);
                     setStatus("ready");
+                } else if (type === "model_fallback") {
+                    setModelNotice(`“${TIER_LABEL[requested] || requested}”档模型文件尚未上传，已回退到“${TIER_LABEL[used] || used}”档完成本次转录。`);
                 } else if (type === "error") {
                     console.error("Worker error:", error);
                     alert("An error occurred: " + error);
@@ -84,9 +108,9 @@ export default function AudioToTextPage() {
                 }
             };
 
-            // Start loading model immediately
+            // Start loading model immediately (with user's saved tier)
             setStatus("loading_model");
-            workerRef.current.postMessage({ type: "load" });
+            workerRef.current.postMessage({ type: "load", model: modelTier });
         }
 
         return () => {
@@ -95,12 +119,34 @@ export default function AudioToTextPage() {
     }, []);
     /* eslint-enable react-hooks/exhaustive-deps */
 
+    // 简单能量 VAD：切除首尾静音（各保留约 250ms），减少静音段幻觉；
+    // 有效语音短于 0.5s 时不切，防止误伤超短语音
+    const trimSilence = (data: Float32Array, sampleRate = 16000): Float32Array => {
+        const margin = Math.floor(sampleRate * 0.25);
+        const win = Math.floor(sampleRate * 0.02);
+        const threshold = 0.02;
+        const active = (start: number) => {
+            const end = Math.min(start + win, data.length);
+            let sum = 0;
+            for (let i = start; i < end; i++) sum += Math.abs(data[i]);
+            return sum / (end - start) > threshold;
+        };
+        let s = 0;
+        while (s + win < data.length && !active(s)) s += win;
+        let e = data.length;
+        while (e - win > s && !active(e - win)) e -= win;
+        s = Math.max(0, s - margin);
+        e = Math.min(data.length, e + margin);
+        if (e - s < sampleRate * 0.5) return data;
+        return data.slice(s, e);
+    };
+
     const decodeAudio = async (audioBlob: Blob | File) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
         const arrayBuffer = await audioBlob.arrayBuffer();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        return audioBuffer.getChannelData(0);
+        return trimSilence(audioBuffer.getChannelData(0));
     };
 
     const startTranscription = async (file: File | Blob) => {
@@ -112,7 +158,8 @@ export default function AudioToTextPage() {
             workerRef.current.postMessage({
                 type: "transcribe",
                 audio,
-                language: selectedLanguage
+                language: selectedLanguage,
+                model: modelTier
             });
         } catch (err) {
             console.error("Decoding error", err);
@@ -121,10 +168,21 @@ export default function AudioToTextPage() {
         }
     };
 
+    const changeTier = (tier: string) => {
+        if (tier === modelTier || !workerRef.current || status === "loading_model" || status === "processing") return;
+        setModelTier(tier);
+        try { localStorage.setItem("yuliusbox-audio-model", tier); } catch { /* ignore */ }
+        setModelNotice(null);
+        setProgress(null);
+        setStatus("loading_model");
+        workerRef.current.postMessage({ type: "load", model: tier });
+    };
+
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const f = e.target.files[0];
             setAudioFile(f);
+            setShortWarn(null);
             startTranscription(f);
         }
     };
@@ -147,15 +205,26 @@ export default function AudioToTextPage() {
                 };
 
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-                    const file = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+                    const durSec = (Date.now() - recordStartRef.current) / 1000;
+                    // 用录制器实际输出的格式标注，不再硬编码 audio/wav
+                    const mimeType = mediaRecorder.mimeType || "audio/webm";
+                    const ext = mimeType.includes("mp4") ? "m4a" : mimeType.includes("wav") ? "wav" : "webm";
+                    const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+                    const file = new File([audioBlob], `recording.${ext}`, { type: mimeType });
                     setAudioFile(file);
+                    if (durSec < 3) {
+                        setShortWarn(`本次录音仅 ${durSec.toFixed(1)} 秒：超短语音识别率较低，建议说完整的一句话，识别会准很多。`);
+                    } else {
+                        setShortWarn(null);
+                    }
                     startTranscription(file);
                     // Stop all tracks
                     stream.getTracks().forEach(track => track.stop());
                 };
 
                 mediaRecorder.start();
+                recordStartRef.current = Date.now();
+                setShortWarn(null);
                 setIsRecording(true);
             } catch (err) {
                 console.error("Microphone access denied", err);
@@ -267,6 +336,40 @@ export default function AudioToTextPage() {
                             )}
                         </button>
 
+                        {/* Model tier */}
+                        <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800">
+                            <div className="flex items-center gap-2 text-zinc-400 text-sm mb-3">
+                                <Cpu className="w-4 h-4" />
+                                {language === "en" ? "Model" : "模型"}
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                                {["tiny", "base", "small"].map((id) => (
+                                    <button
+                                        key={id}
+                                        onClick={() => changeTier(id)}
+                                        disabled={status === "loading_model" || status === "processing"}
+                                        className={cn(
+                                            "rounded-lg border px-2 py-2 text-center transition-all disabled:opacity-50",
+                                            modelTier === id
+                                                ? "border-emerald-500/50 bg-emerald-500/10 text-white"
+                                                : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
+                                        )}
+                                    >
+                                        <div className="text-sm font-medium">{TIER_LABEL[id]}</div>
+                                        <div className="text-[11px] text-zinc-500 font-mono">{id}</div>
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="text-[11px] text-zinc-600 mt-2">
+                                {language === "en"
+                                    ? "Balanced by default. Fast saves data, Accurate is best on desktop."
+                                    : "默认均衡档。快速档省流量，高精度档建议在电脑上用。"}
+                            </p>
+                            {modelNotice && (
+                                <p className="text-xs text-amber-400 mt-2">{modelNotice}</p>
+                            )}
+                        </div>
+
                         {/* Settings */}
                         <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800 flex items-center justify-between">
                             <div className="flex items-center gap-2 text-zinc-400 text-sm">
@@ -275,7 +378,10 @@ export default function AudioToTextPage() {
                             </div>
                             <select
                                 value={selectedLanguage}
-                                onChange={(e) => setSelectedLanguage(e.target.value)}
+                                onChange={(e) => {
+                                    setSelectedLanguage(e.target.value);
+                                    try { localStorage.setItem("yuliusbox-audio-lang", e.target.value); } catch { /* ignore */ }
+                                }}
                                 className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                             >
                                 <option value="auto">{language === "en" ? t.lang.auto.en : t.lang.auto.cn}</option>
@@ -288,6 +394,11 @@ export default function AudioToTextPage() {
                     {/* Right: Output */}
                     <div className="flex flex-col h-full min-h-[400px]">
                         <div className="flex-1 bg-zinc-950 rounded-2xl border border-zinc-800 p-6 relative group">
+                            {shortWarn && (
+                                <div className="mb-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm">
+                                    {shortWarn}
+                                </div>
+                            )}
                             {transcription ? (
                                 <div className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
                                     {transcription}

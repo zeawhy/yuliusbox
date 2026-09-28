@@ -2,6 +2,10 @@ name = "yuliusbox-ai"
 main = "worker.js"
 compatibility_date = "2024-09-23"
 
+# Required by `npx wrangler preview` (the Workers Builds deploy command).
+# The block may stay empty; it only enables preview deployments.
+[previews]
+
 # Observability
 [observability]
 enabled = true
