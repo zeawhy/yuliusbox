@@ -15,11 +15,24 @@ export default function AudioToTextPage() {
     const [transcription, setTranscription] = useState("");
     const [audioFile, setAudioFile] = useState<File | null>(null);
     const [isRecording, setIsRecording] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState<string>("auto");
+    // 语言默认：优先用用户上次的选择，其次按浏览器语言推导（短语音走 auto 检测极易误判）
+    const getInitialLang = () => {
+        if (typeof window !== "undefined") {
+            const saved = localStorage.getItem("yuliusbox-audio-lang");
+            if (saved) return saved;
+            const nav = (navigator.language || "").toLowerCase();
+            if (nav.startsWith("zh")) return "zh";
+            if (nav.startsWith("en")) return "en";
+        }
+        return "auto";
+    };
+    const [selectedLanguage, setSelectedLanguage] = useState<string>(getInitialLang);
+    const [shortWarn, setShortWarn] = useState<string | null>(null);
 
     // Refs
     const workerRef = useRef<Worker | null>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const recordStartRef = useRef<number>(0);
     const audioChunksRef = useRef<Blob[]>([]);
 
     // Translations
@@ -125,6 +138,7 @@ export default function AudioToTextPage() {
         if (e.target.files?.[0]) {
             const f = e.target.files[0];
             setAudioFile(f);
+            setShortWarn(null);
             startTranscription(f);
         }
     };
@@ -147,15 +161,26 @@ export default function AudioToTextPage() {
                 };
 
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-                    const file = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+                    const durSec = (Date.now() - recordStartRef.current) / 1000;
+                    // 用录制器实际输出的格式标注，不再硬编码 audio/wav
+                    const mimeType = mediaRecorder.mimeType || "audio/webm";
+                    const ext = mimeType.includes("mp4") ? "m4a" : mimeType.includes("wav") ? "wav" : "webm";
+                    const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+                    const file = new File([audioBlob], `recording.${ext}`, { type: mimeType });
                     setAudioFile(file);
+                    if (durSec < 3) {
+                        setShortWarn(`本次录音仅 ${durSec.toFixed(1)} 秒：超短语音识别率较低，建议说完整的一句话，识别会准很多。`);
+                    } else {
+                        setShortWarn(null);
+                    }
                     startTranscription(file);
                     // Stop all tracks
                     stream.getTracks().forEach(track => track.stop());
                 };
 
                 mediaRecorder.start();
+                recordStartRef.current = Date.now();
+                setShortWarn(null);
                 setIsRecording(true);
             } catch (err) {
                 console.error("Microphone access denied", err);
@@ -275,7 +300,10 @@ export default function AudioToTextPage() {
                             </div>
                             <select
                                 value={selectedLanguage}
-                                onChange={(e) => setSelectedLanguage(e.target.value)}
+                                onChange={(e) => {
+                                    setSelectedLanguage(e.target.value);
+                                    try { localStorage.setItem("yuliusbox-audio-lang", e.target.value); } catch { /* ignore */ }
+                                }}
                                 className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                             >
                                 <option value="auto">{language === "en" ? t.lang.auto.en : t.lang.auto.cn}</option>
@@ -288,6 +316,11 @@ export default function AudioToTextPage() {
                     {/* Right: Output */}
                     <div className="flex flex-col h-full min-h-[400px]">
                         <div className="flex-1 bg-zinc-950 rounded-2xl border border-zinc-800 p-6 relative group">
+                            {shortWarn && (
+                                <div className="mb-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm">
+                                    {shortWarn}
+                                </div>
+                            )}
                             {transcription ? (
                                 <div className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
                                     {transcription}
