@@ -6,9 +6,9 @@ import { Footer } from "@/components/layout/Footer";
 import { HUB_ORDER, hubContent, slugifyHeading } from "@/lib/hub-content";
 
 export const metadata: Metadata = {
-    title: "Free Online Tools That Run Entirely in Your Browser | YuliusBox",
+    title: "Free Online Tools That Run in Your Browser | YuliusBox",
     description:
-        "Compress images, merge PDFs, convert video to GIF, generate Excel formulas, beautify screenshots, and transcribe audio — 100% in your browser. Your files never leave your device.",
+        "Compress images, merge PDFs, convert video to GIF, beautify screenshots, and transcribe audio — right in your browser. Your files never leave your device.",
     keywords: [
         "free online tools",
         "compress image online",
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
         url: "/",
         siteName: "YuliusBox",
         type: "website",
-        title: "Free Online Tools That Run Entirely in Your Browser | YuliusBox",
+        title: "Free Online Tools That Run in Your Browser | YuliusBox",
         description:
-            "Compress images, merge PDFs, convert video to GIF, and more — 100% in your browser. Your files never leave your device.",
+            "Compress images, merge PDFs, convert video to GIF, and more — right in your browser. Your files never leave your device.",
     },
 };
 
@@ -84,7 +84,7 @@ const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
     { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
     { href: "/tools/pdf-kit", label: "Merge PDF files online" },
     { href: "/tools/video-to-gif", label: "Convert video to GIF" },
-    { href: "/tools/excel-formula-bot", label: "AI Excel formula generator" },
+    { href: "/tools/excel-formula-bot", label: "AI Excel formula generator *" },
     { href: "/tools/screenshot-beautifier", label: "Screenshot beautifier" },
     { href: "/tools/audio-to-text", label: "Free audio to text transcriber" },
     { href: "https://www.heic2jpg-free.com", label: "Convert HEIC to JPG free", external: true },
@@ -106,12 +106,14 @@ export default function Home() {
                 <section className="flex flex-col gap-6 max-w-3xl pt-4 sm:pt-8">
                     <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white">
                         Free online tools that run{" "}
-                        <span className="text-zinc-500">entirely in your browser.</span>
+                        <span className="text-zinc-500">in your browser.</span>
                     </h1>
                     <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl">
                         Your files never leave your device. Compress images, merge PDFs,
-                        convert video to GIF, generate Excel formulas, beautify screenshots,
-                        and transcribe audio — no uploads, no accounts, no tracking.
+                        convert video to GIF, beautify screenshots, and transcribe audio —
+                        no uploads, no accounts. The AI Excel formula generator is the
+                        one exception: it sends only your typed description to an AI
+                        service — never your files.
                     </p>
                 </section>
 
@@ -187,19 +189,38 @@ export default function Home() {
                             )
                         )}
                     </ul>
+                    <p className="text-xs text-zinc-500 mt-4 max-w-2xl">
+                        * The AI Excel formula generator is the one exception to our
+                        on-device rule: it sends only your typed description to an AI
+                        service — never your files.
+                    </p>
                 </section>
 
                 {/* How it works */}
                 <section aria-label="How it works" className="max-w-3xl">
                     <h2 className="text-2xl font-bold text-white mb-6">How it works</h2>
                     <p className="text-zinc-400 leading-relaxed mb-8">
-                        Every YuliusBox tool runs on your device using modern browser
+                        Every YuliusBox file tool runs on your device using modern browser
                         technology — WebAssembly, the Canvas API, and on-device AI models
                         like Whisper. When you drop a file into a tool, it is processed by
                         your own CPU and GPU; nothing is sent to a server, stored in a
-                        database, or logged. That means no queues, no file-size quotas
-                        imposed by server costs, and no privacy trade-offs — your tools
-                        even keep working offline once the page has loaded.
+                        database, or logged — and your files are never touched by ads or
+                        analytics. That means no queues, no file-size quotas imposed by
+                        server costs, and no privacy trade-offs — most tools even keep
+                        working offline once the page has loaded. The one exception is the
+                        AI Excel formula generator: it sends only your typed description
+                        to an AI service. Verify it yourself — open the DevTools Network
+                        tab and watch your files go nowhere. YuliusBox is open source
+                        (MIT) —{" "}
+                        <a
+                            href="https://github.com/zeawhy/yuliusbox"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-4 hover:text-white transition-colors"
+                        >
+                            view the code on GitHub
+                        </a>
+                        .
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                         {TRUST_POINTS.map((point) => (
