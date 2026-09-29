@@ -14,9 +14,41 @@ const MAX_WIDTH_OR_HEIGHT = 1920;
 interface ImageCompressorToolProps {
     /** When set, each image is iteratively compressed to stay under this size (MB). */
     targetSizeMB?: number;
+    /** When "webp", the compressed result is re-encoded to WebP via canvas. */
+    outputFormat?: "webp";
 }
 
-export function ImageCompressorTool({ targetSizeMB }: ImageCompressorToolProps) {
+/** Re-encode a compressed image blob to WebP via canvas (keeps alpha channel). */
+const toWebp = (blob: Blob, quality: number): Promise<Blob> =>
+    new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(blob);
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+                URL.revokeObjectURL(url);
+                reject(new Error("Canvas unavailable"));
+                return;
+            }
+            ctx.drawImage(img, 0, 0);
+            URL.revokeObjectURL(url);
+            canvas.toBlob(
+                (b) => (b ? resolve(b) : reject(new Error("WebP encoding failed"))),
+                "image/webp",
+                quality
+            );
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error("Could not decode image for WebP conversion"));
+        };
+        img.src = url;
+    });
+
+export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompressorToolProps) {
     const { language } = useLanguage();
     // Wait, I should import the interface or redefine it. I'll redefine it here to keep file self-contained as before.
     // Or copy from previous implementation.
@@ -69,13 +101,17 @@ export function ImageCompressorTool({ targetSizeMB }: ImageCompressorToolProps) 
 
                 const compressedFile = await imageCompression(fileObj.originalFile, options);
 
+                // Optional WebP re-encode (e.g. the "Convert Images to WebP" long-tail page).
+                const finalFile =
+                    outputFormat === "webp" ? await toWebp(compressedFile, quality) : compressedFile;
+
                 setFileState(prev => prev.map(f => {
                     if (f.id === fileObj.id) {
-                        const ratio = ((f.originalSize - compressedFile.size) / f.originalSize) * 100;
+                        const ratio = ((f.originalSize - finalFile.size) / f.originalSize) * 100;
                         return {
                             ...f,
-                            compressedBlob: compressedFile,
-                            compressedSize: compressedFile.size,
+                            compressedBlob: finalFile,
+                            compressedSize: finalFile.size,
                             status: "done",
                             compressionRatio: ratio
                         };
@@ -90,7 +126,7 @@ export function ImageCompressorTool({ targetSizeMB }: ImageCompressorToolProps) 
         }
 
         setIsProcessing(false);
-    }, [quality, targetSizeMB]);
+    }, [quality, targetSizeMB, outputFormat]);
 
     const handleFiles = useCallback((newFiles: File[]) => {
         const fileObjs: CompressedFile[] = newFiles.map(file => ({
@@ -136,12 +172,17 @@ export function ImageCompressorTool({ targetSizeMB }: ImageCompressorToolProps) 
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
     };
 
+    const outputName = (originalName: string) =>
+        outputFormat === "webp"
+            ? `compressed-${originalName.replace(/\.[^.]+$/, "")}.webp`
+            : `compressed-${originalName}`;
+
     const downloadFile = (file: CompressedFile) => {
         if (file.status !== "done") return;
         const url = URL.createObjectURL(file.compressedBlob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `compressed-${file.originalFile.name}`;
+        link.download = outputName(file.originalFile.name);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -153,7 +194,7 @@ export function ImageCompressorTool({ targetSizeMB }: ImageCompressorToolProps) 
         const completedFiles = fileState.filter(f => f.status === "done");
 
         completedFiles.forEach(f => {
-            zip.file(`compressed-${f.originalFile.name}`, f.compressedBlob);
+            zip.file(outputName(f.originalFile.name), f.compressedBlob);
         });
 
         const content = await zip.generateAsync({ type: "blob" });
@@ -200,6 +241,11 @@ export function ImageCompressorTool({ targetSizeMB }: ImageCompressorToolProps) 
                     </div>
                 </div>
 
+            {outputFormat === "webp" && (
+                <p className="text-center text-sm text-emerald-400 font-medium -mt-4">
+                    Output format: WebP — downloads will be .webp files.
+                </p>
+            )}
             {targetSizeMB != null && (
                 <p className="text-center text-sm text-emerald-400 font-medium -mt-4">
                     Target size: {targetSizeMB < 1 ? `${Math.round(targetSizeMB * 1024)} KB` : `${targetSizeMB} MB`} per image — quality adjusts automatically.

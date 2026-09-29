@@ -3,6 +3,7 @@
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
 import { hubContent } from "@/lib/hub-content";
+import { longTailPages } from "@/lib/long-tail-content";
 import { ImageCompressorTool } from "@/components/tools/ImageCompressorTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -26,7 +27,12 @@ export default function ImageCompressorPage() {
                 <ImageCompressorTool />
             </div>
 
-            <HubBody content={content} />
+            <HubBody
+                content={content}
+                longTailLinks={longTailPages
+                    .filter((p) => p.hubId === "image-compressor")
+                    .map((p) => ({ href: p.href, label: p.crumb }))}
+            />
             <Footer />
         </div>
     );

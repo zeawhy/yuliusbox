@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
-import { ImageCompressorTool } from "@/components/tools/ImageCompressorTool";
-import { compressImageTo100kb } from "@/lib/long-tail-content";
+import { ScreenshotBeautifierTool } from "@/components/tools/ScreenshotBeautifierTool";
+import { longTailPages } from "@/lib/long-tail-content";
+import { hubContent } from "@/lib/hub-content";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
-const content = compressImageTo100kb;
+const content = longTailPages.find((p) => p.slug === "screenshot-to-social-post")!;
+const hub = hubContent[content.hubId];
 
 export const metadata: Metadata = {
     title: content.metaTitle,
     description: content.metaDescription,
-    keywords: [
-        "compress image to 100kb",
-        "reduce image size to 100kb",
-        "100kb photo compressor",
-        "shrink jpg to 100kb online",
-    ],
+    keywords: content.keywords,
     alternates: { canonical: content.href },
     openGraph: {
         url: content.href,
@@ -27,14 +24,14 @@ export const metadata: Metadata = {
     },
 };
 
-export default function CompressImageTo100kbPage() {
+export default function ScreenshotToSocialPostPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
             <Header />
             <Breadcrumbs
                 trail={[
                     { href: "/", label: "Home" },
-                    { href: "/tools/image-compressor", label: "Image Compressor" },
+                    { href: hub.href, label: hub.crumb },
                     { href: content.href, label: content.crumb },
                 ]}
             />
@@ -47,10 +44,7 @@ export default function CompressImageTo100kbPage() {
                     <p className="text-zinc-400 max-w-xl mx-auto">{content.subtitle}</p>
                 </div>
 
-                <ImageCompressorTool
-                    targetSizeMB={content.preset?.targetSizeMB}
-                    outputFormat={content.preset?.outputFormat}
-                />
+                <ScreenshotBeautifierTool stylePreset={content.preset?.screenshotStyle} />
             </div>
 
             <HubBody content={content} />

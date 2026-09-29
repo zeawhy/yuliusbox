@@ -22,10 +22,27 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 }
 
 export const config = {
-    matcher: "/api/extract-video",
+    // 410 for the removed video-downloader pages (AdSense policy risk) +
+    // rate limiting for the extract-video API.
+    matcher: ["/tools/video-downloader/:path*", "/api/extract-video"],
 };
 
 export default async function proxy(request: NextRequest) {
+    // Permanently gone: the video-downloader tool was removed for
+    // AdSense/YouTube ToS policy reasons. Return 410 so search engines
+    // drop the URL instead of treating it as a soft 404.
+    // NOTE: after this deploys, file a URL removal request in Google
+    // Search Console for /tools/video-downloader to speed up deindexing.
+    if (request.nextUrl.pathname.startsWith("/tools/video-downloader")) {
+        return new NextResponse(
+            "<!DOCTYPE html><html><head><title>410 Gone</title></head><body><h1>410 Gone</h1><p>This tool has been permanently removed.</p></body></html>",
+            {
+                status: 410,
+                headers: { "Content-Type": "text/html; charset=utf-8" },
+            }
+        );
+    }
+
     if (!ratelimit) {
         return NextResponse.next();
     }

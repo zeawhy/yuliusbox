@@ -1,13 +1,21 @@
 import Link from "next/link";
 import { ShieldCheck, ArrowRight } from "lucide-react";
-import { slugifyHeading, type HubContent } from "@/lib/hub-content";
+import { slugifyHeading, type HubContent, type RelatedLink } from "@/lib/hub-content";
 
 /**
  * Shared body for tool-family hub pages, rendered AFTER the interactive
  * tool widget. Order: trust note -> How to use -> content sections ->
- * FAQ (with FAQPage structured data) -> Related tools.
+ * FAQ (with FAQPage structured data) -> long-tail scenario links
+ * (hub pages only) -> Related tools.
  */
-export function HubBody({ content }: { content: HubContent }) {
+export function HubBody({
+    content,
+    longTailLinks,
+}: {
+    content: HubContent;
+    /** Hub pages pass their indexed long-tail pages; long-tail pages omit this. */
+    longTailLinks?: RelatedLink[];
+}) {
     const faqJsonLd = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -85,6 +93,30 @@ export function HubBody({ content }: { content: HubContent }) {
                     ))}
                 </div>
             </section>
+
+            {/* Long-tail scenario pages (hub pages only) */}
+            {longTailLinks && longTailLinks.length > 0 && (
+                <section aria-label="Popular guides" className="w-full max-w-3xl mx-auto">
+                    <h2 className="text-2xl font-bold text-white mb-6">
+                        More {content.crumb} guides
+                    </h2>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {longTailLinks.map((link) => (
+                            <li key={link.href}>
+                                <Link
+                                    href={link.href}
+                                    className="group flex items-center justify-between gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-600 hover:bg-zinc-900 transition-all"
+                                >
+                                    <span className="text-zinc-300 group-hover:text-white font-medium text-[15px]">
+                                        {link.label}
+                                    </span>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300 group-hover:translate-x-0.5 transition-all shrink-0" />
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
 
             {/* Related tools */}
             <section aria-label="Related tools" className="w-full max-w-3xl mx-auto">
