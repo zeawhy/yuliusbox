@@ -1,106 +1,222 @@
-"use client";
-
-import { useState, useMemo } from "react";
-import { toolsData, ToolCategory } from "@/lib/tools-data";
-import { ToolCard } from "@/components/ui/ToolCard";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, ShieldCheck, UserX, BadgeCheck, Image, FileText, Film, Table, MonitorSmartphone, Mic, type LucideIcon } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { useLanguage } from "@/context/LanguageContext";
-import { CategoryTabs } from "@/components/ui/CategoryTabs";
+import { HUB_ORDER, hubContent, slugifyHeading } from "@/lib/hub-content";
+
+export const metadata: Metadata = {
+    title: "Free Online Tools That Run Entirely in Your Browser | YuliusBox",
+    description:
+        "Compress images, merge PDFs, convert video to GIF, generate Excel formulas, beautify screenshots, and transcribe audio — 100% in your browser. Your files never leave your device.",
+    keywords: [
+        "free online tools",
+        "compress image online",
+        "merge pdf",
+        "video to gif",
+        "excel formula generator",
+        "browser tools no upload",
+    ],
+    alternates: { canonical: "/" },
+    openGraph: {
+        url: "/",
+        siteName: "YuliusBox",
+        type: "website",
+        title: "Free Online Tools That Run Entirely in Your Browser | YuliusBox",
+        description:
+            "Compress images, merge PDFs, convert video to GIF, and more — 100% in your browser. Your files never leave your device.",
+    },
+};
+
+const FAMILY_ICONS: Record<string, LucideIcon> = {
+    "image-compressor": Image,
+    "pdf-kit": FileText,
+    "video-to-gif": Film,
+    "excel-formula-bot": Table,
+    "screenshot-beautifier": MonitorSmartphone,
+    "audio-to-text": Mic,
+};
+
+const FAMILY_TAGLINES: Record<string, string> = {
+    "image-compressor": "Shrink JPG, PNG & WebP photos with no visible quality loss.",
+    "pdf-kit": "Merge multiple PDFs into one, or shrink oversized files.",
+    "video-to-gif": "Turn MP4 and MOV clips into GIFs — no watermark.",
+    "excel-formula-bot": "Describe the calculation in plain English; AI writes the formula.",
+    "screenshot-beautifier": "Browser frames, gradients, and shadows for your screenshots.",
+    "audio-to-text": "Whisper AI transcription that runs 100% on your device.",
+};
+
+/**
+ * Card sub-links: descriptive anchors to hub sections and long-tail pages.
+ * Fragments are derived from the actual section headings, so they cannot drift.
+ */
+const frag = (hubId: keyof typeof hubContent, sectionIndex: number) =>
+    `${hubContent[hubId].href}#${slugifyHeading(hubContent[hubId].sections[sectionIndex].heading)}`;
+
+const FAMILY_SUBLINKS: Record<string, { href: string; label: string }[]> = {
+    "image-compressor": [
+        { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+        { href: frag("image-compressor", 2), label: "JPG vs PNG vs WebP guide" },
+    ],
+    "pdf-kit": [
+        { href: frag("pdf-kit", 0), label: "Merge PDF files online" },
+        { href: frag("pdf-kit", 1), label: "Why PDFs get so big" },
+    ],
+    "video-to-gif": [
+        { href: "/tools/video-to-gif", label: "MP4 to GIF converter" },
+        { href: frag("video-to-gif", 1), label: "Frame rate & size guide" },
+    ],
+    "excel-formula-bot": [
+        { href: frag("excel-formula-bot", 1), label: "Formulas it handles well" },
+        { href: frag("excel-formula-bot", 2), label: "Excel vs Google Sheets" },
+    ],
+    "screenshot-beautifier": [
+        { href: frag("screenshot-beautifier", 2), label: "Styles for different audiences" },
+        { href: frag("screenshot-beautifier", 3), label: "Export tips" },
+    ],
+    "audio-to-text": [
+        { href: frag("audio-to-text", 1), label: "Choosing a Whisper model tier" },
+        { href: frag("audio-to-text", 2), label: "Recording tips for accuracy" },
+    ],
+};
+
+const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
+    { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+    { href: "/tools/pdf-kit", label: "Merge PDF files online" },
+    { href: "/tools/video-to-gif", label: "Convert video to GIF" },
+    { href: "/tools/excel-formula-bot", label: "AI Excel formula generator" },
+    { href: "/tools/screenshot-beautifier", label: "Screenshot beautifier" },
+    { href: "/tools/audio-to-text", label: "Free audio to text transcriber" },
+    { href: "https://www.heic2jpg-free.com", label: "Convert HEIC to JPG free", external: true },
+];
+
+const TRUST_POINTS = [
+    { icon: ShieldCheck, title: "No upload", text: "Files are processed on your device and never sent to a server." },
+    { icon: UserX, title: "No signup", text: "Every tool works instantly. No accounts, no email walls." },
+    { icon: BadgeCheck, title: "Free", text: "All core tools are free to use, with no watermarks." },
+];
 
 export default function Home() {
-  const { language } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
+    return (
+        <div className="flex min-h-screen flex-col items-center px-4 sm:px-8 max-w-7xl mx-auto">
+            <Header />
 
-  const filteredTools = useMemo(() => {
-    if (activeCategory === "all") return toolsData;
-    return toolsData.filter((tool) => tool.category === activeCategory);
-  }, [activeCategory]);
+            <main className="w-full flex-1 flex flex-col gap-16 sm:gap-24">
+                {/* Hero */}
+                <section className="flex flex-col gap-6 max-w-3xl pt-4 sm:pt-8">
+                    <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white">
+                        Free online tools that run{" "}
+                        <span className="text-zinc-500">entirely in your browser.</span>
+                    </h1>
+                    <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl">
+                        Your files never leave your device. Compress images, merge PDFs,
+                        convert video to GIF, generate Excel formulas, beautify screenshots,
+                        and transcribe audio — no uploads, no accounts, no tracking.
+                    </p>
+                </section>
 
-  const t = {
-    title: {
-      en: "Privacy-First Web Tools",
-      cn: "隐私优先的 Web 生产力工具箱"
-    },
-    subtitle: {
-      en: "for Productivity.",
-      cn: ""
-    },
-    description: {
-      en: "A collection of free, client-side, and secure utilities. No ads, no tracking, just useful tools that respect your data.",
-      cn: "集合了免费、纯本地运行、安全的实用工具。无广告、无追踪，完全保障您的数据隐私。"
-    },
-    cta: {
-      en: "Explore Tools",
-      cn: "探索工具"
-    }
-  };
+                {/* Tool family cards */}
+                <section aria-label="Tool families">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {HUB_ORDER.map((id) => {
+                            const hub = hubContent[id];
+                            const Icon = FAMILY_ICONS[id];
+                            return (
+                                <article
+                                    key={id}
+                                    className="group rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6 hover:border-zinc-600 hover:bg-zinc-900 transition-all flex flex-col"
+                                >
+                                    <Link href={hub.href} className="flex items-start gap-4 mb-3">
+                                        <span className="p-2.5 rounded-xl bg-zinc-800 border border-zinc-700 shrink-0">
+                                            <Icon className="w-5 h-5 text-zinc-200" />
+                                        </span>
+                                        <span>
+                                            <h2 className="text-lg font-semibold text-white group-hover:underline underline-offset-4">
+                                                {hub.crumb}
+                                            </h2>
+                                            <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
+                                                {FAMILY_TAGLINES[id]}
+                                            </p>
+                                        </span>
+                                    </Link>
+                                    <ul className="mt-auto pt-3 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-zinc-800/70">
+                                        {FAMILY_SUBLINKS[id].map((sub) => (
+                                            <li key={sub.label}>
+                                                <Link
+                                                    href={sub.href}
+                                                    className="text-sm text-zinc-500 hover:text-white transition-colors"
+                                                >
+                                                    {sub.label}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </section>
 
-  return (
-    <div className="flex min-h-screen flex-col items-center p-4 sm:p-8 lg:p-24 max-w-7xl mx-auto">
-      <Header />
+                {/* Popular tools */}
+                <section aria-label="Popular tools">
+                    <h2 className="text-2xl font-bold text-white mb-6">Popular tools</h2>
+                    <ul className="flex flex-wrap gap-3">
+                        {POPULAR_LINKS.map((link) =>
+                            link.external ? (
+                                <li key={link.label}>
+                                    <a
+                                        href={link.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
+                                    >
+                                        {link.label}
+                                        <ArrowRight className="w-3.5 h-3.5" />
+                                    </a>
+                                </li>
+                            ) : (
+                                <li key={link.label}>
+                                    <Link
+                                        href={link.href}
+                                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
+                                    >
+                                        {link.label}
+                                        <ArrowRight className="w-3.5 h-3.5" />
+                                    </Link>
+                                </li>
+                            )
+                        )}
+                    </ul>
+                </section>
 
-      {/* Hero Section */}
-      <main className="w-full flex-1 flex flex-col items-start gap-16 sm:gap-24">
-        <section className="flex flex-col gap-6 max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white">
-            {language === "en" ? (
-              <>
-                Privacy-First Web Tools <br />
-                <span className="text-zinc-500">for Productivity.</span>
-              </>
-            ) : (
-              "隐私优先的 Web 生产力工具箱"
-            )}
-          </h1>
-          <p className="text-lg sm:text-lg text-zinc-400 leading-relaxed max-w-2xl">
-            {language === "en" && (
-              <>
-                A collection of free, client-side, and secure utilities. <br className="hidden sm:block" />
-                No ads, no tracking, just useful tools that respect your data.
-              </>
-            )}
-            {language === "cn" && (
-              "集合了免费、纯本地运行、安全的实用工具。无广告、无追踪，完全保障您的数据隐私。"
-            )}
-          </p>
-          <div className="flex gap-4 pt-4">
-            <Link
-              href="#tools"
-              className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold text-zinc-950 bg-white rounded-full hover:bg-zinc-200 hover:scale-105 transition-all duration-300"
-            >
-              {language === "en" ? t.cta.en : t.cta.cn}
-            </Link>
-          </div>
-        </section>
+                {/* How it works */}
+                <section aria-label="How it works" className="max-w-3xl">
+                    <h2 className="text-2xl font-bold text-white mb-6">How it works</h2>
+                    <p className="text-zinc-400 leading-relaxed mb-8">
+                        Every YuliusBox tool runs on your device using modern browser
+                        technology — WebAssembly, the Canvas API, and on-device AI models
+                        like Whisper. When you drop a file into a tool, it is processed by
+                        your own CPU and GPU; nothing is sent to a server, stored in a
+                        database, or logged. That means no queues, no file-size quotas
+                        imposed by server costs, and no privacy trade-offs — your tools
+                        even keep working offline once the page has loaded.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                        {TRUST_POINTS.map((point) => (
+                            <div
+                                key={point.title}
+                                className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5"
+                            >
+                                <point.icon className="w-6 h-6 text-emerald-500 mb-3" />
+                                <h3 className="font-semibold text-white mb-1.5">{point.title}</h3>
+                                <p className="text-sm text-zinc-400 leading-relaxed">{point.text}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </main>
 
-        {/* Tools Section */}
-        <section id="tools" className="w-full scroll-mt-32 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
-          <CategoryTabs
-            activeCategory={activeCategory}
-            onCategoryChange={setActiveCategory}
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-500">
-            {filteredTools.map((tool) => (
-              <div key={tool.id} className="animate-in fade-in zoom-in-95 duration-500">
-                <ToolCard tool={tool} />
-              </div>
-            ))}
-          </div>
-
-          {filteredTools.length === 0 && (
-            <div className="w-full py-24 text-center text-zinc-500 font-mono text-sm border border-dashed border-zinc-800 rounded-3xl">
-              -- Result set empty --
-            </div>
-          )}
-        </section>
-      </main>
-
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
+            <Footer />
+        </div>
+    );
 }
-

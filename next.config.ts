@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { NOINDEX_TOOL_PATHS } from "./src/lib/seo";
 
 const nextConfig: NextConfig = {
   async redirects() {
@@ -120,6 +121,18 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // 4. SEO: noindex low-priority tool pages (canonical list in src/lib/seo.ts).
+      // Pages stay fully usable for direct visitors; search engines are told
+      // not to index them. Re-index a tool by removing its path from the list.
+      ...NOINDEX_TOOL_PATHS.map((path) => ({
+        source: path,
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      })),
     ];
   },
 };
