@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 
 type Language = "en" | "cn";
 
@@ -13,27 +13,25 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    // Initialize with a function to check localStorage if available on client?
-    // No, hydration mismatch.
-    const [language, setLanguageState] = useState<Language>("en");
+    // Site copy is English-only (SEO/AdSense information-architecture decision,
+    // 2026-09-29). The context shape is kept so existing tool components keep
+    // working unchanged; language is pinned to "en" and any legacy
+    // localStorage preference is ignored and cleaned up.
+    const language: Language = "en";
 
     useEffect(() => {
-        // Load persisted language preference
-        const savedLang = localStorage.getItem("yuliusbox-lang") as Language;
-        if (savedLang) {
-            // eslint-disable-next-line
-            setLanguageState(savedLang);
+        try {
+            localStorage.removeItem("yuliusbox-lang");
+        } catch {
+            // storage unavailable — nothing to clean
         }
     }, []);
 
-    const setLanguage = (lang: Language) => {
-        setLanguageState(lang);
-        localStorage.setItem("yuliusbox-lang", lang);
+    const setLanguage = (_lang: Language) => {
+        // no-op: the language switcher was removed; the site is English-only
     };
 
-    const t = (en: string, cn: string) => {
-        return language === "en" ? en : cn;
-    };
+    const t = (en: string, _cn: string) => en;
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, t }}>

@@ -3,12 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import { ArrowLeft, Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
-import Link from "next/link";
+import { Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HubBody } from "@/components/seo/HubBody";
+import { hubContent } from "@/lib/hub-content";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 export default function VideoToGifPage() {
     const { language } = useLanguage();
+    const content = hubContent["video-to-gif"];
     const [loaded, setLoaded] = useState(false);
     const [videoFile, setVideoFile] = useState<File | null>(null);
     const [gifUrl, setGifUrl] = useState<string | null>(null);
@@ -145,22 +150,17 @@ export default function VideoToGifPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                </Link>
-                <span className="text-zinc-500 font-mono text-xs hidden sm:inline-block">{language === "en" ? t.privacy.en : t.privacy.cn}</span>
-            </div>
+                        <Header />
+<Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{content.h1}</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        {language === "en" ? t.desc.en : t.desc.cn}
+                        {content.subtitle}
                         <br />
                         <span className="text-yellow-500 text-sm">
-                            {language === "en" ? "(Max 10 seconds to prevent browser crash)" : "(为防止浏览器崩溃，限制转换前 10 秒)"}
+                            (Max 10 seconds per conversion to prevent browser crashes)
                         </span>
                     </p>
                 </div>
@@ -220,7 +220,7 @@ export default function VideoToGifPage() {
 
                                 <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-4">
                                     <div className="flex items-center gap-2 mb-2 text-zinc-300 font-medium">
-                                        <Settings2 className="w-5 h-5" /> {language === "en" ? "Settings" : "设置"}
+                                        <Settings2 className="w-5 h-5" /> Settings
                                     </div>
 
                                     <div className="space-y-2">
@@ -299,68 +299,8 @@ export default function VideoToGifPage() {
                 )}
             </div>
 
-            {/* SEO Content Section */}
-            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
-                <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Create GIFs from any video" : "将任意视频转换为 GIF"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "Convert your MP4, MOV, or WEBM videos into high-quality GIFs in seconds. Whether you need a reaction GIF for social media or a quick animation for a presentation, YuliusBox Video to GIF converter delivers professional results directly in your browser."
-                            : "几秒钟内将您的 MP4、MOV 或 WEBM 视频转换为高质量 GIF。无论您是需要社交媒体上的表情包还是演示文稿的动画，YuliusBox 视频转 GIF 工具都能直接在您的浏览器中提供专业级的结果。"}
-                    </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Why use WASM?" : "为什么使用 WASM？"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en" ? "We use FFmpeg WASM (WebAssembly) to bring desktop-grade video processing power to the web. This means:" : "我们使用 FFmpeg WASM (WebAssembly) 将桌面级的视频处理能力带到网页端。这意味着："}
-                    </p>
-                    <ul className="text-zinc-400 mb-6 list-disc pl-5">
-                        <li>
-                            <strong>{language === "en" ? "Zero Uploads:" : "零上传："}</strong>
-                            {language === "en" ? " Your private videos are processed on your computer, never sent to the cloud." : " 您的私密视频完全在您的电脑上处理，从未发送到云端。"}
-                        </li>
-                        <li>
-                            <strong>{language === "en" ? "Fast performance:" : "快速性能："}</strong>
-                            {language === "en" ? " Leverages your device's CPU for conversion." : " 利用您设备的 CPU 进行转换。"}
-                        </li>
-                        <li>
-                            <strong>{language === "en" ? "No server limits:" : "无服务器限制："}</strong>
-                            {language === "en" ? " Convert as many videos as you want without waiting in queues." : " 无需排队，无限量转换视频。"}
-                        </li>
-                    </ul>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
-                    </h2>
-                    <div className="space-y-4">
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "Is there a watermark?" : "有水印吗？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "No. Unlike many \"free\" tools, we do not add any watermarks to your generated GIFs. The tool is completely free and clean."
-                                    : "没有。与许多“免费”工具不同，我们不会在您生成的 GIF 上添加任何水印。该工具完全免费且纯净。"}
-                            </p>
-                        </details>
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "Why is there a 10-second limit?" : "为什么有 10 秒限制？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "Processing video in the browser is memory-intensive. We limit input to 10 seconds to prevent your browser tab from crashing due to memory exhaustion (OOM)."
-                                    : "在浏览器中处理视频非常消耗内存。为了防止浏览器标签页因内存耗尽 (OOM) 而崩溃，我们将输入限制为 10 秒。"}
-                            </p>
-                        </details>
-                    </div>
-                </div>
-            </section>
+            <HubBody content={content} />
+            <Footer />
         </div >
     );
 }

@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Table, Copy, Check, ChevronRight, Zap } from "lucide-react";
-import Link from "next/link";
+import { Table, Copy, Check, ChevronRight, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HubBody } from "@/components/seo/HubBody";
+import { hubContent } from "@/lib/hub-content";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 export default function ExcelFormulaBotPage() {
     const { language } = useLanguage();
+    const content = hubContent["excel-formula-bot"];
     const [prompt, setPrompt] = useState("");
     const [platform, setPlatform] = useState<"excel" | "google-sheets">("excel");
     const [result, setResult] = useState("");
@@ -94,18 +99,16 @@ export default function ExcelFormulaBotPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
-            {/* Header */}
+                        <Header />
+<Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
             <div className="w-full mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors w-fit mb-6">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                </Link>
                 <div className="flex items-center gap-3">
                     <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
                         <Table className="w-8 h-8 text-emerald-500" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
-                        <p className="text-zinc-400 mt-1">{language === "en" ? t.subtitle.en : t.subtitle.cn}</p>
+                        <h1 className="text-3xl font-bold text-white tracking-tight">{content.h1}</h1>
+                        <p className="text-zinc-400 mt-1">{content.subtitle}</p>
                     </div>
                 </div>
             </div>
@@ -219,6 +222,8 @@ export default function ExcelFormulaBotPage() {
                     </div>
                 </div>
             </div>
+            <HubBody content={content} />
+            <Footer />
         </div>
     );
 }

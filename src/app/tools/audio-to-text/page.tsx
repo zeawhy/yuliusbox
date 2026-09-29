@@ -1,13 +1,18 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Mic, FileAudio, Loader2, Copy, Download, Square, Languages, Cpu } from "lucide-react";
-import Link from "next/link";
+import { Mic, FileAudio, Loader2, Copy, Download, Square, Languages, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HubBody } from "@/components/seo/HubBody";
+import { hubContent } from "@/lib/hub-content";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 export default function AudioToTextPage() {
     const { language } = useLanguage();
+    const content = hubContent["audio-to-text"];
 
     // State
     const [status, setStatus] = useState<"idle" | "loading_model" | "ready" | "processing">("idle");
@@ -29,7 +34,7 @@ export default function AudioToTextPage() {
     const [selectedLanguage, setSelectedLanguage] = useState<string>(getInitialLang);
     const [shortWarn, setShortWarn] = useState<string | null>(null);
     // 模型档位：tiny 快速 / base 均衡（默认）/ small 高精度；记住用户选择
-    const TIER_LABEL: Record<string, string> = { tiny: "快速", base: "均衡", small: "高精度" };
+    const TIER_LABEL: Record<string, string> = { tiny: "Fast", base: "Balanced", small: "High accuracy" };
     const [modelTier, setModelTier] = useState<string>(() => {
         if (typeof window !== "undefined") {
             return localStorage.getItem("yuliusbox-audio-model") || "base";
@@ -100,7 +105,7 @@ export default function AudioToTextPage() {
                     setTranscription(data.text);
                     setStatus("ready");
                 } else if (type === "model_fallback") {
-                    setModelNotice(`“${TIER_LABEL[requested] || requested}”档模型文件尚未上传，已回退到“${TIER_LABEL[used] || used}”档完成本次转录。`);
+                    setModelNotice(`The "${TIER_LABEL[requested] || requested}" model files are not uploaded yet — fell back to "${TIER_LABEL[used] || used}" for this transcription.`);
                 } else if (type === "error") {
                     console.error("Worker error:", error);
                     alert("An error occurred: " + error);
@@ -213,7 +218,7 @@ export default function AudioToTextPage() {
                     const file = new File([audioBlob], `recording.${ext}`, { type: mimeType });
                     setAudioFile(file);
                     if (durSec < 3) {
-                        setShortWarn(`本次录音仅 ${durSec.toFixed(1)} 秒：超短语音识别率较低，建议说完整的一句话，识别会准很多。`);
+                        setShortWarn(`Recording is only ${durSec.toFixed(1)}s: very short clips transcribe poorly. Try speaking one complete sentence for much better accuracy.`);
                     } else {
                         setShortWarn(null);
                     }
@@ -248,19 +253,14 @@ export default function AudioToTextPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                </Link>
-                <span className="text-zinc-500 font-mono text-xs hidden sm:inline-block">{language === "en" ? t.privacy.en : t.privacy.cn}</span>
-            </div>
+                        <Header />
+<Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{content.h1}</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        {language === "en" ? t.desc.en : t.desc.cn}
+                        {content.subtitle}
                     </p>
 
                     {/* Progress Bar for Model Loading */}
@@ -340,7 +340,7 @@ export default function AudioToTextPage() {
                         <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800">
                             <div className="flex items-center gap-2 text-zinc-400 text-sm mb-3">
                                 <Cpu className="w-4 h-4" />
-                                {language === "en" ? "Model" : "模型"}
+                                Model
                             </div>
                             <div className="grid grid-cols-3 gap-2">
                                 {["tiny", "base", "small"].map((id) => (
@@ -361,9 +361,7 @@ export default function AudioToTextPage() {
                                 ))}
                             </div>
                             <p className="text-[11px] text-zinc-600 mt-2">
-                                {language === "en"
-                                    ? "Balanced by default. Fast saves data, Accurate is best on desktop."
-                                    : "默认均衡档。快速档省流量，高精度档建议在电脑上用。"}
+                                "Balanced by default. Fast saves data, Accurate is best on desktop."
                             </p>
                             {modelNotice && (
                                 <p className="text-xs text-amber-400 mt-2">{modelNotice}</p>
@@ -439,56 +437,8 @@ export default function AudioToTextPage() {
                 </div>
             </div>
 
-            {/* SEO Content Section */}
-            <section className="w-full max-w-4xl mt-20 py-10 border-t border-zinc-800">
-                <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Powered by OpenAI Whisper & WebGPU" : "由 OpenAI Whisper & WebGPU 驱动"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "Experience the power of OpenAI's state-of-the-art speech recognition models running directly in your browser. We use ONNX Runtime and WebAssembly (WASM) to execute the Whisper model on your device's hardware, delivering fast and accurate transcription without server latency."
-                            : "体验 OpenAI 最先进的语音识别模型直接在您的浏览器中运行的强大功能。我们使用 ONNX Runtime 和 WebAssembly (WASM) 在您的设备硬件上执行 Whisper 模型，提供快速且准确的转录，且无服务器延迟。"}
-                    </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Unlimited & Private" : "无限制 & 隐私保护"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "Because there are no servers involved, there are no limits. Transcribe hours of audio, meetings, or interviews for free. Most importantly, your audio files never leave your computer, guaranteeing 100% privacy for sensitive recordings."
-                            : "因为不涉及服务器，所以没有任何限制。免费转录数小时的音频、会议或采访。最重要的是，您的音频文件从未离开您的电脑，确保证据敏感录音的 100% 隐私。"}
-                    </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
-                    </h2>
-                    <div className="space-y-4">
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "How accurate is it?" : "准确率如何？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "We use the Whisper Tiny/Small models which offer excellent accuracy for English and good performance for 90+ other languages including Chinese."
-                                    : "我们使用 Whisper Tiny/Small 模型，对英语提供出色的准确性，并对包括中文在内的 90 多种其他语言提供良好的性能。"}
-                            </p>
-                        </details>
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "Support for mobile?" : "支持手机使用吗？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "Yes, but it requires a powerful device. For older phones, we recommend using a desktop computer for faster processing."
-                                    : "支持，但需要性能较强的设备。对于较旧的手机，建议使用台式电脑以获得更快的处理速度。"}
-                            </p>
-                        </details>
-                    </div>
-                </div>
-            </section>
+            <HubBody content={content} />
+            <Footer />
         </div>
     );
 }

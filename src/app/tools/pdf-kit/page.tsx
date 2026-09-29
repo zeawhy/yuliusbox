@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
-import { ArrowLeft, Layers, Settings2, Loader2, Minimize2, Upload } from "lucide-react";
-import Link from "next/link";
+import { Layers, Settings2, Loader2, Minimize2, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HubBody } from "@/components/seo/HubBody";
+import { hubContent } from "@/lib/hub-content";
 import { DraggableFileList } from "@/components/ui/DraggableFileList";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 interface PDFFile {
     id: string;
@@ -15,6 +19,7 @@ interface PDFFile {
 
 export default function PDFToolkitPage() {
     const { language } = useLanguage();
+    const content = hubContent["pdf-kit"];
     const [activeTab, setActiveTab] = useState<"merge" | "compress">("merge");
 
     // Merge State
@@ -135,19 +140,14 @@ export default function PDFToolkitPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                </Link>
-                <span className="text-zinc-500 font-mono text-xs hidden sm:inline-block">{language === "en" ? t.privacy.en : t.privacy.cn}</span>
-            </div>
+                        <Header />
+<Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{content.h1}</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        {language === "en" ? t.desc.en : t.desc.cn}
+                        {content.subtitle}
                     </p>
                 </div>
 
@@ -157,7 +157,7 @@ export default function PDFToolkitPage() {
                         <button
                             onClick={() => setActiveTab("merge")}
                             className={cn(
-                                "px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2",
+                                "px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 min-h-[44px]",
                                 activeTab === "merge" ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-400 hover:text-zinc-200"
                             )}
                         >
@@ -166,7 +166,7 @@ export default function PDFToolkitPage() {
                         <button
                             onClick={() => setActiveTab("compress")}
                             className={cn(
-                                "px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2",
+                                "px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 min-h-[44px]",
                                 activeTab === "compress" ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-400 hover:text-zinc-200"
                             )}
                         >
@@ -266,57 +266,8 @@ export default function PDFToolkitPage() {
                 </div>
             </div>
 
-            {/* SEO Content Section */}
-            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
-                <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Secure PDF Manipulation" : "安全的 PDF 处理"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "YuliusBox PDF Toolkit runs entirely in your browser using WebAssembly. Unlike other online tools that upload your sensitive documents to a server, our tool processes everything locally. This guarantees that your contracts, invoices, and personal files never leave your device."
-                            : "YuliusBox PDF 工具箱完全在您的浏览器中使用 WebAssembly 运行。与需要上传敏感文档到服务器的其他在线工具不同，我们的工具所有处理均在本地完成。这确保了您的合同、发票和个人文件从未离开您的设备。"}
-                    </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "How to merge PDFs" : "如何合并 PDF"}
-                    </h2>
-                    <ol className="text-zinc-400 mb-6 list-decimal pl-5">
-                        <li>{language === "en" ? "Select the \"Merge PDF\" tab above." : "点击上方的 \"合并 PDF\" 选项卡。"}</li>
-                        <li>{language === "en" ? "Drag and drop multiple PDF files into the upload area." : "将多个 PDF 文件拖放到上传区域。"}</li>
-                        <li>{language === "en" ? "Reorder the files by dragging them in the list if needed." : "如果需要，可以通过拖拽列表中的文件来调整顺序。"}</li>
-                        <li>{language === "en" ? "Click \"Merge Files\" to generate and download the combined PDF." : "点击 \"合并文件\" 生成并下载合并后的 PDF。"}</li>
-                    </ol>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
-                    </h2>
-                    <div className="space-y-4">
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "Do you save my documents?" : "你们会保存我的文档吗？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "Never. All processing is strictly local (client-side). We cannot see, save, or access your files."
-                                    : "绝不。所有处理严格在本地（客户端）进行。我们无法查看、保存或访问您的任何文件。"}
-                            </p>
-                        </details>
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "Is there a page limit?" : "有页数限制吗？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "Generally no, but performance depends on your device's memory. Merging hundreds of pages is usually fast and stable."
-                                    : "通常没有，但性能取决于您设备的内存。合并数百页的文档通常是快速且稳定的。"}
-                            </p>
-                        </details>
-                    </div>
-                </div>
-            </section>
+            <HubBody content={content} />
+            <Footer />
         </div>
     );
 }

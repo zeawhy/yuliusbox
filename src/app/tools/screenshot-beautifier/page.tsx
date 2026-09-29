@@ -1,14 +1,19 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ArrowLeft, Download, Upload, Image as ImageIcon, Settings, Maximize, Minus, X, User } from "lucide-react";
-import Link from "next/link";
+import { Download, Upload, Image as ImageIcon, Settings, Maximize, Minus, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HubBody } from "@/components/seo/HubBody";
+import { hubContent } from "@/lib/hub-content";
 import { toPng } from "html-to-image";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 export default function ScreenshotBeautifierPage() {
     const { language } = useLanguage();
+    const content = hubContent["screenshot-beautifier"];
     const exportRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -153,17 +158,25 @@ export default function ScreenshotBeautifierPage() {
     };
 
     return (
-        <div
-            className="flex flex-col lg:flex-row h-screen bg-zinc-950 text-white overflow-hidden"
-            onPaste={handlePaste}
-        >
+        <div className="min-h-screen bg-zinc-950 text-white">
+            <div className="max-w-5xl mx-auto px-4 sm:px-8">
+                <Header />
+            </div>
+            <div className="max-w-5xl mx-auto px-4 sm:px-8 pt-4 sm:pt-8">
+                <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
+                <div className="text-center space-y-4 mb-8 sm:mb-12">
+                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">{content.h1}</h1>
+                    <p className="text-zinc-400 max-w-xl mx-auto">{content.subtitle}</p>
+                </div>
+            </div>
+            <div
+                className="flex flex-col lg:flex-row h-screen overflow-hidden"
+                onPaste={handlePaste}
+            >
             {/* Mobile Header / Sidebar on Desktop */}
             <div className="w-full lg:w-80 bg-zinc-900 border-r border-zinc-800 flex flex-col z-20 overflow-y-auto">
                 <div className="p-6 border-b border-zinc-800">
-                    <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors text-sm mb-4">
-                        <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                    </Link>
-                    <h1 className="text-xl font-bold">{language === "en" ? t.title.en : t.title.cn}</h1>
+                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Customize</p>
                 </div>
 
                 <div className="p-6 space-y-8 flex-1">
@@ -564,6 +577,13 @@ export default function ScreenshotBeautifierPage() {
                     )}
                 </div>
             </div>
-        </div >
+            </div>
+            <div className="max-w-5xl mx-auto px-4 sm:px-8 py-4 sm:py-8">
+                <HubBody content={content} />
+            </div>
+            <div className="max-w-5xl mx-auto px-4 sm:px-8">
+                <Footer />
+            </div>
+        </div>
     );
 }

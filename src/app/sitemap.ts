@@ -1,6 +1,10 @@
 import { MetadataRoute } from "next";
 import { toolsData } from "@/lib/tools-data";
 import { NOINDEX_TOOL_PATHS } from "@/lib/seo";
+import { longTailPages } from "@/lib/long-tail-content";
+
+/** Static informational pages (not tools). */
+const STATIC_PAGES = ["/privacy", "/about", "/contact", "/terms"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://www.yuliusbox.com";
@@ -26,6 +30,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
         routes.push({
             url: `${baseUrl}${tool.href}`,
+        });
+    });
+
+    // 3. Indexed long-tail scenario pages
+    longTailPages.forEach((page) => {
+        routes.push({
+            url: `${baseUrl}${page.href}`,
+        });
+    });
+
+    // 4. Static informational pages
+    STATIC_PAGES.forEach((path) => {
+        routes.push({
+            url: `${baseUrl}${path}`,
         });
     });
 
