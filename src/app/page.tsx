@@ -111,9 +111,8 @@ export default function Home() {
                     <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl">
                         Your files never leave your device. Compress images, merge PDFs,
                         convert video to GIF, beautify screenshots, and transcribe audio —
-                        no uploads, no accounts. The AI Excel formula generator is the
-                        one exception: it sends only your typed description to an AI
-                        service — never your files.
+                        no uploads, no accounts. A few server-powered tools are the
+                        exception, and each one is clearly labeled.
                     </p>
                 </section>
 
@@ -190,9 +189,11 @@ export default function Home() {
                         )}
                     </ul>
                     <p className="text-xs text-zinc-500 mt-4 max-w-2xl">
-                        * The AI Excel formula generator is the one exception to our
-                        on-device rule: it sends only your typed description to an AI
-                        service — never your files.
+                        * The AI Excel formula generator is an exception to our on-device
+                        rule: it sends only your typed description to an AI service —
+                        never your files. Our Office-to-PDF converters (Word, Excel,
+                        PowerPoint, URL) also run on our secure servers: files are
+                        converted and never stored.
                     </p>
                 </section>
 
@@ -209,7 +210,10 @@ export default function Home() {
                         server costs, and no privacy trade-offs — most tools even keep
                         working offline once the page has loaded. The one exception is the
                         AI Excel formula generator: it sends only your typed description
-                        to an AI service. Verify it yourself — open the DevTools Network
+                        to an AI service, and our Office-to-PDF converters (Word, Excel,
+                        PowerPoint, URL) run on our secure servers — files are converted,
+                        never stored. Verify the on-device tools yourself — open the
+                        DevTools Network
                         tab and watch your files go nowhere. YuliusBox is open source
                         (MIT) —{" "}
                         <a
