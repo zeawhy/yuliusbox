@@ -36,7 +36,13 @@ export const metadata: Metadata = {
 };
 
 import { LanguageProvider } from "@/context/LanguageContext";
-import { GoogleAnalytics } from '@next/third-parties/google';
+import Script from "next/script";
+
+// Umami (self-hosted, cookieless analytics). The tracking script is only
+// injected once NEXT_PUBLIC_UMAMI_WEBSITE_ID is set, so the site works fine
+// before the analytics server is deployed.
+const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL || "https://stats.yuliusbox.com";
 
 export default function RootLayout({
   children,
@@ -49,7 +55,14 @@ export default function RootLayout({
         <LanguageProvider>
           {children}
         </LanguageProvider>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-CH0GSRDG6C"} />
+        {umamiWebsiteId && (
+          <Script
+            src={`${umamiUrl}/script.js`}
+            data-website-id={umamiWebsiteId}
+            data-domains="yuliusbox.com,www.yuliusbox.com"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );

@@ -93,9 +93,11 @@ export default function PrivacyPage() {
 
             <Section title="Analytics">
                 <p>
-                    We use privacy-conscious, aggregate analytics (Google Analytics) to
-                    understand which tools are popular and to fix broken pages. This data is
-                    aggregated and is not linked to your identity or your files.
+                    We use Umami — a privacy-focused, cookieless analytics tool that we
+                    host on our own server — to understand which tools are popular and
+                    to fix broken pages. It records aggregate page views, referrers,
+                    and device types only: no cookies, no cross-site tracking, and
+                    nothing linked to your identity or your files.
                 </p>
             </Section>
 
