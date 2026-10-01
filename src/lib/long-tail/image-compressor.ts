@@ -8,7 +8,7 @@ export const compressImageTo100kb: LongTailContent = {
     id: "compress-image-to-100kb",
     slug: "compress-image-to-100kb",
     hubId: "image-compressor",
-    href: "/tools/image-compressor/compress-image-to-100kb/",
+    href: "/tools/image-compressor/compress-image-to-100kb",
     crumb: "Compress Image to 100KB",
     h1: "Compress Image to 100KB Online — Free",
     subtitle:
@@ -109,7 +109,7 @@ export const compressJpgTo50kb: LongTailContent = {
     id: "compress-jpg-to-50kb",
     slug: "compress-jpg-to-50kb",
     hubId: "image-compressor",
-    href: "/tools/image-compressor/compress-jpg-to-50kb/",
+    href: "/tools/image-compressor/compress-jpg-to-50kb",
     crumb: "Compress JPG to 50KB",
     h1: "Compress JPG to 50KB Online — Free",
     subtitle:
@@ -190,11 +190,11 @@ export const compressJpgTo50kb: LongTailContent = {
             label: "Image Compressor — full manual control",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Compress image to 100KB",
         },
         {
-            href: "/tools/image-compressor/compress-png-online/",
+            href: "/tools/image-compressor/compress-png-online",
             label: "Compress PNG screenshots",
         },
         {
@@ -209,7 +209,7 @@ export const convertImageToWebp: LongTailContent = {
     id: "convert-image-to-webp",
     slug: "convert-image-to-webp",
     hubId: "image-compressor",
-    href: "/tools/image-compressor/convert-image-to-webp/",
+    href: "/tools/image-compressor/convert-image-to-webp",
     crumb: "Convert Images to WebP",
     h1: "Convert Images to WebP Online — Free",
     subtitle:
@@ -290,11 +290,11 @@ export const convertImageToWebp: LongTailContent = {
             label: "Image Compressor — full manual control",
         },
         {
-            href: "/tools/image-compressor/compress-images-for-websites/",
+            href: "/tools/image-compressor/compress-images-for-websites",
             label: "Compress images for faster websites",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Compress image to 100KB",
         },
         {
@@ -309,7 +309,7 @@ export const compressPhotosForEmail: LongTailContent = {
     id: "compress-photos-for-email",
     slug: "compress-photos-for-email",
     hubId: "image-compressor",
-    href: "/tools/image-compressor/compress-photos-for-email/",
+    href: "/tools/image-compressor/compress-photos-for-email",
     crumb: "Compress Photos for Email",
     h1: "Compress Photos for Email Online — Free",
     subtitle:
@@ -390,11 +390,11 @@ export const compressPhotosForEmail: LongTailContent = {
             label: "Image Compressor — full manual control",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Compress image to 100KB for strict forms",
         },
         {
-            href: "/tools/image-compressor/convert-image-to-webp/",
+            href: "/tools/image-compressor/convert-image-to-webp",
             label: "Convert images to WebP",
         },
         {
@@ -409,7 +409,7 @@ export const compressImagesForWebsites: LongTailContent = {
     id: "compress-images-for-websites",
     slug: "compress-images-for-websites",
     hubId: "image-compressor",
-    href: "/tools/image-compressor/compress-images-for-websites/",
+    href: "/tools/image-compressor/compress-images-for-websites",
     crumb: "Compress Images for Websites",
     h1: "Compress Images for Websites — Faster Pages",
     subtitle:
@@ -490,15 +490,15 @@ export const compressImagesForWebsites: LongTailContent = {
             label: "Image Compressor — full manual control",
         },
         {
-            href: "/tools/image-compressor/convert-image-to-webp/",
+            href: "/tools/image-compressor/convert-image-to-webp",
             label: "Convert images to WebP for extra savings",
         },
         {
-            href: "/tools/image-compressor/compress-png-online/",
+            href: "/tools/image-compressor/compress-png-online",
             label: "Compress PNG screenshots",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Compress image to 100KB",
         },
     ],
@@ -508,7 +508,7 @@ export const compressPngOnline: LongTailContent = {
     id: "compress-png-online",
     slug: "compress-png-online",
     hubId: "image-compressor",
-    href: "/tools/image-compressor/compress-png-online/",
+    href: "/tools/image-compressor/compress-png-online",
     crumb: "Compress PNG Online",
     h1: "Compress PNG Online — Free",
     subtitle:
@@ -588,11 +588,11 @@ export const compressPngOnline: LongTailContent = {
             label: "Image Compressor — full manual control",
         },
         {
-            href: "/tools/image-compressor/compress-images-for-websites/",
+            href: "/tools/image-compressor/compress-images-for-websites",
             label: "Compress images for faster websites",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Compress image to 100KB",
         },
     ],

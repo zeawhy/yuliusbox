@@ -18,7 +18,7 @@ const videoToGifForDiscord: LongTailContent = {
     id: "video-to-gif-for-discord",
     slug: "video-to-gif-for-discord",
     hubId: "video-to-gif",
-    href: "/tools/video-to-gif/video-to-gif-for-discord/",
+    href: "/tools/video-to-gif/video-to-gif-for-discord",
     crumb: "Video to GIF for Discord",
     h1: "Video to GIF for Discord — Under the 8MB Limit",
     subtitle:
@@ -99,15 +99,15 @@ const videoToGifForDiscord: LongTailContent = {
             label: "Video to GIF — full manual FPS and width control",
         },
         {
-            href: "/tools/video-to-gif/compress-gif-online/",
+            href: "/tools/video-to-gif/compress-gif-online",
             label: "Compress an existing GIF to a smaller file",
         },
         {
-            href: "/tools/video-to-gif/screen-recording-to-gif/",
+            href: "/tools/video-to-gif/screen-recording-to-gif",
             label: "Turn screen recordings into GIFs",
         },
         {
-            href: "/tools/image-compressor/convert-image-to-webp/",
+            href: "/tools/image-compressor/convert-image-to-webp",
             label: "Compress images to WebP for the web",
         },
     ],
@@ -117,7 +117,7 @@ const convertMovToGif: LongTailContent = {
     id: "convert-mov-to-gif",
     slug: "convert-mov-to-gif",
     hubId: "video-to-gif",
-    href: "/tools/video-to-gif/convert-mov-to-gif/",
+    href: "/tools/video-to-gif/convert-mov-to-gif",
     crumb: "Convert MOV to GIF",
     h1: "Convert MOV to GIF Online — Free",
     subtitle:
@@ -197,11 +197,11 @@ const convertMovToGif: LongTailContent = {
             label: "Video to GIF — full manual FPS and width control",
         },
         {
-            href: "/tools/video-to-gif/video-to-gif-for-discord/",
+            href: "/tools/video-to-gif/video-to-gif-for-discord",
             label: "Make Discord-ready GIFs under 8MB",
         },
         {
-            href: "/tools/video-to-gif/screen-recording-to-gif/",
+            href: "/tools/video-to-gif/screen-recording-to-gif",
             label: "Turn screen recordings into GIFs",
         },
         {
@@ -215,7 +215,7 @@ const webmToGifConverter: LongTailContent = {
     id: "webm-to-gif-converter",
     slug: "webm-to-gif-converter",
     hubId: "video-to-gif",
-    href: "/tools/video-to-gif/webm-to-gif-converter/",
+    href: "/tools/video-to-gif/webm-to-gif-converter",
     crumb: "WebM to GIF Converter",
     h1: "Convert WebM to GIF Online — Free",
     subtitle:
@@ -295,11 +295,11 @@ const webmToGifConverter: LongTailContent = {
             label: "Video to GIF — full manual FPS and width control",
         },
         {
-            href: "/tools/video-to-gif/screen-recording-to-gif/",
+            href: "/tools/video-to-gif/screen-recording-to-gif",
             label: "Turn screen recordings into GIFs",
         },
         {
-            href: "/tools/video-to-gif/convert-mov-to-gif/",
+            href: "/tools/video-to-gif/convert-mov-to-gif",
             label: "Convert MOV clips to GIF",
         },
         {
@@ -313,7 +313,7 @@ const screenRecordingToGif: LongTailContent = {
     id: "screen-recording-to-gif",
     slug: "screen-recording-to-gif",
     hubId: "video-to-gif",
-    href: "/tools/video-to-gif/screen-recording-to-gif/",
+    href: "/tools/video-to-gif/screen-recording-to-gif",
     crumb: "Screen Recording to GIF",
     h1: "Turn Screen Recordings into GIFs — Free",
     subtitle:
@@ -393,15 +393,15 @@ const screenRecordingToGif: LongTailContent = {
             label: "Video to GIF — full manual FPS and width control",
         },
         {
-            href: "/tools/video-to-gif/convert-mov-to-gif/",
+            href: "/tools/video-to-gif/convert-mov-to-gif",
             label: "Convert iPhone MOV recordings to GIF",
         },
         {
-            href: "/tools/video-to-gif/webm-to-gif-converter/",
+            href: "/tools/video-to-gif/webm-to-gif-converter",
             label: "Convert WebM recordings to GIF",
         },
         {
-            href: "/tools/screenshot-beautifier/code-screenshot-generator/",
+            href: "/tools/screenshot-beautifier/code-screenshot-generator",
             label: "Beautiful code screenshots for docs",
         },
     ],
@@ -411,7 +411,7 @@ const compressGifOnline: LongTailContent = {
     id: "compress-gif-online",
     slug: "compress-gif-online",
     hubId: "video-to-gif",
-    href: "/tools/video-to-gif/compress-gif-online/",
+    href: "/tools/video-to-gif/compress-gif-online",
     crumb: "Compress GIF Online",
     h1: "Compress GIF Online — Make GIFs Smaller",
     subtitle:
@@ -492,15 +492,15 @@ const compressGifOnline: LongTailContent = {
             label: "Video to GIF — convert clips with full control",
         },
         {
-            href: "/tools/video-to-gif/video-to-gif-for-discord/",
+            href: "/tools/video-to-gif/video-to-gif-for-discord",
             label: "Make Discord-ready GIFs under 8MB",
         },
         {
-            href: "/tools/video-to-gif/screen-recording-to-gif/",
+            href: "/tools/video-to-gif/screen-recording-to-gif",
             label: "Turn screen recordings into GIFs",
         },
         {
-            href: "/tools/image-compressor/convert-image-to-webp/",
+            href: "/tools/image-compressor/convert-image-to-webp",
             label: "Compress still images to WebP",
         },
     ],

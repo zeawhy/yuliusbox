@@ -128,7 +128,7 @@ export const hubContent: Record<string, HubContent> = {
             },
         ],
         related: [
-            { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
             { href: "/tools/pdf-kit", label: "Merge and compress PDF files" },
             { href: "/tools/video-to-gif", label: "Convert video to GIF" },
             { href: "https://www.heic2jpg-free.com", label: "Convert HEIC photos to JPG", external: true },
@@ -201,7 +201,7 @@ export const hubContent: Record<string, HubContent> = {
         ],
         related: [
             { href: "/tools/image-compressor", label: "Compress images for the web" },
-            { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
             { href: "/tools/excel-formula-bot", label: "Generate Excel formulas with AI" },
         ],
     },
@@ -415,7 +415,7 @@ export const hubContent: Record<string, HubContent> = {
         related: [
             { href: "/tools/image-compressor", label: "Compress images for faster pages" },
             { href: "/tools/video-to-gif", label: "Turn screen recordings into GIFs" },
-            { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
         ],
     },
     "audio-to-text": {

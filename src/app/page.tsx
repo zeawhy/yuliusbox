@@ -55,7 +55,7 @@ const frag = (hubId: keyof typeof hubContent, sectionIndex: number) =>
 
 const FAMILY_SUBLINKS: Record<string, { href: string; label: string }[]> = {
     "image-compressor": [
-        { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+        { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
         { href: frag("image-compressor", 2), label: "JPG vs PNG vs WebP guide" },
     ],
     "pdf-kit": [
@@ -81,7 +81,7 @@ const FAMILY_SUBLINKS: Record<string, { href: string; label: string }[]> = {
 };
 
 const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
-    { href: "/tools/image-compressor/compress-image-to-100kb/", label: "Compress image to 100KB" },
+    { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
     { href: "/tools/pdf-kit", label: "Merge PDF files online" },
     { href: "/tools/video-to-gif", label: "Convert video to GIF" },
     { href: "/tools/excel-formula-bot", label: "AI Excel formula generator *" },

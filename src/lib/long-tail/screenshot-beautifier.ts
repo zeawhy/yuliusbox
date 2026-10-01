@@ -20,7 +20,7 @@ export const codeScreenshotGenerator: LongTailContent = {
     id: "code-screenshot-generator",
     slug: "code-screenshot-generator",
     hubId: "screenshot-beautifier",
-    href: "/tools/screenshot-beautifier/code-screenshot-generator/",
+    href: "/tools/screenshot-beautifier/code-screenshot-generator",
     crumb: "Code Screenshot Generator",
     h1: "Beautiful Code Screenshots — Free Generator",
     subtitle:
@@ -102,11 +102,11 @@ export const codeScreenshotGenerator: LongTailContent = {
             label: "Screenshot Beautifier — all styles and frames",
         },
         {
-            href: "/tools/screenshot-beautifier/gradient-background-screenshot/",
+            href: "/tools/screenshot-beautifier/gradient-background-screenshot",
             label: "Screenshots on gradient backgrounds",
         },
         {
-            href: "/tools/screenshot-beautifier/screenshot-to-social-post/",
+            href: "/tools/screenshot-beautifier/screenshot-to-social-post",
             label: "Turn screenshots into social posts",
         },
         {
@@ -120,7 +120,7 @@ export const screenshotInBrowserMockup: LongTailContent = {
     id: "screenshot-in-browser-mockup",
     slug: "screenshot-in-browser-mockup",
     hubId: "screenshot-beautifier",
-    href: "/tools/screenshot-beautifier/screenshot-in-browser-mockup/",
+    href: "/tools/screenshot-beautifier/screenshot-in-browser-mockup",
     crumb: "Screenshot in Browser Mockup",
     h1: "Put Screenshots in a Browser Mockup — Free",
     subtitle:
@@ -202,11 +202,11 @@ export const screenshotInBrowserMockup: LongTailContent = {
             label: "Screenshot Beautifier — all styles and frames",
         },
         {
-            href: "/tools/screenshot-beautifier/code-screenshot-generator/",
+            href: "/tools/screenshot-beautifier/code-screenshot-generator",
             label: "Beautiful code screenshot generator",
         },
         {
-            href: "/tools/screenshot-beautifier/app-store-screenshot-maker/",
+            href: "/tools/screenshot-beautifier/app-store-screenshot-maker",
             label: "App Store screenshot maker",
         },
         {
@@ -220,7 +220,7 @@ export const gradientBackgroundScreenshot: LongTailContent = {
     id: "gradient-background-screenshot",
     slug: "gradient-background-screenshot",
     hubId: "screenshot-beautifier",
-    href: "/tools/screenshot-beautifier/gradient-background-screenshot/",
+    href: "/tools/screenshot-beautifier/gradient-background-screenshot",
     crumb: "Gradient Background Screenshots",
     h1: "Screenshots on Gradient Backgrounds — Free",
     subtitle:
@@ -301,11 +301,11 @@ export const gradientBackgroundScreenshot: LongTailContent = {
             label: "Screenshot Beautifier — all styles and frames",
         },
         {
-            href: "/tools/screenshot-beautifier/screenshot-in-browser-mockup/",
+            href: "/tools/screenshot-beautifier/screenshot-in-browser-mockup",
             label: "Screenshot in a browser mockup",
         },
         {
-            href: "/tools/screenshot-beautifier/screenshot-to-social-post/",
+            href: "/tools/screenshot-beautifier/screenshot-to-social-post",
             label: "Turn screenshots into social posts",
         },
         {
@@ -319,7 +319,7 @@ export const appStoreScreenshotMaker: LongTailContent = {
     id: "app-store-screenshot-maker",
     slug: "app-store-screenshot-maker",
     hubId: "screenshot-beautifier",
-    href: "/tools/screenshot-beautifier/app-store-screenshot-maker/",
+    href: "/tools/screenshot-beautifier/app-store-screenshot-maker",
     crumb: "App Store Screenshot Maker",
     h1: "App Store Screenshots — Free Maker",
     subtitle:
@@ -401,11 +401,11 @@ export const appStoreScreenshotMaker: LongTailContent = {
             label: "Screenshot Beautifier — all styles and frames",
         },
         {
-            href: "/tools/screenshot-beautifier/screenshot-in-browser-mockup/",
+            href: "/tools/screenshot-beautifier/screenshot-in-browser-mockup",
             label: "Screenshot in a browser mockup",
         },
         {
-            href: "/tools/screenshot-beautifier/gradient-background-screenshot/",
+            href: "/tools/screenshot-beautifier/gradient-background-screenshot",
             label: "Screenshots on gradient backgrounds",
         },
         {
@@ -419,7 +419,7 @@ export const screenshotToSocialPost: LongTailContent = {
     id: "screenshot-to-social-post",
     slug: "screenshot-to-social-post",
     hubId: "screenshot-beautifier",
-    href: "/tools/screenshot-beautifier/screenshot-to-social-post/",
+    href: "/tools/screenshot-beautifier/screenshot-to-social-post",
     crumb: "Screenshot to Social Post",
     h1: "Turn Screenshots into Social Posts — Free",
     subtitle:
@@ -501,11 +501,11 @@ export const screenshotToSocialPost: LongTailContent = {
             label: "Screenshot Beautifier — all styles and frames",
         },
         {
-            href: "/tools/screenshot-beautifier/code-screenshot-generator/",
+            href: "/tools/screenshot-beautifier/code-screenshot-generator",
             label: "Beautiful code screenshot generator",
         },
         {
-            href: "/tools/screenshot-beautifier/gradient-background-screenshot/",
+            href: "/tools/screenshot-beautifier/gradient-background-screenshot",
             label: "Screenshots on gradient backgrounds",
         },
         {

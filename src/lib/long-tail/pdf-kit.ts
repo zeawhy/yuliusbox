@@ -18,7 +18,7 @@ export const mergePdfOnline: LongTailContent = {
     id: "merge-pdf-online",
     slug: "merge-pdf-online",
     hubId: "pdf-kit",
-    href: "/tools/pdf-kit/merge-pdf-online/",
+    href: "/tools/pdf-kit/merge-pdf-online",
     crumb: "Merge PDF Online",
     h1: "Merge PDF Online — Free",
     subtitle:
@@ -99,15 +99,15 @@ export const mergePdfOnline: LongTailContent = {
             label: "PDF Tools — merge, split, convert",
         },
         {
-            href: "/tools/pdf-kit/jpg-to-pdf-converter/",
+            href: "/tools/pdf-kit/jpg-to-pdf-converter",
             label: "Turn JPG scans into a PDF first",
         },
         {
-            href: "/tools/pdf-kit/extract-pages-from-pdf/",
+            href: "/tools/pdf-kit/extract-pages-from-pdf",
             label: "Extract pages from a PDF",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Shrink scanned images before merging",
         },
     ],
@@ -117,7 +117,7 @@ export const jpgToPdfConverter: LongTailContent = {
     id: "jpg-to-pdf-converter",
     slug: "jpg-to-pdf-converter",
     hubId: "pdf-kit",
-    href: "/tools/pdf-kit/jpg-to-pdf-converter/",
+    href: "/tools/pdf-kit/jpg-to-pdf-converter",
     crumb: "JPG to PDF Converter",
     h1: "JPG to PDF Converter — Free",
     subtitle:
@@ -198,11 +198,11 @@ export const jpgToPdfConverter: LongTailContent = {
             label: "PDF Tools — merge, split, convert",
         },
         {
-            href: "/tools/pdf-kit/merge-pdf-online/",
+            href: "/tools/pdf-kit/merge-pdf-online",
             label: "Merge PDFs into one file",
         },
         {
-            href: "/tools/pdf-kit/compress-pdf-online/",
+            href: "/tools/pdf-kit/compress-pdf-online",
             label: "Shrink the resulting PDF",
         },
         {
@@ -217,7 +217,7 @@ export const splitPdfOnline: LongTailContent = {
     id: "split-pdf-online",
     slug: "split-pdf-online",
     hubId: "pdf-kit",
-    href: "/tools/pdf-kit/split-pdf-online/",
+    href: "/tools/pdf-kit/split-pdf-online",
     crumb: "Split PDF Online",
     h1: "Split PDF Online — Free",
     subtitle:
@@ -298,15 +298,15 @@ export const splitPdfOnline: LongTailContent = {
             label: "PDF Tools — merge, split, convert",
         },
         {
-            href: "/tools/pdf-kit/extract-pages-from-pdf/",
+            href: "/tools/pdf-kit/extract-pages-from-pdf",
             label: "Extract specific pages instead",
         },
         {
-            href: "/tools/pdf-kit/merge-pdf-online/",
+            href: "/tools/pdf-kit/merge-pdf-online",
             label: "Merge PDFs back together",
         },
         {
-            href: "/tools/pdf-kit/compress-pdf-online/",
+            href: "/tools/pdf-kit/compress-pdf-online",
             label: "Shrink large PDFs",
         },
     ],
@@ -316,7 +316,7 @@ export const extractPagesFromPdf: LongTailContent = {
     id: "extract-pages-from-pdf",
     slug: "extract-pages-from-pdf",
     hubId: "pdf-kit",
-    href: "/tools/pdf-kit/extract-pages-from-pdf/",
+    href: "/tools/pdf-kit/extract-pages-from-pdf",
     crumb: "Extract Pages from PDF",
     h1: "Extract Pages from PDF — Free",
     subtitle:
@@ -397,11 +397,11 @@ export const extractPagesFromPdf: LongTailContent = {
             label: "PDF Tools — merge, split, convert",
         },
         {
-            href: "/tools/pdf-kit/split-pdf-online/",
+            href: "/tools/pdf-kit/split-pdf-online",
             label: "Split a PDF into separate pages",
         },
         {
-            href: "/tools/pdf-kit/merge-pdf-online/",
+            href: "/tools/pdf-kit/merge-pdf-online",
             label: "Merge excerpts into one file",
         },
     ],
@@ -411,7 +411,7 @@ export const compressPdfOnline: LongTailContent = {
     id: "compress-pdf-online",
     slug: "compress-pdf-online",
     hubId: "pdf-kit",
-    href: "/tools/pdf-kit/compress-pdf-online/",
+    href: "/tools/pdf-kit/compress-pdf-online",
     crumb: "Compress PDF Online",
     h1: "Compress PDF Online — Free",
     subtitle:
@@ -492,15 +492,15 @@ export const compressPdfOnline: LongTailContent = {
             label: "PDF Tools — merge, split, convert",
         },
         {
-            href: "/tools/pdf-kit/jpg-to-pdf-converter/",
+            href: "/tools/pdf-kit/jpg-to-pdf-converter",
             label: "Build lean PDFs from compressed JPGs",
         },
         {
-            href: "/tools/image-compressor/compress-image-to-100kb/",
+            href: "/tools/image-compressor/compress-image-to-100kb",
             label: "Compress scan images first",
         },
         {
-            href: "/tools/pdf-kit/merge-pdf-online/",
+            href: "/tools/pdf-kit/merge-pdf-online",
             label: "Merge PDFs into one file",
         },
     ],

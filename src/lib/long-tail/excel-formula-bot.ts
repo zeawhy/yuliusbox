@@ -17,7 +17,7 @@ const vlookupVsXlookupGenerator: LongTailContent = {
     id: "vlookup-vs-xlookup-generator",
     slug: "vlookup-vs-xlookup-generator",
     hubId: "excel-formula-bot",
-    href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator/",
+    href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator",
     crumb: "VLOOKUP vs XLOOKUP Generator",
     h1: "VLOOKUP vs XLOOKUP Formula Generator",
     subtitle:
@@ -101,15 +101,15 @@ const vlookupVsXlookupGenerator: LongTailContent = {
             label: "Excel Formula Bot — generate any formula",
         },
         {
-            href: "/tools/excel-formula-bot/sumifs-countifs-builder/",
+            href: "/tools/excel-formula-bot/sumifs-countifs-builder",
             label: "Build SUMIFS and COUNTIFS formulas",
         },
         {
-            href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions/",
+            href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions",
             label: "IF formulas with multiple conditions",
         },
         {
-            href: "/tools/excel-formula-bot/google-sheets-formula-generator/",
+            href: "/tools/excel-formula-bot/google-sheets-formula-generator",
             label: "Google Sheets formula generator",
         },
     ],
@@ -119,7 +119,7 @@ const excelIfFormulaMultipleConditions: LongTailContent = {
     id: "excel-if-formula-multiple-conditions",
     slug: "excel-if-formula-multiple-conditions",
     hubId: "excel-formula-bot",
-    href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions/",
+    href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions",
     crumb: "IF Formula with Multiple Conditions",
     h1: "Excel IF Formula with Multiple Conditions — Generator",
     subtitle:
@@ -203,15 +203,15 @@ const excelIfFormulaMultipleConditions: LongTailContent = {
             label: "Excel Formula Bot — generate any formula",
         },
         {
-            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator/",
+            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator",
             label: "VLOOKUP vs XLOOKUP generator",
         },
         {
-            href: "/tools/excel-formula-bot/sumifs-countifs-builder/",
+            href: "/tools/excel-formula-bot/sumifs-countifs-builder",
             label: "Build SUMIFS and COUNTIFS formulas",
         },
         {
-            href: "/tools/excel-formula-bot/count-unique-values-formula/",
+            href: "/tools/excel-formula-bot/count-unique-values-formula",
             label: "Count unique values formula",
         },
     ],
@@ -221,7 +221,7 @@ const countUniqueValuesFormula: LongTailContent = {
     id: "count-unique-values-formula",
     slug: "count-unique-values-formula",
     hubId: "excel-formula-bot",
-    href: "/tools/excel-formula-bot/count-unique-values-formula/",
+    href: "/tools/excel-formula-bot/count-unique-values-formula",
     crumb: "Count Unique Values Formula",
     h1: "Count Unique Values in Excel — Formula Generator",
     subtitle:
@@ -304,15 +304,15 @@ const countUniqueValuesFormula: LongTailContent = {
             label: "Excel Formula Bot — generate any formula",
         },
         {
-            href: "/tools/excel-formula-bot/sumifs-countifs-builder/",
+            href: "/tools/excel-formula-bot/sumifs-countifs-builder",
             label: "Build SUMIFS and COUNTIFS formulas",
         },
         {
-            href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions/",
+            href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions",
             label: "IF formulas with multiple conditions",
         },
         {
-            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator/",
+            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator",
             label: "VLOOKUP vs XLOOKUP generator",
         },
     ],
@@ -322,7 +322,7 @@ const sumifsCountifsBuilder: LongTailContent = {
     id: "sumifs-countifs-builder",
     slug: "sumifs-countifs-builder",
     hubId: "excel-formula-bot",
-    href: "/tools/excel-formula-bot/sumifs-countifs-builder/",
+    href: "/tools/excel-formula-bot/sumifs-countifs-builder",
     crumb: "SUMIFS / COUNTIFS Builder",
     h1: "SUMIFS and COUNTIFS Formula Builder",
     subtitle:
@@ -406,15 +406,15 @@ const sumifsCountifsBuilder: LongTailContent = {
             label: "Excel Formula Bot — generate any formula",
         },
         {
-            href: "/tools/excel-formula-bot/count-unique-values-formula/",
+            href: "/tools/excel-formula-bot/count-unique-values-formula",
             label: "Count unique values formula",
         },
         {
-            href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions/",
+            href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions",
             label: "IF formulas with multiple conditions",
         },
         {
-            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator/",
+            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator",
             label: "VLOOKUP vs XLOOKUP generator",
         },
     ],
@@ -424,7 +424,7 @@ const googleSheetsFormulaGenerator: LongTailContent = {
     id: "google-sheets-formula-generator",
     slug: "google-sheets-formula-generator",
     hubId: "excel-formula-bot",
-    href: "/tools/excel-formula-bot/google-sheets-formula-generator/",
+    href: "/tools/excel-formula-bot/google-sheets-formula-generator",
     crumb: "Google Sheets Formula Generator",
     h1: "Google Sheets Formula Generator — Free AI",
     subtitle:
@@ -509,15 +509,15 @@ const googleSheetsFormulaGenerator: LongTailContent = {
             label: "Excel Formula Bot — generate any formula",
         },
         {
-            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator/",
+            href: "/tools/excel-formula-bot/vlookup-vs-xlookup-generator",
             label: "VLOOKUP vs XLOOKUP generator",
         },
         {
-            href: "/tools/excel-formula-bot/sumifs-countifs-builder/",
+            href: "/tools/excel-formula-bot/sumifs-countifs-builder",
             label: "Build SUMIFS and COUNTIFS formulas",
         },
         {
-            href: "/tools/audio-to-text/transcribe-meeting-recordings/",
+            href: "/tools/audio-to-text/transcribe-meeting-recordings",
             label: "Transcribe meeting recordings to text",
         },
     ],

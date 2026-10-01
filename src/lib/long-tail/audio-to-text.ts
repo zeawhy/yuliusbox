@@ -22,7 +22,7 @@ export const transcribeMp3ToText: LongTailContent = {
     id: "transcribe-mp3-to-text",
     slug: "transcribe-mp3-to-text",
     hubId: "audio-to-text",
-    href: "/tools/audio-to-text/transcribe-mp3-to-text/",
+    href: "/tools/audio-to-text/transcribe-mp3-to-text",
     crumb: "Transcribe MP3 to Text",
     h1: "Transcribe MP3 to Text — Free & Private",
     subtitle:
@@ -103,15 +103,15 @@ export const transcribeMp3ToText: LongTailContent = {
             label: "Audio to Text — all formats and tiers",
         },
         {
-            href: "/tools/audio-to-text/transcribe-meeting-recordings/",
+            href: "/tools/audio-to-text/transcribe-meeting-recordings",
             label: "Transcribe meeting recordings",
         },
         {
-            href: "/tools/audio-to-text/transcribe-interviews-free/",
+            href: "/tools/audio-to-text/transcribe-interviews-free",
             label: "Transcribe interviews free",
         },
         {
-            href: "/tools/audio-to-text/private-voice-transcription/",
+            href: "/tools/audio-to-text/private-voice-transcription",
             label: "Private voice transcription",
         },
     ],
@@ -121,7 +121,7 @@ export const transcribeIphoneVoiceMemos: LongTailContent = {
     id: "transcribe-iphone-voice-memos",
     slug: "transcribe-iphone-voice-memos",
     hubId: "audio-to-text",
-    href: "/tools/audio-to-text/transcribe-iphone-voice-memos/",
+    href: "/tools/audio-to-text/transcribe-iphone-voice-memos",
     crumb: "Transcribe iPhone Voice Memos",
     h1: "Transcribe iPhone Voice Memos to Text — Free",
     subtitle:
@@ -202,11 +202,11 @@ export const transcribeIphoneVoiceMemos: LongTailContent = {
             label: "Audio to Text — all formats and tiers",
         },
         {
-            href: "/tools/audio-to-text/transcribe-mp3-to-text/",
+            href: "/tools/audio-to-text/transcribe-mp3-to-text",
             label: "Transcribe MP3 to text",
         },
         {
-            href: "/tools/audio-to-text/private-voice-transcription/",
+            href: "/tools/audio-to-text/private-voice-transcription",
             label: "Private voice transcription",
         },
     ],
@@ -216,7 +216,7 @@ export const transcribeMeetingRecordings: LongTailContent = {
     id: "transcribe-meeting-recordings",
     slug: "transcribe-meeting-recordings",
     hubId: "audio-to-text",
-    href: "/tools/audio-to-text/transcribe-meeting-recordings/",
+    href: "/tools/audio-to-text/transcribe-meeting-recordings",
     crumb: "Transcribe Meeting Recordings",
     h1: "Transcribe Meeting Recordings to Text — Free",
     subtitle:
@@ -297,15 +297,15 @@ export const transcribeMeetingRecordings: LongTailContent = {
             label: "Audio to Text — all formats and tiers",
         },
         {
-            href: "/tools/audio-to-text/transcribe-mp3-to-text/",
+            href: "/tools/audio-to-text/transcribe-mp3-to-text",
             label: "Transcribe MP3 to text",
         },
         {
-            href: "/tools/audio-to-text/transcribe-interviews-free/",
+            href: "/tools/audio-to-text/transcribe-interviews-free",
             label: "Transcribe interviews free",
         },
         {
-            href: "/tools/audio-to-text/private-voice-transcription/",
+            href: "/tools/audio-to-text/private-voice-transcription",
             label: "Private voice transcription",
         },
     ],
@@ -315,7 +315,7 @@ export const transcribeInterviewsFree: LongTailContent = {
     id: "transcribe-interviews-free",
     slug: "transcribe-interviews-free",
     hubId: "audio-to-text",
-    href: "/tools/audio-to-text/transcribe-interviews-free/",
+    href: "/tools/audio-to-text/transcribe-interviews-free",
     crumb: "Transcribe Interviews Free",
     h1: "Transcribe Interviews to Text — Free",
     subtitle:
@@ -396,15 +396,15 @@ export const transcribeInterviewsFree: LongTailContent = {
             label: "Audio to Text — all formats and tiers",
         },
         {
-            href: "/tools/audio-to-text/transcribe-mp3-to-text/",
+            href: "/tools/audio-to-text/transcribe-mp3-to-text",
             label: "Transcribe MP3 to text",
         },
         {
-            href: "/tools/audio-to-text/transcribe-meeting-recordings/",
+            href: "/tools/audio-to-text/transcribe-meeting-recordings",
             label: "Transcribe meeting recordings",
         },
         {
-            href: "/tools/audio-to-text/private-voice-transcription/",
+            href: "/tools/audio-to-text/private-voice-transcription",
             label: "Private voice transcription",
         },
     ],
@@ -414,7 +414,7 @@ export const privateVoiceTranscription: LongTailContent = {
     id: "private-voice-transcription",
     slug: "private-voice-transcription",
     hubId: "audio-to-text",
-    href: "/tools/audio-to-text/private-voice-transcription/",
+    href: "/tools/audio-to-text/private-voice-transcription",
     crumb: "Private Voice Transcription",
     h1: "Private Voice-to-Text — Nothing Uploaded",
     subtitle:
@@ -495,15 +495,15 @@ export const privateVoiceTranscription: LongTailContent = {
             label: "Audio to Text — all formats and tiers",
         },
         {
-            href: "/tools/audio-to-text/transcribe-interviews-free/",
+            href: "/tools/audio-to-text/transcribe-interviews-free",
             label: "Transcribe interviews free",
         },
         {
-            href: "/tools/audio-to-text/transcribe-meeting-recordings/",
+            href: "/tools/audio-to-text/transcribe-meeting-recordings",
             label: "Transcribe meeting recordings",
         },
         {
-            href: "/tools/audio-to-text/transcribe-iphone-voice-memos/",
+            href: "/tools/audio-to-text/transcribe-iphone-voice-memos",
             label: "Transcribe iPhone voice memos",
         },
     ],
