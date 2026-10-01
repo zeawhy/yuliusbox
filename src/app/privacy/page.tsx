@@ -54,6 +54,14 @@ export default function PrivacyPage() {
                     spreadsheet files and their contents are never transmitted — only the
                     description you enter.
                 </p>
+                <p>
+                    A second exception is the Office-to-PDF converters (Word, Excel, and
+                    PowerPoint to PDF). These run on our isolated cloud worker because
+                    browsers cannot faithfully render Office documents on their own. Your
+                    file is transmitted securely, converted, and immediately destroyed
+                    from memory once the PDF is returned — it is never stored or used
+                    for any other purpose.
+                </p>
             </Section>
 
             <Section title="Cookies">
