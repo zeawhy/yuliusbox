@@ -426,6 +426,20 @@ export const toolsData: Tool[] = [
         popular: true,
     },
     {
+        id: "domain-lookup",
+        category: "developer",
+        name: {
+            en: "Domain Lookup",
+            cn: "域名查询工具"
+        },
+        description: {
+            en: "WHOIS/RDAP lookup: registrar, expiry, name servers, plus bulk availability checks across popular extensions.",
+            cn: "WHOIS/RDAP 域名信息查询：注册商、到期时间、NS 记录，支持多后缀可用性与批量查询。"
+        },
+        icon: Globe,
+        href: "/tools/domain-lookup",
+    },
+    {
         id: "more-tools",
         category: "productivity",
         name: {
