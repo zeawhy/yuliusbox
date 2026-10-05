@@ -324,15 +324,37 @@ async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise
 // ---------------------------------------------------------------------------
 const MAX_DOMAINS = 50;
 
+// Allow the full upstream chain (IANA bootstrap + RDAP, each with its own
+// timeout) to complete on serverless. Vercel clamps to the plan's max.
+export const maxDuration = 60;
+
 export async function POST(request: NextRequest) {
+    try {
+        return await handlePost(request);
+    } catch (err) {
+        // Last-resort guard: never let an uncaught exception produce an
+        // empty/non-JSON response (the client parses JSON unconditionally).
+        console.error("domain-lookup POST failed:", err);
+        return NextResponse.json(
+            { error: "Lookup service temporarily unavailable. Please retry." },
+            { status: 500 }
+        );
+    }
+}
+
+async function handlePost(request: NextRequest) {
     if (ratelimit) {
-        const ip = getClientIp(request);
-        const { success } = await ratelimit.limit(`domainlookup_${ip}`);
-        if (!success) {
-            return NextResponse.json(
-                { error: "Too many lookup requests. Please try again in a minute." },
-                { status: 429 }
-            );
+        try {
+            const ip = getClientIp(request);
+            const { success } = await ratelimit.limit(`domainlookup_${ip}`);
+            if (!success) {
+                return NextResponse.json(
+                    { error: "Too many lookup requests. Please try again in a minute." },
+                    { status: 429 }
+                );
+            }
+        } catch {
+            // Fail open: a rate-limiter outage must not break lookups.
         }
     }
 

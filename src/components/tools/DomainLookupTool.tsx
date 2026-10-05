@@ -114,16 +114,30 @@ function suggestAlternatives(domain: string): string[] {
 }
 
 async function queryDomains(domains: string[]): Promise<DomainResult[]> {
-    const res = await fetch("/api/tools/domain-lookup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ domains }),
-    });
-    const json = await res.json();
-    if (!res.ok) {
-        throw new Error(json.error || `Request failed (${res.status})`);
+    let res: Response;
+    try {
+        res = await fetch("/api/tools/domain-lookup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ domains }),
+        });
+    } catch {
+        throw new Error("Network error. Please check your connection and retry.");
     }
-    return json.results as DomainResult[];
+    let json: { results?: DomainResult[]; error?: string } | null = null;
+    try {
+        json = await res.json();
+    } catch {
+        throw new Error(
+            res.ok
+                ? "Server returned an invalid response. Please retry."
+                : `Request failed (${res.status}). Please retry in a moment.`
+        );
+    }
+    if (!res.ok) {
+        throw new Error(json?.error || `Request failed (${res.status})`);
+    }
+    return (json?.results ?? []) as DomainResult[];
 }
 
 type Tab = "lookup" | "availability" | "bulk";
