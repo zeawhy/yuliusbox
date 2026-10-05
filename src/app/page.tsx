@@ -86,6 +86,7 @@ const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
     { href: "/tools/video-to-gif", label: "Convert video to GIF" },
     { href: "/tools/excel-formula-bot", label: "AI Excel formula generator *" },
     { href: "/tools/screenshot-beautifier", label: "Screenshot beautifier" },
+    { href: "/tools/domain-lookup", label: "Domain lookup" },
     { href: "/tools/audio-to-text", label: "Free audio to text transcriber" },
     { href: "https://www.heic2jpg-free.com", label: "Convert HEIC to JPG free", external: true },
 ];

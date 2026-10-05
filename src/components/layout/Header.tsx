@@ -38,6 +38,14 @@ export function Header() {
                                         {hubContent[id].crumb}
                                     </Link>
                                 ))}
+                                <div className="border-t border-zinc-800 mt-1 pt-1">
+                                    <Link
+                                        href="/tools"
+                                        className="block px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 hover:text-white hover:bg-zinc-800 transition-colors"
+                                    >
+                                        All tools →
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,6 +92,13 @@ export function Header() {
                             {hubContent[id].crumb}
                         </Link>
                     ))}
+                    <Link
+                        href="/tools"
+                        onClick={() => setMobileOpen(false)}
+                        className="px-3 py-3 rounded-lg text-[15px] font-medium text-indigo-300 hover:text-white hover:bg-zinc-900 transition-colors min-h-[44px] flex items-center"
+                    >
+                        All tools →
+                    </Link>
                     <p className="px-3 pt-3 pb-1 text-xs font-semibold text-zinc-600 uppercase tracking-widest">
                         Company
                     </p>

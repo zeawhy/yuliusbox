@@ -4,7 +4,7 @@ import { NOINDEX_TOOL_PATHS } from "@/lib/seo";
 import { longTailPages } from "@/lib/long-tail-content";
 
 /** Static informational pages (not tools). */
-const STATIC_PAGES = ["/privacy", "/about", "/contact", "/terms"];
+const STATIC_PAGES = ["/privacy", "/about", "/contact", "/terms", "/tools"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = "https://www.yuliusbox.com";
