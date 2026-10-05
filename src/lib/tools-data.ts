@@ -440,6 +440,21 @@ export const toolsData: Tool[] = [
         href: "/tools/domain-lookup",
     },
     {
+        id: "exif-remover",
+        category: "media",
+        name: {
+            en: "EXIF Remover",
+            cn: "EXIF 元数据清除"
+        },
+        description: {
+            en: "View hidden photo metadata (camera, GPS, timestamps) and wipe it clean. AI-generation marker detection included.",
+            cn: "查看照片隐藏元数据（相机、GPS、时间戳）并一键清除，附带 AI 生成标记检测。"
+        },
+        icon: Eraser,
+        href: "/tools/exif-remover",
+        popular: true,
+    },
+    {
         id: "more-tools",
         category: "productivity",
         name: {
