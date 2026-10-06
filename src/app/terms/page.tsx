@@ -6,6 +6,20 @@ export const metadata: Metadata = {
     title: "Terms of Service | YuliusBox",
     description: "The terms of service for using YuliusBox's free online tools.",
     alternates: { canonical: "/terms" },
+    openGraph: {
+        url: "/terms",
+        siteName: "YuliusBox",
+        type: "website",
+        images: [
+            {
+                url: "/og/terms.png",
+                width: 1200,
+                height: 630,
+                alt: "Terms of Service",
+            },
+        ],
+    },
+
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

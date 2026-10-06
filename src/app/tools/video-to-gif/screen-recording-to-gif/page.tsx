@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-video-to-gif-screen-recording-to-gif.png",
+                width: 1200,
+                height: 630,
+                alt: "Screen Recording to GIF \u2014 Free for Docs & Demos",
+            },
+        ],
     },
 };
 

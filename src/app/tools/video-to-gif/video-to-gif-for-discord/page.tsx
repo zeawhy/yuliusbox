@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-video-to-gif-video-to-gif-for-discord.png",
+                width: 1200,
+                height: 630,
+                alt: "Video to GIF for Discord \u2014 Under 8MB Limit Free",
+            },
+        ],
     },
 };
 

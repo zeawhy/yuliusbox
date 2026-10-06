@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-image-compressor-compress-photos-for-email.png",
+                width: 1200,
+                height: 630,
+                alt: "Compress Photos for Email \u2014 Beat Attachment Limits Free",
+            },
+        ],
     },
 };
 

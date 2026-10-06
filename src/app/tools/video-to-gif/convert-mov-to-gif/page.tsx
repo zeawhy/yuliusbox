@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-video-to-gif-convert-mov-to-gif.png",
+                width: 1200,
+                height: 630,
+                alt: "Convert MOV to GIF Online Free \u2014 iPhone Clips",
+            },
+        ],
     },
 };
 

@@ -7,6 +7,20 @@ export const metadata: Metadata = {
     description:
         "How YuliusBox handles your data: tools run locally in your browser, files are never uploaded, and how cookies and advertising work.",
     alternates: { canonical: "/privacy" },
+    openGraph: {
+        url: "/privacy",
+        siteName: "YuliusBox",
+        type: "website",
+        images: [
+            {
+                url: "/og/privacy.png",
+                width: 1200,
+                height: 630,
+                alt: "Privacy Policy",
+            },
+        ],
+    },
+
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

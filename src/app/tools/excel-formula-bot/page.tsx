@@ -18,6 +18,14 @@ export const metadata: Metadata = {
         url: "/tools/excel-formula-bot",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-excel-formula-bot.png",
+                width: 1200,
+                height: 630,
+                alt: "Free Excel Formula Generator & AI Bot",
+            },
+        ],
     },
 };
 

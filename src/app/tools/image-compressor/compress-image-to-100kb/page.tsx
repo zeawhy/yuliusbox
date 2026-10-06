@@ -24,6 +24,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-image-compressor-compress-image-to-100kb.png",
+                width: 1200,
+                height: 630,
+                alt: "Compress Image to 100KB Online Free \u2014 No Upload",
+            },
+        ],
     },
 };
 

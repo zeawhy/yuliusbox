@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-audio-to-text-transcribe-meeting-recordings.png",
+                width: 1200,
+                height: 630,
+                alt: "Transcribe Meeting Recordings to Text \u2014 Free",
+            },
+        ],
     },
 };
 

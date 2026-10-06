@@ -9,6 +9,20 @@ export const metadata: Metadata = {
     description:
         "Browse all free YuliusBox tools: image, video, PDF, developer and productivity utilities that run in your browser. No uploads, no accounts.",
     alternates: { canonical: "https://www.yuliusbox.com/tools" },
+    openGraph: {
+        url: "/tools",
+        siteName: "YuliusBox",
+        type: "website",
+        images: [
+            {
+                url: "/og/tools.png",
+                width: 1200,
+                height: 630,
+                alt: "All Free Online Tools \u2014 YuliusBox",
+            },
+        ],
+    },
+
 };
 
 export default function ToolsIndexPage() {

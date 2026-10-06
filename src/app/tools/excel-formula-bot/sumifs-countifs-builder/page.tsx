@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-excel-formula-bot-sumifs-countifs-builder.png",
+                width: 1200,
+                height: 630,
+                alt: "SUMIFS & COUNTIFS Formula Builder \u2014 Free AI Tool",
+            },
+        ],
     },
 };
 

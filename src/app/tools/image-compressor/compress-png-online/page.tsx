@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-image-compressor-compress-png-online.png",
+                width: 1200,
+                height: 630,
+                alt: "Compress PNG Online Free \u2014 Shrink Screenshots & Graphics",
+            },
+        ],
     },
 };
 

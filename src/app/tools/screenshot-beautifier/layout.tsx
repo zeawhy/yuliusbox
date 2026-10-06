@@ -12,6 +12,14 @@ export const metadata: Metadata = {
         url: "/tools/screenshot-beautifier",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-screenshot-beautifier.png",
+                width: 1200,
+                height: 630,
+                alt: "Screenshot Beautifier - Create Stunning Mockups",
+            },
+        ],
     },
 };
 

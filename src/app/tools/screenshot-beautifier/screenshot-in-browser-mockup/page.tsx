@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-screenshot-beautifier-screenshot-in-browser-mockup.png",
+                width: 1200,
+                height: 630,
+                alt: "Screenshot in Browser Mockup \u2014 Free Online",
+            },
+        ],
     },
 };
 

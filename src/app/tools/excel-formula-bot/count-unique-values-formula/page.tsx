@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-excel-formula-bot-count-unique-values-formula.png",
+                width: 1200,
+                height: 630,
+                alt: "Count Unique Values in Excel \u2014 Formula Generator Free",
+            },
+        ],
     },
 };
 

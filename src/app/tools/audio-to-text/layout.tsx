@@ -12,6 +12,14 @@ export const metadata: Metadata = {
         url: "/tools/audio-to-text",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-audio-to-text.png",
+                width: 1200,
+                height: 630,
+                alt: "Local AI Audio Transcription - Free Speech to Text",
+            },
+        ],
     },
 };
 

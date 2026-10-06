@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-video-to-gif-webm-to-gif-converter.png",
+                width: 1200,
+                height: 630,
+                alt: "Convert WebM to GIF Online Free \u2014 No Upload",
+            },
+        ],
     },
 };
 

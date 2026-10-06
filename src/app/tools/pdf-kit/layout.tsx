@@ -12,6 +12,14 @@ export const metadata: Metadata = {
         url: "/tools/pdf-kit",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-pdf-kit.png",
+                width: 1200,
+                height: 630,
+                alt: "Free PDF Merger & Splitter - 100% Offline",
+            },
+        ],
     },
 };
 

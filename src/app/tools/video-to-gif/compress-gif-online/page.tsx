@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-video-to-gif-compress-gif-online.png",
+                width: 1200,
+                height: 630,
+                alt: "Compress GIF Online Free \u2014 Shrink GIF File Size",
+            },
+        ],
     },
 };
 

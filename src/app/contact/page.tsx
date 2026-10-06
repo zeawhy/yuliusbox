@@ -8,6 +8,20 @@ export const metadata: Metadata = {
     description:
         "Contact YuliusBox: feedback, bug reports, and tool requests via support@yuliusbox.com.",
     alternates: { canonical: "/contact" },
+    openGraph: {
+        url: "/contact",
+        siteName: "YuliusBox",
+        type: "website",
+        images: [
+            {
+                url: "/og/contact.png",
+                width: 1200,
+                height: 630,
+                alt: "Contact",
+            },
+        ],
+    },
+
 };
 
 export default function ContactPage() {

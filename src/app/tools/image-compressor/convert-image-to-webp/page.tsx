@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-image-compressor-convert-image-to-webp.png",
+                width: 1200,
+                height: 630,
+                alt: "Convert Image to WebP Online Free \u2014 Real .webp Output",
+            },
+        ],
     },
 };
 

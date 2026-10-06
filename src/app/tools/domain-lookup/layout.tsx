@@ -19,6 +19,14 @@ export const metadata: Metadata = {
         url: "/tools/domain-lookup",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-domain-lookup.png",
+                width: 1200,
+                height: 630,
+                alt: "Free Domain WHOIS Lookup & Availability Checker",
+            },
+        ],
     },
 };
 

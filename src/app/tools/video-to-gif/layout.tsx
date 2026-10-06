@@ -12,6 +12,14 @@ export const metadata: Metadata = {
         url: "/tools/video-to-gif",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-video-to-gif.png",
+                width: 1200,
+                height: 630,
+                alt: "Video to GIF Converter - No Watermark & High Quality",
+            },
+        ],
     },
 };
 

@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-screenshot-beautifier-app-store-screenshot-maker.png",
+                width: 1200,
+                height: 630,
+                alt: "App Store Screenshot Maker \u2014 Free Online",
+            },
+        ],
     },
 };
 

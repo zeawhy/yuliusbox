@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-pdf-kit-jpg-to-pdf-converter.png",
+                width: 1200,
+                height: 630,
+                alt: "JPG to PDF Converter Free \u2014 Photos to One PDF",
+            },
+        ],
     },
 };
 

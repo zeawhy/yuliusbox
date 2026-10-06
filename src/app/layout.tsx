@@ -22,13 +22,20 @@ export const metadata: Metadata = {
     siteName: "YuliusBox",
     title: "YuliusBox - Privacy-First Web Tools",
     description: "A collection of free, client-side, and secure utilities for productivity.",
+    images: [
+      {
+        url: "/og/home.png",
+        width: 1200,
+        height: 630,
+        alt: "Free Online Tools That Run in Your Browser",
+      },
+    ],
   },
   twitter: {
     // Keep only `card` here on purpose: no title/description, so each page's
     // Twitter card falls back to its own openGraph/metadata title instead of
-    // inheriting the generic site-wide copy. Also "summary" (not
-    // "summary_large_image") because the site has no OG images yet.
-    card: "summary",
+    // inheriting the generic site-wide copy.
+    card: "summary_large_image",
   },
   verification: {
     google: "ZJjClxLHZ6bdUogWf-dZvE5ggE74X6GK4gCkHpDMPxI",

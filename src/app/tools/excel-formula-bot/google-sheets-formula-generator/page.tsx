@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-excel-formula-bot-google-sheets-formula-generator.png",
+                width: 1200,
+                height: 630,
+                alt: "Google Sheets Formula Generator \u2014 Free AI",
+            },
+        ],
     },
 };
 

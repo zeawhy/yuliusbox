@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-screenshot-beautifier-gradient-background-screenshot.png",
+                width: 1200,
+                height: 630,
+                alt: "Screenshots on Gradient Backgrounds \u2014 Free",
+            },
+        ],
     },
 };
 

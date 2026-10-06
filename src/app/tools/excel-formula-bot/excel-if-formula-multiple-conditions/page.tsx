@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-excel-formula-bot-excel-if-formula-multiple-conditions.png",
+                width: 1200,
+                height: 630,
+                alt: "Excel IF with Multiple Conditions \u2014 Formula Generator",
+            },
+        ],
     },
 };
 

@@ -7,6 +7,20 @@ export const metadata: Metadata = {
     description:
         "YuliusBox is a collection of free, privacy-first online tools that run entirely in your browser. Your files never leave your device.",
     alternates: { canonical: "/about" },
+    openGraph: {
+        url: "/about",
+        siteName: "YuliusBox",
+        type: "website",
+        images: [
+            {
+                url: "/og/about.png",
+                width: 1200,
+                height: 630,
+                alt: "About",
+            },
+        ],
+    },
+
 };
 
 export default function AboutPage() {

@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-pdf-kit-split-pdf-online.png",
+                width: 1200,
+                height: 630,
+                alt: "Split PDF Online Free \u2014 Every Page as Its Own File",
+            },
+        ],
     },
 };
 

@@ -19,6 +19,14 @@ export const metadata: Metadata = {
         url: "/tools/exif-remover",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-exif-remover.png",
+                width: 1200,
+                height: 630,
+                alt: "Remove EXIF Data from Photos \u2014 Free Online Metadata Cleaner",
+            },
+        ],
     },
 };
 

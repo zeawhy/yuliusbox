@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-pdf-kit-extract-pages-from-pdf.png",
+                width: 1200,
+                height: 630,
+                alt: "Extract Pages from PDF Free \u2014 Pull Any Range",
+            },
+        ],
     },
 };
 

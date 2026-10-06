@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-excel-formula-bot-vlookup-vs-xlookup-generator.png",
+                width: 1200,
+                height: 630,
+                alt: "VLOOKUP vs XLOOKUP Formula Generator \u2014 Free AI",
+            },
+        ],
     },
 };
 

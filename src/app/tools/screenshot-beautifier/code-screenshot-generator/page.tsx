@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-screenshot-beautifier-code-screenshot-generator.png",
+                width: 1200,
+                height: 630,
+                alt: "Beautiful Code Screenshots Generator \u2014 Free",
+            },
+        ],
     },
 };
 

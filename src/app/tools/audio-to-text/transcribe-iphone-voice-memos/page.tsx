@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-audio-to-text-transcribe-iphone-voice-memos.png",
+                width: 1200,
+                height: 630,
+                alt: "Transcribe iPhone Voice Memos to Text \u2014 Free",
+            },
+        ],
     },
 };
 

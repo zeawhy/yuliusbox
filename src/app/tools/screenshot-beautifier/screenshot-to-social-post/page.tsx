@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-screenshot-beautifier-screenshot-to-social-post.png",
+                width: 1200,
+                height: 630,
+                alt: "Turn Screenshots into Social Posts \u2014 Free",
+            },
+        ],
     },
 };
 

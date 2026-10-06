@@ -21,6 +21,14 @@ export const metadata: Metadata = {
         type: "website",
         title: content.metaTitle,
         description: content.metaDescription,
+        images: [
+            {
+                url: "/og/tools-image-compressor-compress-jpg-to-50kb.png",
+                width: 1200,
+                height: 630,
+                alt: "Compress JPG to 50KB Online Free \u2014 No Upload",
+            },
+        ],
     },
 };
 
