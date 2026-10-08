@@ -25,6 +25,14 @@ export const metadata: Metadata = {
         title: "Free Online Tools That Run in Your Browser | YuliusBox",
         description:
             "Compress images, merge PDFs, convert video to GIF, and more — right in your browser. Your files never leave your device.",
+        images: [
+            {
+                url: "/og/home.png",
+                width: 1200,
+                height: 630,
+                alt: "Free Online Tools That Run in Your Browser",
+            },
+        ],
     },
 };
 
