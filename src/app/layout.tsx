@@ -45,6 +45,29 @@ export const metadata: Metadata = {
 import { LanguageProvider } from "@/context/LanguageContext";
 import Script from "next/script";
 
+// Site-wide structured data: WebSite + Organization (tool hub layouts carry
+// their own per-tool WebApplication JSON-LD; do not duplicate those here).
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: "YuliusBox",
+      url: "https://www.yuliusbox.com",
+      description:
+        "Free privacy-first online tools that run in your browser. Your files never leave your device.",
+      inLanguage: "en",
+    },
+    {
+      "@type": "Organization",
+      name: "YuliusBox",
+      url: "https://www.yuliusbox.com",
+      logo: "https://www.yuliusbox.com/og/home.png",
+      sameAs: ["https://github.com/zeawhy/yuliusbox"],
+    },
+  ],
+};
+
 // Umami (self-hosted, cookieless analytics). The tracking script is only
 // injected once NEXT_PUBLIC_UMAMI_WEBSITE_ID is set, so the site works fine
 // before the analytics server is deployed.
@@ -59,6 +82,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={clsx(inter.className, "bg-zinc-950 text-white antialiased min-h-screen")}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+        />
         <LanguageProvider>
           {children}
         </LanguageProvider>

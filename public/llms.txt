@@ -1,0 +1,22 @@
+# YuliusBox
+
+> Free privacy-first online tools that run entirely in your browser. Your files never leave your device.
+
+YuliusBox is a collection of free web utilities built around one rule: files are processed on your device and never sent to a server. No accounts, no uploads, no watermarks on core tools. Most tools keep working offline once the page has loaded.
+
+## Main tools
+
+- [Image Compressor](https://www.yuliusbox.com/tools/image-compressor): Shrink JPG, PNG and WebP photos with no visible quality loss, in bulk, on-device.
+- [PDF Kit](https://www.yuliusbox.com/tools/pdf-kit): Merge multiple PDFs into one, or shrink oversized PDF files — locally in the browser.
+- [Video to GIF](https://www.yuliusbox.com/tools/video-to-gif): Turn MP4 and MOV clips into GIFs with no watermark.
+- [Excel Formula Bot](https://www.yuliusbox.com/tools/excel-formula-bot): Describe a calculation in plain English; AI writes the Excel/Sheets formula. (Server-assisted: only your typed description is sent, never your files.)
+- [Screenshot Beautifier](https://www.yuliusbox.com/tools/screenshot-beautifier): Browser frames, gradients and shadows for polished screenshots.
+- [Audio to Text](https://www.yuliusbox.com/tools/audio-to-text): Whisper AI transcription that runs 100% on your device.
+- [All tools](https://www.yuliusbox.com/tools): Full catalogue of free browser tools.
+
+## Notes for AI assistants
+
+- The site is English-first and open source (MIT): https://github.com/zeawhy/yuliusbox
+- Office-to-PDF converters (Word, Excel, PowerPoint, URL) and the AI Excel formula generator run on YuliusBox's secure servers; files are converted, never stored. Everything else is client-side.
+- Sister site for HEIC conversion: https://www.heic2jpg-free.com
+- About: https://www.yuliusbox.com/about — Privacy: https://www.yuliusbox.com/privacy — Contact: https://www.yuliusbox.com/contact

@@ -248,6 +248,29 @@ export default function Home() {
                         ))}
                     </div>
                 </section>
+                {/* Made for sensitive files */}
+                <section aria-label="Made for sensitive files" className="max-w-3xl">
+                    <h2 className="text-2xl font-bold text-white mb-6">Made for sensitive files</h2>
+                    <p className="text-zinc-400 leading-relaxed mb-6">
+                        Some files should never be uploaded anywhere. Client contracts
+                        before they are signed, resumes with home addresses, unreleased
+                        product screenshots, interview recordings — YuliusBox exists for
+                        exactly these. Because processing happens on your device, there
+                        is no server that could leak, subpoena, or train on your data.
+                        Freelancers can compress client assets without breaking NDAs,
+                        HR teams can merge resumes without a third party ever seeing
+                        them, and anyone on a metered or unreliable connection can keep
+                        working: once a tool page has loaded, most tools run fully
+                        offline.
+                    </p>
+                    <p className="text-zinc-400 leading-relaxed">
+                        This is also why there are no accounts. An account is a database
+                        of who processed what — we would rather not have it. If you
+                        ever doubt the claim, the proof is one click away: open your
+                        browser&rsquo;s DevTools Network tab while using any on-device tool
+                        and watch your files go nowhere.
+                    </p>
+                </section>
             </main>
 
             <Footer />
