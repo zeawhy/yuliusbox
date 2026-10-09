@@ -2,8 +2,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Add Watermark to ID Card - Protect Your Identity | YuliusBox",
-    description: "Safely add watermarks to ID cards, passports, and driver licenses locally. Prevent identity theft and unauthorized use.",
+    title: "Watermark ID Card to Protect It From Misuse — Free, No Upload | YuliusBox",
+    description: "Add a custom watermark to your ID card photo to protect it from unauthorized use. Free, runs 100% in your browser — your photo never leaves your device.",
     keywords: ["id card watermark", "protect id photo", "add watermark online", "身份证加水印"],
     alternates: {
         canonical: "/tools/id-watermark",
