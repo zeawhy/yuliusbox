@@ -29,7 +29,6 @@ export const NOINDEX_TOOL_PATHS: string[] = [
     "/tools/cron-generator",
     "/tools/email-paraphraser",
     "/tools/excel-to-pdf",
-    "/tools/id-watermark",
     "/tools/image-editor",
     "/tools/image-grid-joiner",
     "/tools/image-grid-splitter",
