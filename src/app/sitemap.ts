@@ -2,7 +2,9 @@ import { MetadataRoute } from "next";
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { toolsData } from "@/lib/tools-data";
+// NOTE: import from tools-routes, NOT tools-data — tools-data pulls in
+// lucide-react which blows the sitemap function past Vercel's 250MB limit.
+import { toolRoutes } from "@/lib/tools-routes";
 import { NOINDEX_TOOL_PATHS } from "@/lib/seo";
 import { longTailPages } from "@/lib/long-tail-content";
 
@@ -64,13 +66,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // 1. Home page
     const routes: MetadataRoute.Sitemap = [entry(baseUrl, "/")];
 
-    // 2. Generate tool pages dynamically from toolsData, filtering out external,
-    // comingSoon, and noindexed items (canonical noindex list in src/lib/seo.ts)
-    toolsData.forEach((tool) => {
-        // Skip coming-soon tools or external links (e.g. https://www.heic2jpg-free.com)
-        if (tool.comingSoon || !tool.href.startsWith("/")) {
-            return;
-        }
+    // 2. Generate tool pages from the lightweight route index (see tools-routes.ts
+    // for why we don't import tools-data here), filtering noindexed items
+    // (canonical noindex list in src/lib/seo.ts)
+    toolRoutes.forEach((tool) => {
         // Skip tools hidden from search engines
         if (NOINDEX_TOOL_PATHS.includes(tool.href)) {
             return;
