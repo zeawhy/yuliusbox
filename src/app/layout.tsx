@@ -63,7 +63,15 @@ const siteJsonLd = {
       name: "YuliusBox",
       url: "https://www.yuliusbox.com",
       logo: "https://www.yuliusbox.com/og/home.png",
+      description:
+        "Free privacy-first online tools that run entirely in your browser. Your files never leave your device.",
       sameAs: ["https://github.com/zeawhy/yuliusbox"],
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "support@yuliusbox.com",
+        contactType: "customer support",
+        availableLanguage: "English",
+      },
     },
   ],
 };
