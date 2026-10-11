@@ -89,6 +89,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google AdSense 网站验证 */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2743968200342987"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={clsx(inter.className, "bg-zinc-950 text-white antialiased min-h-screen")}>
         <script
           type="application/ld+json"
