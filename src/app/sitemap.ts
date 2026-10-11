@@ -10,7 +10,7 @@ import { longTailPages } from "@/lib/long-tail-content";
 import lastmodMap from "@/lib/sitemap-lastmod.json";
 
 /** Static informational pages (not tools). */
-const STATIC_PAGES = ["/privacy", "/about", "/contact", "/terms", "/tools"];
+const STATIC_PAGES = ["/privacy", "/about", "/contact", "/terms", "/tools", "/suivault/privacy"];
 
 function entry(
     url: string,
