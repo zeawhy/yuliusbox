@@ -509,10 +509,98 @@ export const privateVoiceTranscription: LongTailContent = {
     ],
 };
 
+export const transcribePodcastToText: LongTailContent = {
+    id: "transcribe-podcast-to-text",
+    slug: "transcribe-podcast-to-text",
+    hubId: "audio-to-text",
+    href: "/tools/audio-to-text/transcribe-podcast-to-text",
+    crumb: "Transcribe Podcast to Text",
+    h1: "Transcribe Podcast Episodes to Text — Free & Private",
+    subtitle:
+        "Turn episodes into show notes, pull quotes, and searchable text. Whisper AI runs 100% on your device — your unreleased episode never leaves your browser.",
+    metaTitle: "Transcribe Podcast to Text Free — Private, On-Device | YuliusBox",
+    metaDescription:
+        "Convert podcast episodes to text for show notes, quotes & SEO. Free Whisper transcription that runs 100% in your browser — nothing uploaded.",
+    keywords: [
+        "transcribe podcast to text",
+        "podcast transcription free",
+        "convert podcast episode to text",
+        "podcast show notes generator",
+    ],
+    howTo: [
+        "Drop your episode audio (MP3, M4A, WAV) into the transcriber above.",
+        "Pick a model tier — larger is more accurate, smaller is faster.",
+        "Copy the transcript and shape it into show notes, quotes, or a blog post.",
+    ],
+    sections: [
+        {
+            heading: "Why podcasters transcribe every episode",
+            paragraphs: [
+                "Audio is invisible to search engines. A transcript turns a 45-minute conversation into indexable text — Google can find the episode for the exact phrase your guest said, and listeners can skim before committing to a full listen. Shows that publish transcripts consistently see their back catalog keep working for them in search.",
+                "The second payoff is repurposing: one transcript becomes the show-notes page, five pull quotes for social, a newsletter section, and the raw material for a blog post. Recording is the expensive part; transcription multiplies what that hour of recording produces.",
+            ],
+        },
+        {
+            heading: "From raw transcript to show notes people read",
+            paragraphs: [
+                "Don't publish the raw transcript as your show notes — spoken language reads terribly. Instead: lift the 3–5 key moments with timestamps (listeners love clickable chapters), pull one quotable line per segment, and write a 100-word summary in your own voice. The transcript is the quarry; the show notes are the sculpture.",
+                "Keep the full transcript on the episode page anyway, collapsed behind a “full transcript” toggle. It costs nothing, helps accessibility, and it's the part search engines actually index.",
+            ],
+        },
+        {
+            heading: "Accuracy: what to expect, honestly",
+            paragraphs: [
+                "Whisper is remarkably good at clean speech and falls apart gracefully at the edges: heavy crosstalk, strong accents on niche jargon, and brand names it has never seen. Expect to fix proper nouns — guest names, product names, place names — on the first pass. Budget five minutes of cleanup per 30 minutes of audio and you'll rarely be surprised.",
+                "Two things Whisper won't do: it doesn't label speakers (you'll see one continuous text — add “HOST:” / “GUEST:” yourself at the turn points), and it won't preserve your umms and false starts, which is a mercy, not a bug.",
+            ],
+        },
+        {
+            heading: "Your unreleased episode stays yours",
+            paragraphs: [
+                "This matters more for podcasters than for almost anyone else: transcription services that run in the cloud receive your audio — including embargoed interviews, unannounced guests, and takes you later cut. Here the Whisper model downloads once and runs entirely on your device; the episode file never leaves your browser.",
+                "That also means it works on a plane, in a studio with no guest wifi, or anywhere else you'd rather not route audio through a third party. Private by architecture, not by promise.",
+            ],
+        },
+    ],
+    faqs: [
+        {
+            question: "How long an episode can I transcribe?",
+            answer: "The practical limit is your device's memory — hour-long episodes transcribe fine on most modern laptops and phones, just slower. Longer files take proportionally longer; a 60-minute episode might take several minutes depending on the model tier you pick.",
+        },
+        {
+            question: "Does it identify who is speaking?",
+            answer: "No — Whisper produces one continuous transcript without speaker labels. For interviews, add HOST:/GUEST: markers yourself at the turn points while you do your cleanup pass; it takes a few minutes and reads far better than auto-labels anyway.",
+        },
+        {
+            question: "Which audio formats work?",
+            answer: "MP3, M4A, WAV, and most common formats — whatever your podcast host or recorder exports. If your file is video (a recorded video podcast), extract the audio first or use the video-to-gif tool's sibling pipeline; audio-only is faster to transcribe.",
+        },
+        {
+            question: "Is my episode uploaded anywhere?",
+            answer: "No. The Whisper model files download to your browser once, then everything — decoding, transcription, the transcript itself — runs locally on your device. Your audio never touches a server.",
+        },
+    ],
+    related: [
+        {
+            href: "/tools/audio-to-text/transcribe-mp3-to-text",
+            label: "Transcribe MP3 to text",
+        },
+        {
+            href: "/tools/audio-to-text/transcribe-interviews-free",
+            label: "Transcribe interviews",
+        },
+        {
+            href: "/tools/audio-to-text",
+            label: "Audio to Text — all options",
+        },
+    ],
+};
+
 export const audioToTextPages: LongTailContent[] = [
     transcribeMp3ToText,
     transcribeIphoneVoiceMemos,
     transcribeMeetingRecordings,
     transcribeInterviewsFree,
     privateVoiceTranscription,
+    transcribePodcastToText,
 ];

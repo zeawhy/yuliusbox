@@ -5,6 +5,7 @@ import { videoToGifPages } from "./long-tail/video-to-gif";
 import { excelFormulaBotPages } from "./long-tail/excel-formula-bot";
 import { screenshotBeautifierPages } from "./long-tail/screenshot-beautifier";
 import { audioToTextPages } from "./long-tail/audio-to-text";
+import { exifRemoverPages } from "./long-tail/exif-remover";
 
 /**
  * Long-tail scenario pages.
@@ -65,7 +66,15 @@ export const longTailPages: LongTailContent[] = [
     ...excelFormulaBotPages,
     ...screenshotBeautifierPages,
     ...audioToTextPages,
+    ...exifRemoverPages,
 ];
 
 /** Re-exported for the sample page (keeps its existing import working). */
 export { compressImageTo100kb } from "./long-tail/image-compressor";
+
+/** Re-exports for the batch-2 long-tail pages. */
+export { compressPdfForEmail } from "./long-tail/pdf-kit";
+export { compressImageTo1mb } from "./long-tail/image-compressor";
+export { removeImageMetadata } from "./long-tail/exif-remover";
+export { excelCountifFormulaGenerator } from "./long-tail/excel-formula-bot";
+export { transcribePodcastToText } from "./long-tail/audio-to-text";

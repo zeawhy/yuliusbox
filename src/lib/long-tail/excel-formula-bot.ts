@@ -523,10 +523,101 @@ const googleSheetsFormulaGenerator: LongTailContent = {
     ],
 };
 
+export const excelCountifFormulaGenerator: LongTailContent = {
+    id: "excel-countif-formula-generator",
+    slug: "excel-countif-formula-generator",
+    hubId: "excel-formula-bot",
+    href: "/tools/excel-formula-bot/excel-countif-formula-generator",
+    crumb: "COUNTIF Formula Generator",
+    h1: "Excel COUNTIF Formula Generator — Free",
+    subtitle:
+        "Count cells that meet your condition without memorizing syntax. Describe it in plain English — get a working COUNTIF or COUNTIFS formula instantly.",
+    metaTitle: "Excel COUNTIF Formula Generator — Count With Conditions | YuliusBox",
+    metaDescription:
+        "Generate Excel COUNTIF & COUNTIFS formulas from plain English. Count orders over $500, overdue tasks, survey answers — free, no signup.",
+    keywords: [
+        "excel countif formula",
+        "countif formula generator",
+        "excel countifs multiple criteria",
+        "count cells with condition excel",
+    ],
+    preset: {
+        formulaExample: "Count how many orders in column C are over 500",
+    },
+    howTo: [
+        "Describe what you want to count in the box above — the example is editable.",
+        "Submit and get a working COUNTIF or COUNTIFS formula with a plain-English breakdown.",
+        "Copy it into your spreadsheet and adjust the ranges to your data.",
+    ],
+    sections: [
+        {
+            heading: "COUNTIF vs COUNTIFS in 30 seconds",
+            paragraphs: [
+                "COUNTIF counts cells in one range that meet one condition: =COUNTIF(C2:C100,\">500\"). COUNTIFS extends it to multiple conditions across multiple ranges: =COUNTIFS(C2:C100,\">500\",B2:B100,\"West\"). Same idea, more filters — and every range in COUNTIFS must be the same size, or Excel throws an error.",
+                "Nine times out of ten, when someone searches for “countif,” they actually need COUNTIFS — one condition is rarely enough in real data. The generator picks the right one from your description, so you don't have to decide upfront.",
+            ],
+        },
+        {
+            heading: "The criteria syntax that trips everyone up",
+            paragraphs: [
+                "COUNTIF's second argument has its own mini-language: comparison operators must be wrapped in quotes as text — \">500\", \"<=\"&A1, \"<>\"&\"done\" — while plain numbers and cell references go bare. Dates are the classic trap: =COUNTIF(A:A,\">\"&DATE(2026,1,1)) works; =COUNTIF(A:A,>2026-01-01) doesn't, because the operator must be a string.",
+                "Wildcards are the other half of the language: * matches any run of characters, ? matches exactly one, and ~ escapes a literal * or ?. So \"*refund*\" finds any cell containing “refund”, while \"~*\" finds cells containing an actual asterisk. It's powerful once learned — and exactly the kind of syntax nobody should have to memorize, which is why the generator exists.",
+            ],
+        },
+        {
+            heading: "Three mistakes that silently give wrong counts",
+            paragraphs: [
+                "First, mismatched ranges in COUNTIFS — every criteria range must have identical dimensions. Second, counting what looks blank: cells containing \"\" (empty text from a formula) are not blank to COUNTIF, so =COUNTIF(A:A,\"\") misses them while =COUNTIF(A:A,\"=\") catches true empties. Third, extra spaces — \"done \" with a trailing space is not \"done\", and COUNTIF will happily return zero without telling you why.",
+                "When a count looks wrong, the debugging order is: check for stray spaces, check whether “blanks” are really blank, then verify your ranges line up. Or describe the symptom to the formula bot — it's good at spotting these.",
+            ],
+        },
+        {
+            heading: "Beyond counting: what pairs well with COUNTIF",
+            paragraphs: [
+                "Conditional counting is usually step one of a summary. The natural next steps: SUMIFS for totaling the matching rows instead of just counting them, AVERAGEIFS for their average, and a pivot table when the whole report needs grouping. If you find yourself writing five COUNTIFS side by side, that's a pivot table asking to be born.",
+                "For Google Sheets users, everything here works identically — COUNTIF and COUNTIFS are one of the functions both platforms agree on completely.",
+            ],
+        },
+    ],
+    faqs: [
+        {
+            question: "What's the difference between COUNTIF and COUNTIFS?",
+            answer: "COUNTIF handles one condition on one range (=COUNTIF(C2:C100,\">500\")). COUNTIFS handles multiple conditions across multiple ranges (=COUNTIFS(C2:C100,\">500\",B2:B100,\"West\")) — every range must be the same size. Describe your need in plain English and the generator picks the right one.",
+        },
+        {
+            question: "Why does my COUNTIF return 0 when matches clearly exist?",
+            answer: "The usual suspects: trailing spaces in your data (\"done \" ≠ \"done\"), numbers stored as text, or criteria syntax errors — comparison operators must be quoted as text, like \">500\". Check the data first, then the formula.",
+        },
+        {
+            question: "How do I count cells containing specific text?",
+            answer: "Use wildcards: =COUNTIF(A:A,\"*refund*\") counts cells containing “refund” anywhere. * matches any characters, ? matches exactly one character. For an exact match, drop the wildcards: =COUNTIF(A:A,\"refund\").",
+        },
+        {
+            question: "Does this work in Google Sheets too?",
+            answer: "Yes — COUNTIF and COUNTIFS work identically in Excel and Google Sheets. The generated formula copies straight into either.",
+        },
+    ],
+    related: [
+        {
+            href: "/tools/excel-formula-bot/count-unique-values-formula",
+            label: "Count unique values formula",
+        },
+        {
+            href: "/tools/excel-formula-bot/sumifs-countifs-builder",
+            label: "SUMIFS & COUNTIFS builder",
+        },
+        {
+            href: "/tools/excel-formula-bot",
+            label: "Excel Formula Bot — all formulas",
+        },
+    ],
+};
+
 export const excelFormulaBotPages: LongTailContent[] = [
     vlookupVsXlookupGenerator,
     excelIfFormulaMultipleConditions,
     countUniqueValuesFormula,
     sumifsCountifsBuilder,
     googleSheetsFormulaGenerator,
+    excelCountifFormulaGenerator,
 ];
