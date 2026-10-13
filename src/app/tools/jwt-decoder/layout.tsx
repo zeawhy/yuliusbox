@@ -32,13 +32,13 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: "JWT Decoder — Decode & Inspect JSON Web Tokens",
     url: "https://www.yuliusbox.com/tools/jwt-decoder",
     description:
         "Decode JWT header, payload claims, and expiry times in the browser. Free, unlimited, nothing uploaded.",
     applicationCategory: "DeveloperApplication",
-    operatingSystem: "Any",
+    operatingSystem: "Web",
     offers: {
         "@type": "Offer",
         price: "0",

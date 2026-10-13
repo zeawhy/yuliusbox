@@ -25,12 +25,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Video to GIF Converter",
     "url": "https://www.yuliusbox.com/tools/video-to-gif",
     "description": "Convert MP4/MOV to animated GIF instantly. Powered by FFmpeg WASM for browser-based processing.",
     "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

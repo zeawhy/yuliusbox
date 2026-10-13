@@ -32,13 +32,13 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: "EXIF Remover — Photo Metadata Cleaner",
     url: "https://www.yuliusbox.com/tools/exif-remover",
     description:
         "View hidden EXIF/IPTC/XMP metadata in photos and remove it with one click. Free, unlimited, processed entirely in the browser.",
     applicationCategory: "Utility",
-    operatingSystem: "Any",
+    operatingSystem: "Web",
     offers: {
         "@type": "Offer",
         price: "0",

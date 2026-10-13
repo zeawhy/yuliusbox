@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Image Grid Splitter",
     "url": "https://www.yuliusbox.com/tools/image-grid-splitter",
     "description": "Split a single image into a grid of smaller pieces instantly. 100% free, private browser-based processing.",
     "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

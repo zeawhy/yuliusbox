@@ -5,6 +5,7 @@ import { ArrowLeft, Copy, Check, Code, FileJson, Languages, ArrowRight } from "l
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 type OutputLanguage = "typescript" | "go" | "dart";
 
@@ -194,6 +195,8 @@ export default function JsonConverterClient() {
                         />
                     </div>
                 </div>
+
+                <LocalTrustNote />
 
                 {/* Output Pane */}
                 <div className="flex flex-col gap-3 relative group">

@@ -5,6 +5,7 @@ import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
 import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 
 
@@ -240,6 +241,8 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
                         <p className="text-sm text-zinc-500">{language === "en" ? t.limit.en : t.limit.cn}</p>
                     </div>
                 </div>
+
+            <LocalTrustNote />
 
             {outputFormat === "webp" && (
                 <p className="text-center text-sm text-emerald-400 font-medium -mt-4">

@@ -32,13 +32,13 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: "Domain Lookup — WHOIS & Availability Checker",
     url: "https://www.yuliusbox.com/tools/domain-lookup",
     description:
         "Free domain WHOIS/RDAP lookup: registrar, creation and expiry dates, name servers, plus bulk availability checks across popular extensions.",
     applicationCategory: "Utility",
-    operatingSystem: "Any",
+    operatingSystem: "Web",
     offers: {
         "@type": "Offer",
         price: "0",

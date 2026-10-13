@@ -5,6 +5,7 @@ import { Copy, Check, FileText, Shield, User, Mail, Globe, Apple, Smartphone, La
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 interface GeneratorState {
     companyName: string;
@@ -266,6 +267,7 @@ If you have any questions or suggestions about the Terms and Conditions, do not 
                             </div>
                         </div>
                     </div>
+                    <LocalTrustNote />
                 </div>
 
                 {/* Right: Preview */}

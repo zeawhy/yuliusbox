@@ -5,6 +5,7 @@ import { ArrowLeft, Eraser, Download, Upload, RefreshCw, Layers, Zap, Info } fro
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 export default function BackgroundRemover() {
     const { language } = useLanguage();
@@ -144,6 +145,7 @@ export default function BackgroundRemover() {
                     <p className="text-zinc-500 text-sm flex items-center gap-2">
                         <Info className="w-4 h-4" /> {language === "en" ? t.tips.en : t.tips.cn}
                     </p>
+                    <LocalTrustNote />
                 </div>
             ) : (
                 <div className="w-full flex flex-col gap-8">

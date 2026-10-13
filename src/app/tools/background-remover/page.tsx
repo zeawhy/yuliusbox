@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 export default function BackgroundRemoverPage() {
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": "SoftwareApplication",
         "name": "AI Online Background Remover",
         "description": "Automatically remove image backgrounds in the browser using AI.",
         "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Any",
+        "operatingSystem": "Web",
         "offers": {
             "@type": "Offer",
             "price": "0",

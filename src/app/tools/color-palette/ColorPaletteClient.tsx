@@ -6,6 +6,7 @@ import ColorThief, { Palette as ColorPalette } from "color-thief-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 export default function ColorPaletteGenerator() {
     const { language } = useLanguage();
@@ -98,6 +99,8 @@ export default function ColorPaletteGenerator() {
                                 </div>
                             )}
                         </div>
+
+                        <LocalTrustNote />
 
                         {/* How To Section */}
                         <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800/50">

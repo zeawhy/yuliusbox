@@ -5,6 +5,7 @@ import { ArrowLeft, Upload, Download, Type, RotateCw, Move, Palette, ShieldCheck
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 export default function IDWatermarkPage() {
     const { language } = useLanguage();
@@ -188,6 +189,8 @@ export default function IDWatermarkPage() {
                         )}
                     </div>
                 </div>
+
+                <LocalTrustNote />
 
                 {/* Right Column: Controls */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 h-fit space-y-8 animate-in fade-in slide-in-from-right-4">

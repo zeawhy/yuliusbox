@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Social Media Safe Zone Overlay",
     "url": "https://www.yuliusbox.com/tools/safe-zone-overlay",
     "description": "Check if your subtitles are blocked by UI icons. Free safe zone overlay tool for TikTok, Instagram Reels, and YouTube Shorts.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

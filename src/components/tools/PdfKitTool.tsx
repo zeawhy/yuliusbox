@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DraggableFileList } from "@/components/ui/DraggableFileList";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 export type PdfKitMode = "merge" | "compress" | "split" | "extract" | "jpg-to-pdf";
 
@@ -100,6 +101,7 @@ function UploadZone({
                 {fileName ?? label}
             </p>
             <p className="text-sm text-zinc-500 mt-2">PDF files up to 100MB</p>
+            <LocalTrustNote />
         </div>
     );
 }

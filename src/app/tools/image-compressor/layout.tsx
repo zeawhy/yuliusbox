@@ -25,12 +25,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Bulk Image Compressor",
     "url": "https://www.yuliusbox.com/tools/image-compressor",
     "description": "Free unlimited bulk image compression. Reduce file size locally in your browser without losing quality.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

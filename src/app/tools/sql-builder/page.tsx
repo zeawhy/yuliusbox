@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "AI SQL Query Builder",
     "url": "https://www.yuliusbox.com/tools/sql-builder",
     "description": "Generate optimized SQL queries from natural language for MySQL, PostgreSQL, and SQLite.",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

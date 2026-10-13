@@ -31,12 +31,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Excel Formula Bot",
     "url": "https://www.yuliusbox.com/tools/excel-formula-bot",
     "description": "Convert plain English to Excel and Google Sheets formulas instantly with AI.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

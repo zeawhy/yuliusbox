@@ -17,12 +17,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "ID Card Watermark Tool",
     "url": "https://www.yuliusbox.com/tools/id-watermark",
     "description": "Safely add watermarks to ID cards, passports, and driver licenses locally to prevent unauthorized use.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

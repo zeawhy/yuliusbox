@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Image Grid Joiner",
     "url": "https://www.yuliusbox.com/tools/image-grid-joiner",
     "description": "Combine multiple images into a single grid picture instantly. 100% free, private browser-based processing.",
     "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

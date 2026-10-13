@@ -6,6 +6,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { ArrowLeft, Scissors, Maximize, Download, Image as ImageIcon, Upload, Save, Check } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 
 type FileFormat = "image/jpeg" | "image/png" | "image/webp";
@@ -195,6 +196,7 @@ export default function ImageEditor() {
                         {language === "en" ? t.upload.en : t.upload.cn}
                         <input type="file" accept="image/*" onChange={onSelectFile} className="hidden" />
                     </label>
+                    <LocalTrustNote />
                 </div>
             ) : (
                 <div className="w-full flex flex-col lg:grid lg:grid-cols-12 gap-12 items-start">

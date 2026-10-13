@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 interface UploadedImage {
     id: string;
@@ -339,6 +340,8 @@ export default function ImageGridJoinerPage() {
                                     </button>
                                 )}
                             </div>
+
+                            <LocalTrustNote />
 
                             {/* DND Area */}
                             {images.length === 0 ? (

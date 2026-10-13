@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 export default function ImageEditorPage() {
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": "SoftwareApplication",
         "name": "Online Image Resizer & Cropper",
         "description": "Resize and crop images directly in your browser.",
         "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Any",
+        "operatingSystem": "Web",
         "offers": {
             "@type": "Offer",
             "price": "0",
