@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3 } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -453,6 +453,20 @@ export const toolsData: Tool[] = [
         icon: Eraser,
         href: "/tools/exif-remover",
         popular: true,
+    },
+    {
+        id: "jwt-decoder",
+        category: "developer",
+        name: {
+            en: "JWT Decoder",
+            cn: "JWT 解码器"
+        },
+        description: {
+            en: "Decode JSON Web Tokens in your browser: header, claims, and expiry times — with signature-format display. Nothing uploaded.",
+            cn: "在浏览器中解码 JWT：头部、声明与过期时间，附签名格式展示。不上传任何数据。"
+        },
+        icon: KeyRound,
+        href: "/tools/jwt-decoder",
     },
     {
         id: "more-tools",

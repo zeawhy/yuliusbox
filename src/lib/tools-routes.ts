@@ -29,6 +29,7 @@ export const toolRoutes: ToolRoute[] = [
     { href: "/tools/image-grid-joiner" },
     { href: "/tools/image-grid-splitter" },
     { href: "/tools/json-to-code" },
+    { href: "/tools/jwt-decoder" },
     { href: "/tools/pdf-kit" },
     { href: "/tools/ppt-to-pdf" },
     { href: "/tools/privacy-generator" },
