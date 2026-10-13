@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Social Media Video Downloader",
     "url": "https://www.yuliusbox.com/tools/video-downloader",
     "description": "Download videos from YouTube, TikTok, Instagram, Twitter, and more without watermarks.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

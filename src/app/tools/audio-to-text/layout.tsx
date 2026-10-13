@@ -25,12 +25,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Local AI Audio Transcription",
     "url": "https://www.yuliusbox.com/tools/audio-to-text",
     "description": "Convert audio to text offline using OpenAI Whisper model in your browser. Unlimited free transcription.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

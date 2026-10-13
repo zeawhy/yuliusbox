@@ -25,12 +25,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Screenshot Beautifier",
     "url": "https://www.yuliusbox.com/tools/screenshot-beautifier",
     "description": "Transform boring screenshots into beautiful product showcases with 3D tilts, shadows, and backgrounds.",
     "applicationCategory": "DesignApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

@@ -5,6 +5,7 @@ import { Upload, Monitor, Download, Smartphone, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 type Platform = "tiktok" | "reels" | "shorts";
 
@@ -176,6 +177,8 @@ export default function SafeZoneOverlay() {
                                 {t.upload}
                             </div>
                         </div>
+
+                        <LocalTrustNote />
 
                         {/* Download Button */}
                         {downloadUrl && (

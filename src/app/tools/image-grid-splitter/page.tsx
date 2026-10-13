@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Image from "next/image";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 export default function ImageGridSplitterPage() {
     const { language } = useLanguage();
@@ -328,6 +329,8 @@ export default function ImageGridSplitterPage() {
                                     </button>
                                 )}
                             </div>
+
+                            <LocalTrustNote />
 
                             {/* DND / Visual Area */}
                             {!file ? (

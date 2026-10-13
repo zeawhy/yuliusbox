@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 export default function SpeedTestPage() {
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": "SoftwareApplication",
         "name": "Online Internet Speed Test",
         "description": "Measure your internet speed including download, upload, and latency.",
         "applicationCategory": "UtilityApplication",
-        "operatingSystem": "Any",
+        "operatingSystem": "Web",
         "offers": {
             "@type": "Offer",
             "price": "0",

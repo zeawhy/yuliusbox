@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "AI Cron Expression Generator",
     "url": "https://www.yuliusbox.com/tools/cron-generator",
     "description": "Convert natural language descriptions into valid Cron expressions instantly.",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

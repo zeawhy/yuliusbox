@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "YouTube Title Optimizer",
     "url": "https://www.yuliusbox.com/tools/youtube-optimizer",
     "description": "Generate viral, high-CTR video titles and SEO tags for YouTube using AI.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

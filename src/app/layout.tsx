@@ -46,7 +46,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import Script from "next/script";
 
 // Site-wide structured data: WebSite + Organization (tool hub layouts carry
-// their own per-tool WebApplication JSON-LD; do not duplicate those here).
+// their own per-tool SoftwareApplication JSON-LD; do not duplicate those here).
 const siteJsonLd = {
   "@context": "https://schema.org",
   "@graph": [

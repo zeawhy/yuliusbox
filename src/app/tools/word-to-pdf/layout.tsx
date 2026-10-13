@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Word to PDF Converter",
     "url": "https://www.yuliusbox.com/tools/word-to-pdf",
     "description": "Convert Word documents (.doc, .docx) to PDF format securely in the cloud. Fast, free, and precise formatting retention.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

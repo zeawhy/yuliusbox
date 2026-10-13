@@ -25,12 +25,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "PDF Kit",
     "url": "https://www.yuliusbox.com/tools/pdf-kit",
     "description": "Merge, split, and organize PDF files directly in your browser. Secure local processing for your sensitive documents.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

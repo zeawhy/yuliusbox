@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Download, Upload, Maximize, Minus, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toPng } from "html-to-image";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 interface SettingsState {
     background: string;
@@ -583,6 +584,9 @@ export function ScreenshotBeautifierTool({ stylePreset }: { stylePreset?: Screen
                                 className="hidden"
                                 onChange={handleFileUpload}
                             />
+                            <div className="mt-4">
+                                <LocalTrustNote />
+                            </div>
                         </div>
                     )}
                 </div>

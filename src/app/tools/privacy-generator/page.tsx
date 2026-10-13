@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function PrivacyGeneratorPage() {
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": "SoftwareApplication",
         "name": "Free Privacy Policy Generator",
         "description": "Generate standard Privacy Policy and Terms of Service for your iOS/Android app or website instantly.",
         "applicationCategory": "DeveloperApplication",

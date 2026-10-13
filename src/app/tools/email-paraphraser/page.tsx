@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "Polite Email Paraphraser",
     "url": "https://www.yuliusbox.com/tools/email-paraphraser",
     "description": "Rewrite your emails to be professional, polite, and persuasive using AI.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

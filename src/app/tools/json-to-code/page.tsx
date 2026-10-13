@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "JSON to Code Converter",
     "url": "https://www.yuliusbox.com/tools/json-to-code",
     "description": "Convert JSON to TypeScript, Go, or Dart models instantly.",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

@@ -8,6 +8,7 @@ import {
     Camera, Calendar, FileImage, Loader2, CheckCircle, X, Eye, EyeOff, Package,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 
 // Logic ported from wipefey (MIT, github.com/seizmann/wipefey):
@@ -286,6 +287,8 @@ export function ExifRemoverTool() {
                     onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }}
                 />
             </div>
+
+            <LocalTrustNote />
 
             {/* Stats bar */}
             {items.length > 0 && (

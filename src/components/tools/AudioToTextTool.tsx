@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Mic, FileAudio, Loader2, Copy, Download, Square, Languages, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 export function AudioToTextTool() {
     // State
@@ -255,6 +256,8 @@ export function AudioToTextTool() {
                             </>
                         )}
                     </div>
+
+                    <LocalTrustNote />
 
                     <div className="flex items-center gap-4">
                         <div className="h-px bg-zinc-800 flex-1" />

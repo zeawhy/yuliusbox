@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "AI Regex Generator & Explainer",
     "url": "https://www.yuliusbox.com/tools/regex-generator",
     "description": "Generate regular expressions from plain English or explain complex regex patterns instantly.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "URL to PDF Converter",
     "url": "https://www.yuliusbox.com/tools/url-to-pdf",
     "description": "Convert any public website or URL into a high-quality PDF document.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

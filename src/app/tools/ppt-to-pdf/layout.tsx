@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "PowerPoint to PDF Converter",
     "url": "https://www.yuliusbox.com/tools/ppt-to-pdf",
     "description": "Convert PowerPoint presentations (.pptx, .ppt) to PDF format securely in the cloud. Fast, free, and precise formatting retention.",
     "applicationCategory": "Utility",
-    "operatingSystem": "Any",
+    "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
         "price": "0",

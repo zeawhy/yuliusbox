@@ -6,6 +6,7 @@ import {
     Clock3, Fingerprint, FileJson, ChevronDown, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface DecodedPart {
@@ -237,6 +238,8 @@ export function JwtDecoderTool() {
                     )}
                 </div>
             </div>
+
+            <LocalTrustNote />
 
             {/* Error state */}
             {result?.error === "not-three-parts" && (

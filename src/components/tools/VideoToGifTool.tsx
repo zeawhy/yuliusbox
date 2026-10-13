@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
+import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 
 interface VideoToGifToolProps {
     /** Starting FPS value; falls back to 10 when unset. */
@@ -191,6 +192,8 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                 />
                             </div>
+
+                            <LocalTrustNote />
 
                             <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-4">
                                 <div className="flex items-center gap-2 mb-2 text-zinc-300 font-medium">
