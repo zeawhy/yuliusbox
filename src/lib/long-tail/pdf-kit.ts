@@ -506,10 +506,103 @@ export const compressPdfOnline: LongTailContent = {
     ],
 };
 
+export const compressPdfForEmail: LongTailContent = {
+    id: "compress-pdf-for-email",
+    slug: "compress-pdf-for-email",
+    hubId: "pdf-kit",
+    href: "/tools/pdf-kit/compress-pdf-for-email",
+    crumb: "Compress PDF for Email",
+    h1: "Compress PDF for Email — Beat the 25MB Attachment Limit",
+    subtitle:
+        "Gmail rejects attachments over 25MB — and a 20MB file can bounce anyway. Trim your PDF's hidden bloat, free and private, right in your browser.",
+    metaTitle: "Compress PDF for Email — Fix the 25MB Attachment Limit | YuliusBox",
+    metaDescription:
+        "Attachment bouncing at 25MB? Shrink your PDF with an honest metadata cleanup before sending. Free, unlimited, 100% in-browser — nothing uploaded.",
+    keywords: [
+        "compress pdf for email",
+        "reduce pdf size for email attachment",
+        "pdf too large to email",
+        "gmail 25mb attachment limit pdf",
+    ],
+    preset: { pdfMode: "compress" },
+    howTo: [
+        "Drop the PDF into the compressor above — it never leaves your device.",
+        "Run the cleanup and download the slimmer file (original untouched).",
+        "Check the new size against your mail provider's limit, then attach and send.",
+    ],
+    sections: [
+        {
+            heading: "Why your attachment bounced at “only” 20MB",
+            paragraphs: [
+                "Gmail's 25MB limit sounds generous until you learn how attachments are counted: email encodes files in base64, which inflates them by roughly 37%. A 19MB PDF becomes about 26MB on the wire — over the limit, rejected, no appeal. Outlook.com and many corporate servers cap out even lower, around 20MB or 10MB.",
+                "So the target isn't “under 25MB” — it's comfortably under 18MB if you want the message to actually go through. Every megabyte of hidden bloat you strip is a megabyte of safety margin.",
+            ],
+        },
+        {
+            heading: "What this compressor actually does",
+            paragraphs: [
+                "This tool performs an honest metadata cleanup: it strips the invisible baggage PDFs accumulate — document title and author fields, editing history, embedded thumbnails, duplicate font tables — and rewrites a leaner file. Your content, layout, and quality are byte-for-byte untouched, because nothing is recompressed.",
+                "Be realistic about the payoff: metadata cleanup typically saves kilobytes to a few megabytes. If your PDF is 40MB of scanned images, no metadata tool will get it under 25MB — the images themselves are the weight. The page is upfront about this because the alternative (a “compressor” that silently destroys your scan quality) is worse.",
+            ],
+        },
+        {
+            heading: "When cleanup is enough — and when it isn't",
+            paragraphs: [
+                "Cleanup alone wins when the PDF is text-based but bloated: Word and InDesign exports with full editing histories, files that have been re-saved a dozen times, decks with embedded preview images. These routinely drop 10–30% with zero quality change — often exactly the margin a bounced attachment needs.",
+                "It won't win when the file is image-heavy: scanned contracts, photo portfolios, slide decks exported as full-page images. For those, compress the images before they go into the PDF (our image compressor handles that), or split the document and send it in two parts. If nothing gets you under the limit, upload to Drive/Dropbox and send a link — every mail provider prefers that anyway.",
+            ],
+        },
+        {
+            heading: "The pre-send checklist",
+            paragraphs: [
+                "Before you attach: confirm the final file opens correctly (spot-check the first and last pages), verify the size with the 37% encoding inflation in mind, and keep the original — never overwrite your master copy with the slimmed version. If the recipient needs print quality, say so in the email and offer the full-size file via link.",
+                "And a privacy note that matters more for email than anywhere else: attachments get forwarded, CC'd, and archived on servers you don't control. Running the cleanup locally means your document never passed through a stranger's “free PDF compressor” on its way to the outbox.",
+            ],
+        },
+    ],
+    faqs: [
+        {
+            question: "Will this get my 30MB PDF under Gmail's 25MB limit?",
+            answer: "Only if the excess is metadata bloat. The cleanup strips hidden baggage (editing history, duplicate fonts, embedded thumbnails) — typically kilobytes to a few megabytes. A 30MB scan-heavy PDF needs its images compressed first; use the image compressor on the source images, or split the PDF and send it in parts.",
+        },
+        {
+            question: "Why did Gmail reject my 20MB attachment if the limit is 25MB?",
+            answer: "Email encodes attachments in base64, inflating them by about 37%. Your 20MB file travels as roughly 27MB — over the limit. Aim for files under ~18MB to send reliably through Gmail.",
+        },
+        {
+            question: "Does compressing reduce the PDF's quality?",
+            answer: "No. This tool only removes metadata and rewrites the file structure — text, images, and layout are untouched. If a “compressor” shrinks your file dramatically, it's recompressing your images, and quality loss is the price.",
+        },
+        {
+            question: "Is it safe to compress a contract or application here?",
+            answer: "Yes — the entire process runs in your browser, so the document never travels to a server. That's the right property for anything you'd hesitate to email to a stranger, which is exactly what most online PDF tools are.",
+        },
+    ],
+    related: [
+        {
+            href: "/tools/pdf-kit/compress-pdf-online",
+            label: "Compress PDF — the full guide",
+        },
+        {
+            href: "/tools/pdf-kit/split-pdf-online",
+            label: "Split a large PDF into parts",
+        },
+        {
+            href: "/tools/image-compressor",
+            label: "Compress images before making the PDF",
+        },
+        {
+            href: "/tools/pdf-kit",
+            label: "All PDF tools",
+        },
+    ],
+};
+
 export const pdfKitPages: LongTailContent[] = [
     mergePdfOnline,
     jpgToPdfConverter,
     splitPdfOnline,
     extractPagesFromPdf,
     compressPdfOnline,
+    compressPdfForEmail,
 ];

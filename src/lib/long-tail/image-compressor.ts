@@ -598,6 +598,98 @@ export const compressPngOnline: LongTailContent = {
     ],
 };
 
+export const compressImageTo1mb: LongTailContent = {
+    id: "compress-image-to-1mb",
+    slug: "compress-image-to-1mb",
+    hubId: "image-compressor",
+    href: "/tools/image-compressor/compress-image-to-1mb",
+    crumb: "Compress Image to 1MB",
+    h1: "Compress Image to 1MB — Free Online",
+    subtitle:
+        "Job portals, government forms, and forums cap uploads at 1MB. Shrink any photo under the limit with no visible quality loss — free, private, in your browser.",
+    metaTitle: "Compress Image to 1MB Online Free — No Quality Loss | YuliusBox",
+    metaDescription:
+        "Upload form rejecting your photo? Compress any JPG, PNG, or WebP under 1MB with no visible quality loss. Free, unlimited, 100% in-browser.",
+    keywords: [
+        "compress image to 1mb",
+        "reduce image size to 1mb",
+        "1mb photo compressor",
+        "shrink jpg under 1mb online",
+    ],
+    preset: { targetSizeMB: 1 },
+    howTo: [
+        "Drop your photo into the compressor above — this page targets 1MB automatically.",
+        "The tool iteratively re-encodes until the file lands under 1MB.",
+        "Download the result and upload it to your form — check it looks right first.",
+    ],
+    sections: [
+        {
+            heading: "Where the 1MB limit comes from",
+            paragraphs: [
+                "A huge number of upload forms — job applications, visa and government portals, university submissions, forum avatars, marketplace listings — cap attachments at 1MB (sometimes 2MB, sometimes 500KB). A modern phone photo is 3–8MB, so almost every upload from a phone hits the wall on the first try.",
+                "The limit exists because these backends store millions of uploads and display them at modest sizes. They don't need your 12-megapixel original — and neither does the person reviewing your application on a laptop screen.",
+            ],
+        },
+        {
+            heading: "1MB is plenty for screen",
+            paragraphs: [
+                "Here's the math that makes 1MB comfortable: a 1920px-wide JPEG at 80% quality — sharp on any screen — typically weighs 300–600KB. Even a detailed photo rarely needs the full megabyte. The compressor aims just under the cap, so you keep maximum quality while sailing through the upload validator.",
+                "Resolution matters more than the quality slider. If your photo is 4000px wide, downsizing to 2000px alone can cut the file to a quarter of its size with zero perceptible change at display size. The tool handles the iteration; you just download.",
+            ],
+        },
+        {
+            heading: "When 1MB is the wrong target",
+            paragraphs: [
+                "Don't compress the only copy of a photo you might print. Print needs resolution — a 4×6 inch print at 300 DPI wants roughly 1800×1200 pixels, which fits in 1MB, but anything larger doesn't. Always keep the original; compress a copy for the upload.",
+                "Also watch for forms that demand exact dimensions (passport photos, ID uploads) rather than just a size cap. For those, resize to the required pixels first, then check the file size — the order matters, because resizing changes everything downstream.",
+            ],
+        },
+        {
+            heading: "Why not just let the form compress it?",
+            paragraphs: [
+                "Some portals recompress uploads themselves — badly, with no preview, and sometimes after you've already waited through a slow upload. Doing it yourself means you see the result before submitting, and you keep a copy of exactly what the reviewer will see.",
+                "Doing it locally has a second advantage: ID photos, certificates, and application documents never touch a third-party server. The compression happens on your device; the only upload is the final file to the form you chose.",
+            ],
+        },
+    ],
+    faqs: [
+        {
+            question: "Will compressing to 1MB make my photo look worse?",
+            answer: "Not visibly, for screen use. A 1920px photo at 1MB holds far more detail than any upload form displays. You'd only notice a difference pixel-peeping at 100% zoom or printing large — and you should keep the original for that anyway.",
+        },
+        {
+            question: "My photo is 8MB — can it really get under 1MB?",
+            answer: "Almost always. Phone photos are massively over-specified for uploads: downsizing the resolution plus smart re-encoding typically cuts 70–90% of the weight. The tool iterates automatically until the file lands under the 1MB target.",
+        },
+        {
+            question: "What if the form needs under 500KB or exactly 100KB?",
+            answer: "Use the targeted sibling pages: compress-image-to-100kb for the 100KB case. The same tool powers all of them — only the size target changes.",
+        },
+        {
+            question: "Which format should I upload — JPG, PNG, or WebP?",
+            answer: "JPG for photos (smallest at good quality), PNG only if you need transparency or crisp text/lines. Note that some older government portals only accept JPG — when in doubt, JPG is the safe choice.",
+        },
+    ],
+    related: [
+        {
+            href: "/tools/image-compressor/compress-image-to-100kb",
+            label: "Compress image to 100KB",
+        },
+        {
+            href: "/tools/image-compressor/compress-photos-for-email",
+            label: "Compress photos for email",
+        },
+        {
+            href: "/tools/image-compressor",
+            label: "Image compressor — all options",
+        },
+        {
+            href: "/tools/exif-remover",
+            label: "Strip metadata before uploading",
+        },
+    ],
+};
+
 export const imageCompressorPages: LongTailContent[] = [
     compressImageTo100kb,
     compressJpgTo50kb,
@@ -605,4 +697,5 @@ export const imageCompressorPages: LongTailContent[] = [
     compressPhotosForEmail,
     compressImagesForWebsites,
     compressPngOnline,
+    compressImageTo1mb,
 ];
