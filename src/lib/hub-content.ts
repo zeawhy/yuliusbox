@@ -50,7 +50,6 @@ export const HUB_ORDER = [
     "pdf-kit",
     "video-to-gif",
     "excel-formula-bot",
-    "screenshot-beautifier",
     "audio-to-text",
 ] as const;
 
@@ -272,7 +271,6 @@ export const hubContent: Record<string, HubContent> = {
         ],
         related: [
             { href: "/tools/image-compressor", label: "Compress images for the web" },
-            { href: "/tools/screenshot-beautifier", label: "Beautify screenshots for sharing" },
             { href: "/tools/audio-to-text", label: "Transcribe audio to text in your browser" },
         ],
     },
@@ -345,77 +343,6 @@ export const hubContent: Record<string, HubContent> = {
             { href: "/tools/pdf-kit", label: "Merge and compress PDF files" },
             { href: "/tools/audio-to-text", label: "Transcribe meetings to text privately" },
             { href: "/tools/image-compressor", label: "Compress images for the web" },
-        ],
-    },
-    "screenshot-beautifier": {
-        id: "screenshot-beautifier",
-        href: "/tools/screenshot-beautifier",
-        crumb: "Screenshot Beautifier",
-        h1: "Screenshot Beautifier — Mockups, Shadows & Gradients",
-        subtitle:
-            "Wrap screenshots in browser frames and device mockups with beautiful backgrounds. Free, in your browser.",
-        howTo: [
-            "Upload a screenshot — or paste one straight from your clipboard.",
-            "Pick a browser or device frame, then tune the background, shadow, and padding.",
-            "Add a 3D tilt or social mockup style if you want extra polish.",
-            "Export as a high-resolution PNG and share it anywhere.",
-        ],
-        sections: [
-            {
-                heading: "First impressions are visual",
-                paragraphs: [
-                    "Nobody reads your launch post before they see the screenshot in it. A raw, full-screen capture with browser tabs and a cluttered menu bar signals 'unfinished' before a single word is processed; the same interface wrapped in a clean browser frame, floating over a soft gradient with a gentle shadow, signals 'crafted.' The underlying product hasn't changed — the perceived care has.",
-                    "This matters most where screenshots do the selling: Product Hunt galleries, Twitter/X launch threads, documentation hero images, App Store preview sets, and investor decks. In each of these, the screenshot competes with dozens of others for a glance, and polished presentation is the cheapest competitive advantage available. It takes two minutes and requires zero design skill.",
-                ],
-            },
-            {
-                heading: "The anatomy of a screenshot that gets clicked",
-                paragraphs: [
-                    "Great-looking screenshots share a formula. First, a frame that gives context: a browser window for web apps, a phone mockup for mobile, a code-editor frame for developer tools. The frame tells the viewer what kind of thing they're looking at before they parse a pixel of content. Second, breathing room — generous padding between the frame and the image edge, usually 10–20% of the width, so the composition doesn't feel cramped.",
-                    "Third, a background with intent. Subtle gradients in one or two brand-adjacent colors outperform both flat white (boring) and rainbow explosions (distracting). Dark mode screenshots pair beautifully with deep, saturated backgrounds; light UI pops against soft pastels. Finally, a soft drop shadow grounds the frame — it separates the screenshot from the background the way a mat separates a photo from its frame in a gallery.",
-                ],
-            },
-            {
-                heading: "Styles for different audiences",
-                paragraphs: [
-                    "Developer audiences respond to authenticity: a clean browser frame, minimal shadow, dark background — the aesthetic of a well-maintained GitHub README. Social audiences want more drama: 3D perspective tilts, bolder gradients, and device mockups that read clearly at thumbnail size in a fast-scrolling feed. Documentation wants clarity above all: consistent framing across every image in the docs set, so the page feels like one coherent product rather than a collage of eras.",
-                    "The tool covers all three with presets rather than a blank canvas. Pick the social mockup style for launch day, the minimal browser frame for docs, and the code-editor frame when the screenshot is source code — code screenshots in particular benefit from syntax highlighting plus a frame, which is why they travel so well on social media.",
-                ],
-            },
-            {
-                heading: "Practical tips before you export",
-                paragraphs: [
-                    "Crop ruthlessly before beautifying. Remove browser toolbars, unrelated tabs, and notification badges — every stray element dilutes focus. If the screenshot contains real user data, emails, or API keys, redact them first; beautification draws more eyes, which is exactly when a leaked token hurts most. Export at 2x resolution so the image stays crisp on retina displays, and keep the PNG — converting a beautified screenshot to JPG reintroduces the compression artifacts you just worked to hide.",
-                    "Consistency compounds: use the same background style and padding across a launch set, a docs site, or a slide deck. Viewers won't consciously notice the uniformity, but they'll feel the professionalism. Save your favorite combination and reuse it — a personal visual signature is worth more than novelty per image.",
-                ],
-            },
-        ],
-        faqs: [
-            {
-                question: "What image formats can I upload?",
-                answer: "PNG and JPG screenshots work best, including pastes directly from your clipboard (Ctrl/Cmd+V). For the sharpest results, capture at your display's native resolution — beautification can't add detail that isn't there.",
-            },
-            {
-                question: "What resolution is the exported image?",
-                answer: "Exports render at 2x for retina-crisp output, saved as PNG to preserve the gradients and shadows without compression artifacts. The exact pixel dimensions depend on your screenshot size plus the padding you choose.",
-            },
-            {
-                question: "Can I use the images commercially?",
-                answer: "Yes. Everything you create is yours — use beautified screenshots in product launches, documentation, ads, and decks with no attribution required and no watermark. (The screenshot's own content, like third-party logos, is of course your responsibility.)",
-            },
-            {
-                question: "Do you keep copies of my screenshots?",
-                answer: "No. Composition and export happen entirely in your browser; your screenshots are never uploaded or stored. This is especially important since screenshots often contain unreleased work or sensitive data.",
-            },
-            {
-                question: "How is this different from a Figma template?",
-                answer: "Speed and zero setup. Figma templates are powerful but require opening Figma, finding the file, and exporting manually. Here you paste a screenshot, pick a style, and download — the whole loop takes under a minute, which is why people actually use it every day.",
-            },
-        ],
-        related: [
-            { href: "/tools/image-compressor", label: "Compress images for faster pages" },
-            { href: "/tools/video-to-gif", label: "Turn screen recordings into GIFs" },
-            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
         ],
     },
     "audio-to-text": {

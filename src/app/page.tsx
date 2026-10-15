@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, UserX, BadgeCheck, Image, FileText, Film, Table, MonitorSmartphone, Mic, type LucideIcon } from "lucide-react";
+import { ArrowRight, ShieldCheck, UserX, BadgeCheck, Image, FileText, Film, Table, Mic, type LucideIcon } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HUB_ORDER, hubContent, slugifyHeading } from "@/lib/hub-content";
@@ -8,7 +8,7 @@ import { HUB_ORDER, hubContent, slugifyHeading } from "@/lib/hub-content";
 export const metadata: Metadata = {
     title: "Free Online Tools That Run in Your Browser | YuliusBox",
     description:
-        "Compress images, merge PDFs, convert video to GIF, beautify screenshots, and transcribe audio — right in your browser. Your files never leave your device.",
+        "Compress images, merge PDFs, convert video to GIF, and transcribe audio — right in your browser. Your files never leave your device.",
     keywords: [
         "free online tools",
         "compress image online",
@@ -41,7 +41,6 @@ const FAMILY_ICONS: Record<string, LucideIcon> = {
     "pdf-kit": FileText,
     "video-to-gif": Film,
     "excel-formula-bot": Table,
-    "screenshot-beautifier": MonitorSmartphone,
     "audio-to-text": Mic,
 };
 
@@ -50,7 +49,6 @@ const FAMILY_TAGLINES: Record<string, string> = {
     "pdf-kit": "Merge multiple PDFs into one, or shrink oversized files.",
     "video-to-gif": "Turn MP4 and MOV clips into GIFs — no watermark.",
     "excel-formula-bot": "Describe the calculation in plain English; AI writes the formula.",
-    "screenshot-beautifier": "Browser frames, gradients, and shadows for your screenshots.",
     "audio-to-text": "Whisper AI transcription that runs 100% on your device.",
 };
 
@@ -78,10 +76,6 @@ const FAMILY_SUBLINKS: Record<string, { href: string; label: string }[]> = {
         { href: frag("excel-formula-bot", 1), label: "Formulas it handles well" },
         { href: frag("excel-formula-bot", 2), label: "Excel vs Google Sheets" },
     ],
-    "screenshot-beautifier": [
-        { href: frag("screenshot-beautifier", 2), label: "Styles for different audiences" },
-        { href: frag("screenshot-beautifier", 3), label: "Export tips" },
-    ],
     "audio-to-text": [
         { href: frag("audio-to-text", 1), label: "Choosing a Whisper model tier" },
         { href: frag("audio-to-text", 2), label: "Recording tips for accuracy" },
@@ -93,7 +87,7 @@ const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
     { href: "/tools/pdf-kit", label: "Merge PDF files online" },
     { href: "/tools/video-to-gif", label: "Convert video to GIF" },
     { href: "/tools/excel-formula-bot", label: "AI Excel formula generator *" },
-    { href: "/tools/screenshot-beautifier", label: "Screenshot beautifier" },
+    { href: "/tools/id-watermark", label: "ID photo watermark protector" },
     { href: "/tools/domain-lookup", label: "Domain lookup" },
     { href: "/tools/audio-to-text", label: "Free audio to text transcriber" },
     { href: "https://www.heic2jpg-free.com", label: "Convert HEIC to JPG free", external: true },
@@ -119,10 +113,25 @@ export default function Home() {
                     </h1>
                     <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl">
                         Your files never leave your device. Compress images, merge PDFs,
-                        convert video to GIF, beautify screenshots, and transcribe audio —
+                        convert video to GIF, and transcribe audio —
                         no uploads, no accounts. A few server-powered tools are the
                         exception, and each one is clearly labeled.
                     </p>
+                    <Link
+                        href="/tools/id-watermark"
+                        className="group inline-flex items-center gap-3 self-start rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 hover:border-amber-500/60 hover:bg-amber-500/15 transition-all"
+                    >
+                        <ShieldCheck className="w-6 h-6 text-amber-400 shrink-0" />
+                        <span className="text-left">
+                            <span className="block text-sm font-semibold text-amber-200">
+                                Most visited: ID Watermark Protector
+                            </span>
+                            <span className="block text-xs text-zinc-400 mt-0.5">
+                                Add anti-misuse watermarks to ID photos before sharing — free, in your browser.
+                            </span>
+                        </span>
+                        <ArrowRight className="w-4 h-4 text-amber-300 group-hover:translate-x-1 transition-transform shrink-0" />
+                    </Link>
                 </section>
 
                 {/* Tool family cards */}

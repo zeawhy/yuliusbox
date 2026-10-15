@@ -21,21 +21,6 @@ export interface Tool {
 
 export const toolsData: Tool[] = [
     {
-        id: "screenshot-beautifier",
-        category: "media",
-        name: {
-            en: "Screenshot Beautifier",
-            cn: "截图美化工具"
-        },
-        description: {
-            en: "Wrap your screenshots in a stylish browser window with gradients.",
-            cn: "为您的截图添加精美的浏览器窗口和背景渐变。"
-        },
-        icon: Image,
-        href: "/tools/screenshot-beautifier",
-        popular: true,
-    },
-    {
         id: "heic-2-jpg",
         category: "media",
         name: {
