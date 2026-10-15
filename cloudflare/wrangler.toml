@@ -10,10 +10,7 @@ compatibility_date = "2024-09-23"
 [observability]
 enabled = true
 
-# Optional: Bindings for rate limiting KV namespace.
-# You can uncomment and specify your KV ID here, or bind it directly
-# in the Cloudflare Dashboard under: Worker -> Settings -> Variables and Secrets -> KV Namespace Bindings.
-#
-# [[kv_namespaces]]
-# binding = "LIMITER"
-# id = "your_kv_namespace_id_here"
+# Rate limiting KV namespace (10 req/min per IP, see worker.js).
+[[kv_namespaces]]
+binding = "LIMITER"
+id = "91cc27c541154d3fbe60dab6a6284c24"
