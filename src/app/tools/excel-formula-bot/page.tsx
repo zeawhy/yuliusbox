@@ -65,6 +65,7 @@ export default function Page() {
 
             <HubBody
                 content={content}
+                trustMode="api"
                 longTailLinks={longTailPages
                     .filter((p) => p.hubId === "excel-formula-bot")
                     .map((p) => ({ href: p.href, label: p.crumb }))}

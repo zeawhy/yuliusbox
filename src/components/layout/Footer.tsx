@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Twitter, Mail, Coffee } from "lucide-react";
-import { HUB_ORDER, hubContent } from "@/lib/hub-content";
+import { toolsData } from "@/lib/tools-data";
 
 const LEGAL_LINKS = [
     { href: "/privacy", label: "Privacy Policy" },
@@ -9,33 +9,59 @@ const LEGAL_LINKS = [
     { href: "/contact", label: "Contact" },
 ];
 
+const FOOTER_CATEGORIES: { key: "media" | "productivity" | "developer"; label: string }[] = [
+    { key: "media", label: "Media" },
+    { key: "productivity", label: "Productivity" },
+    { key: "developer", label: "Developer" },
+];
+
 export function Footer() {
+    const activeTools = toolsData.filter((t) => !t.comingSoon);
+
     return (
         <footer className="w-full py-12 mt-24 border-t border-zinc-900 text-zinc-500">
-            {/* Link columns */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-12">
-                <div>
-                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
-                        Tools
-                    </p>
-                    <ul className="space-y-2.5">
-                        {HUB_ORDER.map((id) => (
-                            <li key={id}>
-                                <Link
-                                    href={hubContent[id].href}
-                                    className="text-sm hover:text-white transition-colors"
-                                >
-                                    {hubContent[id].crumb}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div>
+            {/* Tool link columns by category */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
+                {FOOTER_CATEGORIES.map(({ key, label }) => {
+                    const tools = activeTools.filter((t) => t.category === key);
+                    return (
+                        <div key={key}>
+                            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+                                {label}
+                            </p>
+                            <ul className="space-y-2.5">
+                                {tools.map((tool) => (
+                                    <li key={tool.id}>
+                                        {tool.href.startsWith("http") ? (
+                                            <a
+                                                href={tool.href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-sm hover:text-white transition-colors"
+                                            >
+                                                {tool.name.en}
+                                            </a>
+                                        ) : (
+                                            <Link
+                                                href={tool.href}
+                                                className="text-sm hover:text-white transition-colors"
+                                            >
+                                                {tool.name.en}
+                                            </Link>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                })}
+
+                {/* Company + Support column */}
+                <div className="col-span-2 sm:col-span-3 lg:col-span-1">
                     <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                         Company
                     </p>
-                    <ul className="space-y-2.5">
+                    <ul className="space-y-2.5 mb-6">
                         {LEGAL_LINKS.map((link) => (
                             <li key={link.href}>
                                 <Link
@@ -47,8 +73,6 @@ export function Footer() {
                             </li>
                         ))}
                     </ul>
-                </div>
-                <div className="col-span-2 sm:col-span-1">
                     <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
                         Support the Developer
                     </p>

@@ -58,7 +58,7 @@ export default function GoogleSheetsFormulaGeneratorPage() {
                 />
             </div>
 
-            <HubBody content={content} />
+            <HubBody content={content} trustMode="api" />
             <Footer />
         </div>
     );

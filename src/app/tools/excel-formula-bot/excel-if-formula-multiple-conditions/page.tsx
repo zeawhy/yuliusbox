@@ -58,7 +58,7 @@ export default function ExcelIfFormulaMultipleConditionsPage() {
                 />
             </div>
 
-            <HubBody content={content} />
+            <HubBody content={content} trustMode="api" />
             <Footer />
         </div>
     );

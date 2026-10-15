@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
@@ -39,6 +39,8 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
     const ffmpegRef = useRef<FFmpeg | null>(null);
     const messageRef = useRef<HTMLParagraphElement | null>(null);
 
+    const [ffmpegLoading, setFfmpegLoading] = useState(false);
+
     const load = async () => {
         if (!ffmpegRef.current) {
             ffmpegRef.current = new FFmpeg();
@@ -63,7 +65,9 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
             setLoaded(true);
         } catch (err) {
             console.error("FFmpeg load failed", err);
-            setError("Failed to load FFmpeg. Your browser might not support SharedArrayBuffer. Please check if you are using a modern browser.");
+            setError("Failed to load FFmpeg. Please check your browser supports SharedArrayBuffer (requires HTTPS and a modern browser).");
+        } finally {
+            setFfmpegLoading(false);
         }
     };
 
@@ -74,10 +78,7 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
         return URL.createObjectURL(blob);
     };
 
-    useEffect(() => {
-        load();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Run once
+    // No useEffect auto-init — FFmpeg is loaded lazily on first file selection.
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
@@ -85,6 +86,12 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
             setGifUrl(null);
             setGifSize(null);
             setProgress(0);
+            setError(null);
+            // Lazy-load FFmpeg on first file selection
+            if (!loaded && !ffmpegLoading) {
+                setFfmpegLoading(true);
+                load();
+            }
         }
     };
 
@@ -124,14 +131,13 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
             console.error("Conversion failed", err);
             setError("Conversion failed. Video might be too long or complex for browser. Try < 10s video.");
 
-            // Force reload FFmpeg on crash
+            // Reset FFmpeg so user can retry
             if (ffmpegRef.current) {
                 try {
                     ffmpegRef.current.terminate();
                 } catch (e) { console.error("Term failed", e); }
                 ffmpegRef.current = null;
                 setLoaded(false);
-                setTimeout(load, 1000); // Try to reload
             }
         } finally {
             setIsProcessing(false);
@@ -140,14 +146,6 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
 
     return (
         <div className="w-full flex flex-col gap-8">
-            {/* Loading State */}
-            {!loaded && !error && (
-                <div className="flex flex-col items-center justify-center p-12 rounded-2xl bg-zinc-900/50 border border-zinc-800 animate-pulse">
-                    <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mb-4" />
-                    <p className="text-zinc-400">Loading FFmpeg Core... (This may take a moment)</p>
-                </div>
-            )}
-
             {error && (
                 <div className="flex flex-col items-center justify-center p-12 rounded-2xl bg-red-500/10 border border-red-500/20">
                     <AlertCircle className="w-10 h-10 text-red-500 mb-4" />
@@ -155,136 +153,146 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
                 </div>
             )}
 
-            {/* Editor Area */}
-            {loaded && (
-                <>
-                    {typeof window !== 'undefined' && !window.crossOriginIsolated && (
-                        <div className="w-full p-4 mb-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-yellow-200 text-sm text-center">
-                            ⚠ <strong>Security Requirement Missing</strong><br />
-                            Your browser environment does not support `SharedArrayBuffer` (required for WASM).<br />
-                            If testing on mobile via local network (e.g. 192.168.x.x), this will NOT work because it is not HTTPS.<br />
-                            Please use <strong>localhost</strong> on computer or deploy to <strong>Vercel (HTTPS)</strong>.
-                        </div>
-                    )}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full animate-in fade-in slide-in-from-bottom-8">
-                        {/* Left Column: Input */}
-                        <div className="space-y-6">
-                            <div className="relative w-full aspect-video bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex flex-col items-center justify-center group">
-                                {videoFile ? (
-                                    <video
-                                        src={URL.createObjectURL(videoFile)}
-                                        controls
-                                        className="w-full h-full object-contain"
-                                    />
-                                ) : (
-                                    <>
-                                        <div className="p-4 rounded-full bg-zinc-800 transition-colors group-hover:bg-zinc-700 text-zinc-400 group-hover:text-zinc-200 mb-4">
-                                            <Film className="w-8 h-8" />
-                                        </div>
-                                        <p className="text-zinc-400 font-medium">Drop Video Here</p>
-                                        <p className="text-xs text-zinc-600 mt-2">Drag &amp; drop or click to upload MP4, MOV, WebM or GIF</p>
-                                    </>
-                                )}
-                                <input
-                                    type="file"
-                                    accept="video/mp4,video/quicktime,video/webm,image/gif"
-                                    onChange={handleFileChange}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            {/* Editor Area — upload zone always visible; settings shown once FFmpeg is ready */}
+            <>
+                {loaded && typeof window !== 'undefined' && !window.crossOriginIsolated && (
+                    <div className="w-full p-4 mb-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-yellow-200 text-sm text-center">
+                        ⚠ <strong>Security Requirement Missing</strong><br />
+                        Your browser environment does not support `SharedArrayBuffer` (required for WASM).<br />
+                        If testing on mobile via local network (e.g. 192.168.x.x), this will NOT work because it is not HTTPS.<br />
+                        Please use <strong>localhost</strong> on computer or deploy to <strong>Vercel (HTTPS)</strong>.
+                    </div>
+                )}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+                    {/* Left Column: Input */}
+                    <div className="space-y-6">
+                        <div className="relative w-full aspect-video bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex flex-col items-center justify-center group">
+                            {videoFile ? (
+                                <video
+                                    src={URL.createObjectURL(videoFile)}
+                                    controls
+                                    className="w-full h-full object-contain"
                                 />
-                            </div>
-
-                            <LocalTrustNote />
-
-                            <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-4">
-                                <div className="flex items-center gap-2 mb-2 text-zinc-300 font-medium">
-                                    <Settings2 className="w-5 h-5" /> Settings
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400 flex justify-between">
-                                        FPS (Frames Per Second)
-                                        <span className="text-indigo-400">{fps}</span>
-                                    </label>
-                                    <input
-                                        type="range" min="1" max="30" value={fps}
-                                        onChange={(e) => setFps(parseInt(e.target.value))}
-                                        className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-xs text-zinc-400">
-                                        Width (px)
-                                    </label>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="number" value={width}
-                                            onChange={(e) => setWidth(parseInt(e.target.value))}
-                                            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                        />
-                                        <span className="text-zinc-600 text-sm">px</span>
+                            ) : (
+                                <>
+                                    <div className="p-4 rounded-full bg-zinc-800 transition-colors group-hover:bg-zinc-700 text-zinc-400 group-hover:text-zinc-200 mb-4">
+                                        <Film className="w-8 h-8" />
                                     </div>
-                                </div>
-
-                                <p className="text-[11px] text-zinc-600">
-                                    Max 10 seconds per conversion to prevent browser crashes.
-                                </p>
-                            </div>
-
-                            <button
-                                onClick={convertToGif}
-                                disabled={!videoFile || isProcessing}
-                                className="w-full py-3.5 bg-white text-zinc-950 rounded-xl font-bold hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                            >
-                                {isProcessing ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        Converting... {progress}%
-                                    </>
-                                ) : (
-                                    <>
-                                        <Play className="w-5 h-5" /> Convert to GIF
-                                    </>
-                                )}
-                            </button>
+                                    <p className="text-zinc-400 font-medium">Drop Video Here</p>
+                                    <p className="text-xs text-zinc-600 mt-2">Drag &amp; drop or click to upload MP4, MOV, WebM or GIF</p>
+                                </>
+                            )}
+                            <input
+                                type="file"
+                                accept="video/mp4,video/quicktime,video/webm,image/gif"
+                                onChange={handleFileChange}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
                         </div>
 
-                        {/* Right Column: Output */}
-                        <div className="flex flex-col gap-4">
-                            <div className="relative w-full aspect-video bg-zinc-900/50 rounded-2xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center overflow-hidden">
-                                {gifUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={gifUrl} alt="GIF Output" className="w-full h-full object-contain" />
-                                ) : (
-                                    <p className="text-zinc-600 text-sm">GIF Preview</p>
+                        {/* FFmpeg loading indicator — shown only after file is selected and FFmpeg is initializing */}
+                        {ffmpegLoading && !loaded && (
+                            <div className="flex items-center justify-center gap-3 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                                <Loader2 className="w-5 h-5 text-indigo-500 animate-spin shrink-0" />
+                                <p className="text-zinc-400 text-sm">Loading FFmpeg engine… (first load may take a moment)</p>
+                            </div>
+                        )}
+
+                        <LocalTrustNote />
+
+                        {loaded && (
+                            <>
+                                <div className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-4">
+                                    <div className="flex items-center gap-2 mb-2 text-zinc-300 font-medium">
+                                        <Settings2 className="w-5 h-5" /> Settings
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-zinc-400 flex justify-between">
+                                            FPS (Frames Per Second)
+                                            <span className="text-indigo-400">{fps}</span>
+                                        </label>
+                                        <input
+                                            type="range" min="1" max="30" value={fps}
+                                            onChange={(e) => setFps(parseInt(e.target.value))}
+                                            className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-zinc-400">
+                                            Width (px)
+                                        </label>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="number" value={width}
+                                                onChange={(e) => setWidth(parseInt(e.target.value))}
+                                                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                            />
+                                            <span className="text-zinc-600 text-sm">px</span>
+                                        </div>
+                                    </div>
+
+                                    <p className="text-[11px] text-zinc-600">
+                                        Max 10 seconds per conversion to prevent browser crashes.
+                                    </p>
+                                </div>
+
+                                <button
+                                    onClick={convertToGif}
+                                    disabled={!videoFile || isProcessing}
+                                    className="w-full py-3.5 bg-white text-zinc-950 rounded-xl font-bold hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                                >
+                                    {isProcessing ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            Converting... {progress}%
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Play className="w-5 h-5" /> Convert to GIF
+                                        </>
+                                    )}
+                                </button>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Right Column: Output */}
+                    <div className="flex flex-col gap-4">
+                        <div className="relative w-full aspect-video bg-zinc-900/50 rounded-2xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center overflow-hidden">
+                            {gifUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={gifUrl} alt="GIF Output" className="w-full h-full object-contain" />
+                            ) : (
+                                <p className="text-zinc-600 text-sm">GIF Preview</p>
+                            )}
+                        </div>
+
+                        {gifUrl && (
+                            <div className="flex items-center gap-3">
+                                <a
+                                    href={gifUrl}
+                                    download={`output-${Date.now()}.gif`}
+                                    className="flex-1 py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Download className="w-5 h-5" /> Download GIF
+                                </a>
+                                {gifSize != null && (
+                                    <span className="shrink-0 px-3 py-3.5 rounded-xl border border-zinc-800 bg-zinc-900/50 text-sm font-medium text-zinc-300">
+                                        {formatBytes(gifSize)}
+                                    </span>
                                 )}
                             </div>
+                        )}
 
-                            {gifUrl && (
-                                <div className="flex items-center gap-3">
-                                    <a
-                                        href={gifUrl}
-                                        download={`output-${Date.now()}.gif`}
-                                        className="flex-1 py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Download className="w-5 h-5" /> Download GIF
-                                    </a>
-                                    {gifSize != null && (
-                                        <span className="shrink-0 px-3 py-3.5 rounded-xl border border-zinc-800 bg-zinc-900/50 text-sm font-medium text-zinc-300">
-                                            {formatBytes(gifSize)}
-                                        </span>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Log Output (Optional, hidden by default or small) */}
-                            <div className="p-4 rounded-xl bg-black font-mono text-xs text-zinc-500 h-32 overflow-y-auto hidden">
-                                <p ref={messageRef}></p>
-                            </div>
+                        {/* Log Output (Optional, hidden by default or small) */}
+                        <div className="p-4 rounded-xl bg-black font-mono text-xs text-zinc-500 h-32 overflow-y-auto hidden">
+                            <p ref={messageRef}></p>
                         </div>
                     </div>
-                </>
-            )}
+                </div>
+            </>
 
             {maxSizeMB != null && (
                 <p className="text-center text-sm text-emerald-400 font-medium">

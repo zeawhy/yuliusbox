@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { HUB_ORDER, hubContent } from "@/lib/hub-content";
 import { cn } from "@/lib/utils";
+import { GlobalSearch } from "@/components/layout/GlobalSearch";
 
 const ABOUT_LINKS = [{ href: "/about", label: "About" }];
 
@@ -13,13 +14,18 @@ export function Header() {
 
     return (
         <header className="w-full py-5 mb-10 sm:mb-14 border-b border-zinc-900">
-            <div className="flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold tracking-tight text-white select-none">
+            <div className="flex justify-between items-center gap-4">
+                <Link href="/" className="text-2xl font-bold tracking-tight text-white select-none shrink-0">
                     YuliusBox
                 </Link>
 
+                {/* Global Cmd+K search */}
+                <div className="flex-1 flex justify-center">
+                    <GlobalSearch />
+                </div>
+
                 {/* Desktop nav */}
-                <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
+                <nav className="hidden lg:flex items-center gap-1 shrink-0" aria-label="Primary">
                     <div className="relative group">
                         <button
                             className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
