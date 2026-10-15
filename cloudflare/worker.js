@@ -124,112 +124,70 @@ export default {
             }
 
             const langInstruction = language === 'cn' ? " in Simplified Chinese" : " in English";
-            let providerConfig = {};
 
-            // 2. Model Routing Strategy
+            if (!env.AI) {
+                return new Response(JSON.stringify({ error: "Workers AI binding not configured." }), { status: 500, headers: corsHeaders });
+            }
+
+            let systemPrompt = "";
+
+            // 2. Model Routing Strategy (all via Cloudflare Workers AI, no API keys needed)
+            const AI_MODEL = "@cf/openai/gpt-oss-20b";
             switch (type) {
-                case 'email': // Use xAI (Grok) for Native English Tone
-                    providerConfig = {
-                        url: "https://api.x.ai/v1/chat/completions",
-                        apiKey: env.XAI_API_KEY || "",
-                        model: "grok-3",
-                        systemPrompt: "You are a professional business communication expert. Rewrite the draft to be polite and professional. Keep the same language as the input (e.g., if input is Chinese, output Chinese; if English, output English). Return ONLY the rewritten text."
-                    };
-
-                    if (!providerConfig.apiKey) {
-                        return new Response(JSON.stringify({ error: "Missing XAI_API_KEY in Cloudflare Worker secrets." }), { status: 500, headers: corsHeaders });
-                    }
+                case 'email':
+                    systemPrompt = "You are a professional business communication expert. Rewrite the draft to be polite and professional. Keep the same language as the input (e.g., if input is Chinese, output Chinese; if English, output English). Return ONLY the rewritten text.";
                     break;
 
-                case 'excel': // Use Qwen for Logic/Code
-                    providerConfig = {
-                        url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-                        apiKey: env.QWEN_API_KEY || "",
-                        model: "qwen-turbo",
-                        systemPrompt: "You are an Excel expert. Convert the user request into a formula. Return ONLY the formula code."
-                    };
+                case 'excel':
+                    systemPrompt = "You are an Excel expert. Convert the user request into a formula. Return ONLY the formula code.";
                     break;
 
-                case 'regex': // Use Qwen for Logic/Code
-                    providerConfig = {
-                        url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-                        apiKey: env.QWEN_API_KEY || "",
-                        model: "qwen-turbo",
-                        systemPrompt: `You are a Regex expert. If the user asks to generate a regex, return ONLY the regex pattern code. If the user asks to explain a regex, provide a clear, concise explanation${langInstruction}.`
-                    };
+                case 'regex':
+                    systemPrompt = `You are a Regex expert. If the user asks to generate a regex, return ONLY the regex pattern code. If the user asks to explain a regex, provide a clear, concise explanation${langInstruction}.`;
                     break;
 
-                case 'youtube': // Use xAI for Creative/Viral Content
-                    providerConfig = {
-                        url: "https://api.x.ai/v1/chat/completions",
-                        apiKey: env.XAI_API_KEY || "",
-                        model: "grok-3",
-                        systemPrompt: "You are a YouTube expert. Generate 5 high-CTR, viral titles and 10 SEO tags for the user's video topic. Return a valid JSON object with keys 'titles' (array of strings) and 'tags' (array of strings). Do not return markdown blocks."
-                    };
+                case 'youtube':
+                    systemPrompt = "You are a YouTube expert. Generate 5 high-CTR, viral titles and 10 SEO tags for the user's video topic. Return a valid JSON object with keys 'titles' (array of strings) and 'tags' (array of strings). Do not return markdown blocks.";
                     break;
 
-                case 'sql': // Use Qwen for Logic
-                    const dialect = requestBody.dialect || "SQL";
-                    providerConfig = {
-                        url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-                        apiKey: env.QWEN_API_KEY || "",
-                        model: "qwen-turbo",
-                        systemPrompt: `You are an expert Database Administrator. Convert the user's natural language request into a valid ${dialect} query. Return ONLY the SQL code block. No markdown wrapper, no explanation.`
-                    };
+                case 'sql':
+                    systemPrompt = `You are an expert Database Administrator. Convert the user's natural language request into a valid ${requestBody.dialect || "SQL"} query. Return ONLY the SQL code block. No markdown wrapper, no explanation.`;
                     break;
 
-                case 'cron': // Use Qwen for Logic
-                    providerConfig = {
-                        url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-                        apiKey: env.QWEN_API_KEY || "",
-                        model: "qwen-turbo",
-                        systemPrompt: "You are a Cron Job expert. Convert the natural language requirement into a Cron expression and a human-readable explanation. Return a valid JSON object with keys 'expression' (e.g. '*/5 * * * *') and 'description' (in the user's language). No markdown blocks."
-                    };
+                case 'cron':
+                    systemPrompt = "You are a Cron Job expert. Convert the natural language requirement into a Cron expression and a human-readable explanation. Return a valid JSON object with keys 'expression' (e.g. '*/5 * * * *') and 'description' (in the user's language). No markdown blocks.";
                     break;
 
                 default:
                     return new Response(JSON.stringify({ error: "Invalid Type" }), { status: 400, headers: corsHeaders });
             }
 
-            // 3. Upstream Call with 25s timeout
+            // 3. Workers AI Call with 25s timeout
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 25000);
 
-            const response = await fetch(providerConfig.url, {
-                method: "POST",
-                signal: controller.signal,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${providerConfig.apiKey}`
-                },
-                body: JSON.stringify({
-                    model: providerConfig.model,
+            let data;
+            try {
+                data = await env.AI.run(AI_MODEL, {
                     messages: [
-                        { role: "system", content: providerConfig.systemPrompt },
+                        { role: "system", content: systemPrompt },
                         { role: "user", content: userInput }
-                    ],
-                    temperature: 0.3
-                })
-            });
+                    ]
+                }, { signal: controller.signal });
+            } catch (aiError) {
+                clearTimeout(timeoutId);
+                if (aiError.name === "AbortError") {
+                    return new Response(JSON.stringify({ error: "AI upstream generation timed out." }), { status: 504, headers: corsHeaders });
+                }
+                return new Response(JSON.stringify({ error: `AI Error: ${aiError.message}` }), { status: 500, headers: corsHeaders });
+            }
 
             clearTimeout(timeoutId);
 
-            let data;
-            try {
-                data = await response.json();
-            } catch (jsonError) {
-                return new Response(JSON.stringify({ error: `Failed to parse API response: ${jsonError.message}` }), { status: 500, headers: corsHeaders });
-            }
+            const resultText = data.response || data.result?.response || data.choices?.[0]?.message?.content || data.result;
 
-            if (!response.ok) {
-                const errorMsg = data.error?.message || JSON.stringify(data) || "Unknown Upstream API Error";
-                return new Response(JSON.stringify({ error: `API Error: ${errorMsg}` }), { status: response.status, headers: corsHeaders });
-            }
-
-            const resultText = data.choices?.[0]?.message?.content;
-
-            if (!resultText) {
-                return new Response(JSON.stringify({ error: "No content generated. Full response: " + JSON.stringify(data) }), { status: 500, headers: corsHeaders });
+            if (!resultText || typeof resultText !== 'string') {
+                return new Response(JSON.stringify({ error: "No content generated.", debug: JSON.stringify(data).slice(0, 200) }), { status: 500, headers: corsHeaders });
             }
 
             return new Response(JSON.stringify({ result: resultText }), {

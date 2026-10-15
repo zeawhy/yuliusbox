@@ -14,3 +14,7 @@ enabled = true
 [[kv_namespaces]]
 binding = "LIMITER"
 id = "91cc27c541154d3fbe60dab6a6284c24"
+
+# Workers AI binding (free 10k neurons/day, no API key needed).
+[ai]
+binding = "AI"
