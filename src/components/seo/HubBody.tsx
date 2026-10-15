@@ -11,10 +11,17 @@ import { slugifyHeading, type HubContent, type RelatedLink } from "@/lib/hub-con
 export function HubBody({
     content,
     longTailLinks,
+    trustMode = "local",
 }: {
     content: HubContent;
     /** Hub pages pass their indexed long-tail pages; long-tail pages omit this. */
     longTailLinks?: RelatedLink[];
+    /**
+     * Controls the trust badge shown below the tool.
+     * - "local"  (default): tool runs 100% in the browser — no upload.
+     * - "api": tool calls a secure backend API — prompts/files are never stored.
+     */
+    trustMode?: "local" | "api";
 }) {
     const faqJsonLd = {
         "@context": "https://schema.org",
@@ -39,7 +46,9 @@ export function HubBody({
             {/* Trust note */}
             <p className="flex items-center justify-center gap-2 text-sm text-zinc-500 text-center">
                 <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-                Files are processed locally and never uploaded.
+                {trustMode === "api"
+                    ? "Processed via secure API — prompts and files are never stored."
+                    : "Processed 100% locally in your browser — files never leave your device."}
             </p>
 
             {/* How to use */}

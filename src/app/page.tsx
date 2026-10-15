@@ -4,6 +4,7 @@ import { ArrowRight, ShieldCheck, UserX, BadgeCheck, Image, FileText, Film, Tabl
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HUB_ORDER, hubContent, slugifyHeading } from "@/lib/hub-content";
+import { toolsData } from "@/lib/tools-data";
 
 export const metadata: Metadata = {
     title: "Free Online Tools That Run in Your Browser | YuliusBox",
@@ -214,6 +215,57 @@ export default function Home() {
                         converted and never stored.
                     </p>
                 </section>
+
+                {/* All tools by category — compact navigation grid for crawlers and users */}
+                {(() => {
+                    const CATEGORY_ORDER: { key: "media" | "productivity" | "developer"; label: string }[] = [
+                        { key: "media", label: "Media" },
+                        { key: "productivity", label: "Productivity" },
+                        { key: "developer", label: "Developer" },
+                    ];
+                    const activeTools = toolsData.filter((t) => !t.comingSoon);
+                    return (
+                        <section aria-label="All tools">
+                            <h2 className="text-2xl font-bold text-white mb-6">All tools</h2>
+                            <div className="flex flex-col gap-6">
+                                {CATEGORY_ORDER.map(({ key, label }) => {
+                                    const tools = activeTools.filter((t) => t.category === key);
+                                    if (tools.length === 0) return null;
+                                    return (
+                                        <div key={key}>
+                                            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
+                                            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                                                {tools.map((tool) => (
+                                                    <li key={tool.id}>
+                                                        {tool.href.startsWith("http") ? (
+                                                            <a
+                                                                href={tool.href}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 hover:bg-zinc-900 transition-all min-h-[44px]"
+                                                            >
+                                                                <tool.icon className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
+                                                                <span className="truncate">{tool.name.en}</span>
+                                                            </a>
+                                                        ) : (
+                                                            <Link
+                                                                href={tool.href}
+                                                                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 hover:bg-zinc-900 transition-all min-h-[44px]"
+                                                            >
+                                                                <tool.icon className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
+                                                                <span className="truncate">{tool.name.en}</span>
+                                                            </Link>
+                                                        )}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    );
+                })()}
 
                 {/* How it works */}
                 <section aria-label="How it works" className="max-w-3xl">

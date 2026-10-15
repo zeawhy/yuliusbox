@@ -17,6 +17,8 @@ export interface Tool {
     href: string;
     comingSoon?: boolean;
     popular?: boolean;
+    /** Search keywords: name tokens + file extensions + action verbs + synonyms */
+    keywords?: string[];
 }
 
 export const toolsData: Tool[] = [
@@ -34,6 +36,7 @@ export const toolsData: Tool[] = [
         icon: Image,
         href: "https://www.heic2jpg-free.com",
         popular: true,
+        keywords: ["heic", "heif", "jpg", "jpeg", "webp", "convert", "iphone photo", "apple photo", "image converter"],
     },
     {
         id: "image-compressor",
@@ -49,6 +52,7 @@ export const toolsData: Tool[] = [
         icon: Image,
         href: "/tools/image-compressor",
         popular: true,
+        keywords: ["compress", "image", "jpg", "png", "webp", "resize", "shrink", "reduce", "optimize", "photo", "bulk"],
     },
     {
         id: "pdf-toolkit",
@@ -64,6 +68,7 @@ export const toolsData: Tool[] = [
         icon: FileText,
         href: "/tools/pdf-kit",
         comingSoon: false,
+        keywords: ["pdf", "merge", "split", "compress", "combine", "join", "extract pages", "jpg to pdf", "pdf merge", "pdf split"],
     },
     {
         id: "video-to-gif",
@@ -79,6 +84,7 @@ export const toolsData: Tool[] = [
         icon: Blocks,
         href: "/tools/video-to-gif",
         popular: true,
+        keywords: ["gif", "video", "mp4", "mov", "webm", "convert", "animate", "ffmpeg", "discord gif", "screen recording"],
     },
     {
         id: "id-watermark",
@@ -94,6 +100,7 @@ export const toolsData: Tool[] = [
         icon: FileText,
         href: "/tools/id-watermark",
         popular: true,
+        keywords: ["watermark", "id card", "id watermark", "identity", "protect", "stamp", "secure", "id photo"],
     },
     {
         id: "audio-to-text",
@@ -109,6 +116,7 @@ export const toolsData: Tool[] = [
         icon: FileText, // Or Mic if imported, but FileText is safe
         href: "/tools/audio-to-text",
         popular: true,
+        keywords: ["transcribe", "audio", "mp3", "wav", "m4a", "speech to text", "whisper", "voice memo", "meeting", "podcast", "interview"],
     },
     {
         id: "excel-formula-bot",
@@ -124,6 +132,7 @@ export const toolsData: Tool[] = [
         icon: Table,
         href: "/tools/excel-formula-bot",
         popular: true,
+        keywords: ["excel", "formula", "spreadsheet", "google sheets", "vlookup", "sumif", "countif", "xlookup", "excel bot", "formula generator"],
     },
     {
         id: "email-paraphraser",
@@ -139,6 +148,7 @@ export const toolsData: Tool[] = [
         icon: Mail,
         href: "/tools/email-paraphraser",
         popular: true,
+        keywords: ["email", "rewrite", "paraphrase", "polite", "professional", "business email", "formal", "rephraser"],
     },
     {
         id: "regex-generator",
@@ -154,6 +164,7 @@ export const toolsData: Tool[] = [
         icon: Code,
         href: "/tools/regex-generator",
         popular: true,
+        keywords: ["regex", "regular expression", "pattern", "match", "validate", "regexp", "regex builder"],
     },
     {
         id: "json-to-code",
@@ -169,6 +180,7 @@ export const toolsData: Tool[] = [
         icon: FileJson,
         href: "/tools/json-to-code",
         popular: true,
+        keywords: ["json", "typescript", "golang", "dart", "model", "struct", "convert", "interface", "type generator"],
     },
     {
         id: "sql-builder",
@@ -184,6 +196,7 @@ export const toolsData: Tool[] = [
         icon: Database,
         href: "/tools/sql-builder",
         popular: true,
+        keywords: ["sql", "query", "mysql", "postgresql", "database", "select", "sql generator", "natural language sql"],
     },
     {
         id: "cron-generator",
@@ -199,6 +212,7 @@ export const toolsData: Tool[] = [
         icon: Clock,
         href: "/tools/cron-generator",
         popular: true,
+        keywords: ["cron", "cron expression", "schedule", "scheduler", "crontab", "task", "timer", "interval"],
     },
     {
         id: "privacy-generator",
@@ -214,6 +228,7 @@ export const toolsData: Tool[] = [
         icon: Shield,
         href: "/tools/privacy-generator",
         popular: true,
+        keywords: ["privacy policy", "terms of service", "legal", "gdpr", "app store", "privacy", "terms"],
     },
     {
         id: "safe-zone-overlay",
@@ -229,6 +244,7 @@ export const toolsData: Tool[] = [
         icon: Image,
         href: "/tools/safe-zone-overlay",
         popular: true,
+        keywords: ["safe zone", "tiktok", "reels", "shorts", "overlay", "social media", "video safe zone", "preview"],
     },
     {
         id: "youtube-optimizer",
@@ -244,6 +260,7 @@ export const toolsData: Tool[] = [
         icon: Blocks,
         href: "/tools/youtube-optimizer",
         popular: true,
+        keywords: ["youtube", "title", "seo", "tags", "thumbnail", "ctr", "viral", "youtube optimizer", "description"],
     },
     {
         id: "color-palette",
@@ -259,6 +276,7 @@ export const toolsData: Tool[] = [
         icon: Table,
         href: "/tools/color-palette",
         popular: true,
+        keywords: ["color palette", "color", "hex", "palette", "extract colors", "color picker", "design"],
     },
     {
         id: "background-remover",
@@ -274,6 +292,7 @@ export const toolsData: Tool[] = [
         icon: Eraser,
         href: "/tools/background-remover",
         popular: true,
+        keywords: ["background remover", "remove background", "cutout", "transparent", "bg remove", "photo background"],
     },
     {
         id: "image-editor",
@@ -289,6 +308,7 @@ export const toolsData: Tool[] = [
         icon: Scissors,
         href: "/tools/image-editor",
         popular: true,
+        keywords: ["resize", "crop", "image editor", "photo editor", "rotate", "convert", "jpg", "png", "webp"],
     },
     {
         id: "speed-test",
@@ -304,6 +324,7 @@ export const toolsData: Tool[] = [
         icon: Zap,
         href: "/tools/speed-test",
         popular: true,
+        keywords: ["speed test", "internet speed", "ping", "download speed", "upload speed", "bandwidth", "latency"],
     },
     {
         id: "video-downloader",
@@ -319,6 +340,7 @@ export const toolsData: Tool[] = [
         icon: FileVideo,
         href: "/tools/video-downloader",
         popular: true,
+        keywords: ["download", "video downloader", "youtube download", "tiktok download", "instagram", "twitter", "no watermark"],
     },
     {
         id: "word-to-pdf",
@@ -334,6 +356,7 @@ export const toolsData: Tool[] = [
         icon: FileText,
         href: "/tools/word-to-pdf",
         popular: true,
+        keywords: ["word", "doc", "docx", "pdf", "convert", "word to pdf", "document"],
     },
     {
         id: "excel-to-pdf",
@@ -349,6 +372,7 @@ export const toolsData: Tool[] = [
         icon: Table,
         href: "/tools/excel-to-pdf",
         popular: true,
+        keywords: ["excel", "xlsx", "csv", "pdf", "convert", "excel to pdf", "spreadsheet"],
     },
     {
         id: "ppt-to-pdf",
@@ -364,6 +388,7 @@ export const toolsData: Tool[] = [
         icon: FileText,
         href: "/tools/ppt-to-pdf",
         popular: true,
+        keywords: ["ppt", "pptx", "powerpoint", "pdf", "convert", "ppt to pdf", "slides", "presentation"],
     },
     {
         id: "url-to-pdf",
@@ -379,6 +404,7 @@ export const toolsData: Tool[] = [
         icon: Globe,
         href: "/tools/url-to-pdf",
         popular: true,
+        keywords: ["url", "website", "webpage", "pdf", "convert", "url to pdf", "web to pdf", "html to pdf"],
     },
     {
         id: "image-grid-joiner",
@@ -394,6 +420,7 @@ export const toolsData: Tool[] = [
         icon: Grid3X3,
         href: "/tools/image-grid-joiner",
         popular: true,
+        keywords: ["grid", "joiner", "combine", "stitch", "collage", "mosaic", "image grid", "join images"],
     },
     {
         id: "image-grid-splitter",
@@ -409,6 +436,7 @@ export const toolsData: Tool[] = [
         icon: Blocks, // Or any appropriate icon already imported
         href: "/tools/image-grid-splitter",
         popular: true,
+        keywords: ["split", "grid splitter", "9grid", "slice", "cut image", "nine grid", "image splitter"],
     },
     {
         id: "domain-lookup",
@@ -423,6 +451,7 @@ export const toolsData: Tool[] = [
         },
         icon: Globe,
         href: "/tools/domain-lookup",
+        keywords: ["domain", "whois", "rdap", "dns", "registrar", "domain lookup", "availability", "name server"],
     },
     {
         id: "exif-remover",
@@ -438,6 +467,7 @@ export const toolsData: Tool[] = [
         icon: Eraser,
         href: "/tools/exif-remover",
         popular: true,
+        keywords: ["exif", "metadata", "remove metadata", "gps", "location", "privacy", "photo metadata", "strip exif"],
     },
     {
         id: "jwt-decoder",
@@ -452,6 +482,7 @@ export const toolsData: Tool[] = [
         },
         icon: KeyRound,
         href: "/tools/jwt-decoder",
+        keywords: ["jwt", "json web token", "token", "decode", "bearer", "auth", "authentication", "claims"],
     },
     {
         id: "more-tools",

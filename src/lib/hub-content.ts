@@ -141,9 +141,9 @@ export const hubContent: Record<string, HubContent> = {
         subtitle:
             "Combine PDFs into one document or shrink oversized files, entirely in your browser. Your documents never leave your device.",
         howTo: [
-            "Choose the Merge tab to combine files, or the Compress tab to shrink one.",
-            "Drop your PDF files in — drag to reorder them for merging.",
-            "Click Merge or Compress and let your browser do the work locally.",
+            "Choose a tab: Merge to combine files, Compress to shrink one, Split to break it apart, Extract to pull out specific pages, or JPG→PDF to create a PDF from images.",
+            "Drop your PDF (or image) files in — drag to reorder them for merging.",
+            "Click the action button and let your browser do the work locally.",
             "Download the resulting PDF. Nothing was ever uploaded.",
         ],
         sections: [
@@ -186,8 +186,12 @@ export const hubContent: Record<string, HubContent> = {
                 answer: "Mild compression keeps scanned text perfectly readable. Heavy compression softens images, so if the document must be printed or archived long-term, use a gentler setting and keep the original. For email and web uploads, stronger compression is usually fine.",
             },
             {
-                question: "Can I password-protect or split PDFs here?",
-                answer: "The current toolkit focuses on merging and compression. Splitting a PDF into separate files and password protection are on the roadmap — for now, merge covers combining, and compression covers size limits, which are the two most requested operations.",
+                question: "Can I split or extract pages from a PDF here?",
+                answer: "Yes — splitting and page extraction are fully supported. Use the Split tab to break a PDF into individual pages or custom ranges, and the Extract tab to pull out specific pages. JPG-to-PDF conversion is also available: upload your images and download a combined PDF in seconds.",
+            },
+            {
+                question: "Is password protection supported?",
+                answer: "Not yet — password-protecting PDFs is on the roadmap. The current toolkit covers merging, compressing, splitting, extracting pages, and converting JPG images to PDF, which handles the most common everyday requests.",
             },
             {
                 question: "Are my documents uploaded anywhere?",
