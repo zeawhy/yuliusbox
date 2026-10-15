@@ -35,7 +35,6 @@ export const toolRoutes: ToolRoute[] = [
     { href: "/tools/privacy-generator" },
     { href: "/tools/regex-generator" },
     { href: "/tools/safe-zone-overlay" },
-    { href: "/tools/screenshot-beautifier" },
     { href: "/tools/speed-test" },
     { href: "/tools/sql-builder" },
     { href: "/tools/url-to-pdf" },

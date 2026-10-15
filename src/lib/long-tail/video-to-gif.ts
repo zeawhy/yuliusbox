@@ -302,10 +302,6 @@ const webmToGifConverter: LongTailContent = {
             href: "/tools/video-to-gif/convert-mov-to-gif",
             label: "Convert MOV clips to GIF",
         },
-        {
-            href: "/tools/screenshot-beautifier",
-            label: "Screenshot Beautifier — polished stills for docs",
-        },
     ],
 };
 
@@ -399,10 +395,6 @@ const screenRecordingToGif: LongTailContent = {
         {
             href: "/tools/video-to-gif/webm-to-gif-converter",
             label: "Convert WebM recordings to GIF",
-        },
-        {
-            href: "/tools/screenshot-beautifier/code-screenshot-generator",
-            label: "Beautiful code screenshots for docs",
         },
     ],
 };

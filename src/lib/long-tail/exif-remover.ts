@@ -88,10 +88,6 @@ export const removeImageMetadata: LongTailContent = {
             href: "/tools/image-compressor",
             label: "Compress images for faster uploads",
         },
-        {
-            href: "/tools/screenshot-beautifier",
-            label: "Beautify screenshots before sharing",
-        },
     ],
 };
 

@@ -51,6 +51,5 @@ export const NOINDEX_TOOL_PATHS: string[] = [
 //   /tools/image-compressor   — huge search volume ("compress image"), main entry point
 //   /tools/excel-formula-bot  — high-RPM office-worker audience, AdSense-friendly
 //   /tools/pdf-kit            — massive "merge/split pdf" demand, long-tail entry
-//   /tools/screenshot-beautifier — link magnet (Product Hunt / Reddit / dev communities)
 //   /tools/video-to-gif       — stable demand, "for Discord / under 10MB" long-tails
-export const INDEXED_TOOL_COUNT = 6;
+export const INDEXED_TOOL_COUNT = 5;
