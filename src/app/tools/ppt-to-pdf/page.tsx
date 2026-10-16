@@ -4,6 +4,7 @@ import { ArrowLeft, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { FileUploadZone } from "@/components/FileUploadZone";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export default function PptToPdfPage() {
     const { language } = useLanguage();
@@ -22,10 +23,7 @@ export default function PptToPdfPage() {
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
                 </Link>
-                <div className="hidden sm:flex items-center text-green-500/80 font-mono text-xs gap-1.5 border border-green-500/20 bg-green-500/10 px-3 py-1.5 rounded-full">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    {language === "en" ? t.secure.en : t.secure.cn}
-                </div>
+                <PrivacyBadge mode="api" />
             </div>
 
             <div className="w-full flex flex-col gap-8">

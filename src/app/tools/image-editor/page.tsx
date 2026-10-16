@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import ImageEditor from "@/components/tools/ImageEditor";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "AI Online Image Resizer & Cropper - Edit Photos Instantly",
@@ -37,7 +39,12 @@ export default function ImageEditorPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <ImageEditor />
+            <div className="relative w-full">
+                <PrivacyBadge mode="local" className="absolute top-3 right-3 z-20" />
+                <Suspense fallback={null}>
+                    <ImageEditor />
+                </Suspense>
+            </div>
         </div>
     );
 }

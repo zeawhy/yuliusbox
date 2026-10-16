@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { ArrowLeft, Scissors, Maximize, Download, Image as ImageIcon, Upload, Save, Check } from "lucide-react";
@@ -8,6 +8,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { ContinueWith } from "@/components/tools/ContinueWith";
+import { useChainFile } from "@/lib/use-chain-file";
 
 type FileFormat = "image/jpeg" | "image/png" | "image/webp";
 
@@ -88,19 +90,26 @@ export default function ImageEditor() {
         }
     }, [height, lockAspect, originalAspect]);
 
-    async function handleDownload() {
-        if (!imgRef.current) return;
-        setIsProcessing(true);
+function ImageEditorChainSync({ onFileLoaded }: { onFileLoaded: (dataUrl: string) => void }) {
+    const chainFile = useChainFile();
+    useEffect(() => {
+        if (!chainFile) return;
+        const isImage = chainFile.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chainFile.name);
+        if (isImage) {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => onFileLoaded(reader.result?.toString() || ""));
+            reader.readAsDataURL(chainFile.blob);
+        }
+    }, [chainFile, onFileLoaded]);
+    return null;
+}
 
+    function renderExportCanvas(): HTMLCanvasElement | null {
+        if (!imgRef.current) return null;
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
-        if (!ctx) return;
+        if (!ctx) return null;
 
-        // Final dimensions
-        let finalWidth = width;
-        let finalHeight = height;
-
-        // If cropped, we use the cropped area
         if (completedCrop) {
             const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
             const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
@@ -120,28 +129,43 @@ export default function ImageEditor() {
                 canvas.height
             );
 
-            // Re-apply resizing if the user manually changed width/height after cropping?
-            // Actually, in this simple UI, we'll just use the crop as the size if crop is active.
-            // Or prioritize explicit dimensions. Let's prioritize explicit dimensions.
             if (width !== imgRef.current.naturalWidth || height !== imgRef.current.naturalHeight) {
                 const resizedCanvas = document.createElement("canvas");
                 resizedCanvas.width = width;
                 resizedCanvas.height = height;
                 const rCtx = resizedCanvas.getContext("2d");
                 rCtx?.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, width, height);
-                download(resizedCanvas);
+                return resizedCanvas;
             } else {
-                download(canvas);
+                return canvas;
             }
         } else {
-            // Just resizing
             canvas.width = width;
             canvas.height = height;
             ctx.drawImage(imgRef.current, 0, 0, width, height);
+            return canvas;
+        }
+    }
+
+    async function handleDownload() {
+        setIsProcessing(true);
+        const canvas = renderExportCanvas();
+        if (canvas) {
             download(canvas);
         }
-
         setIsProcessing(false);
+    }
+
+    async function getOutputBlob(): Promise<{ blob: Blob; name: string } | null> {
+        const canvas = renderExportCanvas();
+        if (!canvas) return null;
+        return new Promise((resolve) => {
+            canvas.toBlob((b) => {
+                if (!b) return resolve(null);
+                const ext = format.split("/")[1] || "jpeg";
+                resolve({ blob: b, name: `yuliusbox-edited.${ext}` });
+            }, format, quality);
+        });
     }
 
     function download(canvas: HTMLCanvasElement) {
@@ -165,8 +189,16 @@ export default function ImageEditor() {
         }
     }
 
+    const handleChainLoaded = useCallback((dataUrl: string) => {
+        setCrop(undefined);
+        setImgSrc(dataUrl);
+    }, []);
+
     return (
         <div className="w-full max-w-7xl mx-auto">
+            <Suspense fallback={null}>
+                <ImageEditorChainSync onFileLoaded={handleChainLoaded} />
+            </Suspense>
             {/* Header */}
             <div className="w-full mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors w-fit mb-8">
@@ -341,6 +373,12 @@ export default function ImageEditor() {
                                 {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                                 {language === "en" ? t.download.en : t.download.cn}
                             </button>
+
+                            <ContinueWith
+                                links={[{ label: "ID Watermark", href: "/tools/id-watermark" }]}
+                                getFile={getOutputBlob}
+                                className="w-full justify-between"
+                            />
                         </div>
                     </div>
                 </div>

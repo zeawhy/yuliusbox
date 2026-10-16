@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import PrivacyPolicyGenerator from "@/components/tools/PrivacyPolicyGenerator";
-import { Shield } from "lucide-react";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "Free Privacy Policy Generator for Apps & Websites (No Sign-up)",
@@ -38,7 +38,10 @@ export default function PrivacyGeneratorPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <PrivacyPolicyGenerator />
+            <div className="relative w-full">
+                <PrivacyBadge mode="local" className="absolute top-3 right-3 z-20" />
+                <PrivacyPolicyGenerator />
+            </div>
         </div>
     );
 }

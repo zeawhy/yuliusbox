@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { setToolComputeStatus } from "@/lib/tool-compute-status";
 
 export default function BackgroundRemover() {
     const { language } = useLanguage();
@@ -13,6 +14,10 @@ export default function BackgroundRemover() {
     const [originalImg, setOriginalImg] = useState<string | null>(null);
     const [resultImg, setResultImg] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+
+    useEffect(() => {
+        setToolComputeStatus("background-remover", isProcessing ? "loading" : resultImg ? "ready" : "idle");
+    }, [isProcessing, resultImg]);
     const [progress, setProgress] = useState(0);
     const [sliderPos, setSliderPos] = useState(50);
     const containerRef = useRef<HTMLDivElement>(null);

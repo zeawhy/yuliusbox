@@ -1,6 +1,7 @@
 
 import { Metadata } from "next";
 import SqlBuilderClient from "./SqlBuilderClient";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "AI SQL Query Builder - Natural Language to SQL | YuliusBox",
@@ -33,12 +34,13 @@ const jsonLd = {
 
 export default function Page() {
     return (
-        <>
+        <div className="relative w-full">
+            <PrivacyBadge mode="api" className="absolute top-4 right-4 sm:top-8 sm:right-8 z-20" />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <SqlBuilderClient />
-        </>
+        </div>
     );
 }

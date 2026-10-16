@@ -5,6 +5,7 @@ import { longTailPages } from "@/lib/long-tail-content";
 import { PdfKitTool } from "@/components/tools/PdfKitTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export default function PDFToolkitPage() {
     const content = hubContent["pdf-kit"];
@@ -22,7 +23,10 @@ export default function PDFToolkitPage() {
                     </p>
                 </div>
 
-                <PdfKitTool />
+                <div className="relative w-full">
+                    <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
+                    <PdfKitTool />
+                </div>
             </div>
 
             <HubBody

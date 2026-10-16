@@ -1,9 +1,9 @@
-"use client";
-
+import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { ExifRemoverTool } from "@/components/tools/ExifRemoverTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 const FAQS = [
     {
@@ -45,7 +45,12 @@ export default function ExifRemoverPage() {
                     </p>
                 </div>
 
-                <ExifRemoverTool />
+                <div className="relative w-full">
+                    <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
+                    <Suspense fallback={null}>
+                        <ExifRemoverTool />
+                    </Suspense>
+                </div>
 
                 <div className="prose prose-invert prose-zinc max-w-none text-zinc-400 text-sm space-y-4">
                     <h2 className="text-xl font-semibold text-white">What your photos reveal about you</h2>

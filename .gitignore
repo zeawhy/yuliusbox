@@ -45,4 +45,6 @@ next-env.d.ts
 
 # local AI models (should be stored on cloud storage / CDN)
 /models/
-__pycache__/
+# cloudflare
+.wrangler/
+

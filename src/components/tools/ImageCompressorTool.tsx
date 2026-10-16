@@ -7,6 +7,7 @@ import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2 } 
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { ContinueWith } from "@/components/tools/ContinueWith";
 
 
 // Constant outside component to avoid dependency issues
@@ -321,13 +322,19 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
 
                                 <div className="flex items-center gap-2">
                                     {file.status === "done" && (
-                                        <button
-                                            onClick={() => downloadFile(file)}
-                                            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
-                                            title="Download"
-                                        >
-                                            <Download className="w-5 h-5" />
-                                        </button>
+                                        <>
+                                            <ContinueWith
+                                                links={[{ label: "Image Editor", href: "/tools/image-editor" }]}
+                                                getFile={() => ({ blob: file.compressedBlob, name: outputName(file.originalFile.name) })}
+                                            />
+                                            <button
+                                                onClick={() => downloadFile(file)}
+                                                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+                                                title="Download"
+                                            >
+                                                <Download className="w-5 h-5" />
+                                            </button>
+                                        </>
                                     )}
 
                                     <button

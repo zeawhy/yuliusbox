@@ -8,6 +8,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 interface UploadedImage {
     id: string;
@@ -224,10 +225,7 @@ export default function ImageGridJoinerPage() {
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
                 </Link>
-                <div className="hidden sm:flex items-center text-green-500/80 font-mono text-xs gap-1.5 border border-green-500/20 bg-green-500/10 px-3 py-1.5 rounded-full">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    {language === "en" ? t.secure.en : t.secure.cn}
-                </div>
+                <PrivacyBadge mode="local" />
             </div>
 
             <div className="w-full flex flex-col gap-8">

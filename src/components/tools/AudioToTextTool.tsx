@@ -4,10 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import { Mic, FileAudio, Loader2, Copy, Download, Square, Languages, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { setToolComputeStatus } from "@/lib/tool-compute-status";
 
 export function AudioToTextTool() {
     // State
     const [status, setStatus] = useState<"idle" | "loading_model" | "ready" | "processing">("idle");
+
+    useEffect(() => {
+        setToolComputeStatus("audio-to-text", status === "loading_model" ? "loading" : status === "ready" || status === "processing" ? "ready" : "idle");
+    }, [status]);
     const [progress, setProgress] = useState<{ status: string; progress: number } | null>(null);
     const [transcription, setTranscription] = useState("");
     const [audioFile, setAudioFile] = useState<File | null>(null);

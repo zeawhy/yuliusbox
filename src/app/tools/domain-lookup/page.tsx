@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { DomainLookupTool } from "@/components/tools/DomainLookupTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 const FAQS = [
     {
@@ -46,7 +47,10 @@ export default function DomainLookupPage() {
                     </p>
                 </div>
 
-                <DomainLookupTool />
+                <div className="relative w-full">
+                    <PrivacyBadge mode="api" className="absolute top-3 right-3 z-10" />
+                    <DomainLookupTool />
+                </div>
 
                 <div className="prose prose-invert prose-zinc max-w-none text-zinc-400 text-sm space-y-4">
                     <h2 className="text-xl font-semibold text-white">Check any domain in seconds</h2>

@@ -6,6 +6,8 @@ import { removeImageMetadata } from "@/lib/long-tail-content";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+
 const content = removeImageMetadata;
 
 export const metadata: Metadata = {
@@ -50,7 +52,10 @@ export default function RemoveImageMetadataPage() {
                     <p className="text-zinc-400 max-w-xl mx-auto">{content.subtitle}</p>
                 </div>
 
-                <ExifRemoverTool />
+                <div className="relative">
+                    <PrivacyBadge mode="local" />
+                    <ExifRemoverTool />
+                </div>
             </div>
 
             <HubBody content={content} />

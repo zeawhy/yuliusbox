@@ -5,6 +5,7 @@ import { longTailPages } from "@/lib/long-tail-content";
 import { VideoToGifTool } from "@/components/tools/VideoToGifTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export default function VideoToGifPage() {
     const content = hubContent["video-to-gif"];
@@ -22,7 +23,10 @@ export default function VideoToGifPage() {
                     </p>
                 </div>
 
-                <VideoToGifTool />
+                <div className="relative w-full">
+                    <PrivacyBadge mode="local" toolId="video-to-gif" className="absolute top-3 right-3 z-10" />
+                    <VideoToGifTool />
+                </div>
             </div>
 
             <HubBody

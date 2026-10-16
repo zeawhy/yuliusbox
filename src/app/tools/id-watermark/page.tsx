@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { ArrowLeft, Upload, Download, Type, RotateCw, Move, Palette, ShieldCheck, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { ContinueWith } from "@/components/tools/ContinueWith";
+import { useChainFile } from "@/lib/use-chain-file";
 
-export default function IDWatermarkPage() {
+function IDWatermarkContent() {
     const { language } = useLanguage();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -123,6 +126,34 @@ export default function IDWatermarkPage() {
         draw();
     }, [draw]);
 
+    // Chain file integration
+    const chainFile = useChainFile();
+    useEffect(() => {
+        if (!chainFile) return;
+        const isImage = chainFile.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chainFile.name);
+        if (isImage) {
+            const f = new File([chainFile.blob], chainFile.name, { type: chainFile.blob.type || "image/png" });
+            setFile(f);
+            const img = new Image();
+            img.src = URL.createObjectURL(f);
+            img.onload = () => setImage(img);
+        }
+    }, [chainFile]);
+
+    const getWatermarkedBlob = async (): Promise<{ blob: Blob; name: string } | null> => {
+        const canvas = canvasRef.current;
+        if (!canvas || !image) return null;
+        return new Promise((resolve) => {
+            const mime = file?.type === "image/jpeg" ? "image/jpeg" : "image/png";
+            const ext = mime === "image/jpeg" ? "jpg" : "png";
+            canvas.toBlob((b) => {
+                if (!b) return resolve(null);
+                const originalBase = file?.name ? file.name.replace(/\.[^.]+$/, "") : "image";
+                resolve({ blob: b, name: `watermarked_${originalBase}.${ext}` });
+            }, mime, 0.95);
+        });
+    };
+
     const downloadImage = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -139,10 +170,7 @@ export default function IDWatermarkPage() {
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
                 </Link>
-                <span className="text-emerald-500 font-mono text-xs hidden sm:flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                    <ShieldCheck className="w-3 h-3" />
-                    {language === "en" ? t.privacy.en : t.privacy.cn}
-                </span>
+                <PrivacyBadge mode="local" />
             </div>
 
             <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -312,7 +340,7 @@ export default function IDWatermarkPage() {
                         </div>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-4 space-y-3">
                         <button
                             onClick={downloadImage}
                             disabled={!image}
@@ -321,6 +349,17 @@ export default function IDWatermarkPage() {
                             <Download className="w-5 h-5" />
                             {language === "en" ? t.download.en : t.download.cn}
                         </button>
+
+                        {image && (
+                            <ContinueWith
+                                links={[
+                                    { label: "EXIF Remover", href: "/tools/exif-remover" },
+                                    { label: "JPG to PDF", href: "/tools/pdf-kit?tab=jpg-to-pdf" },
+                                ]}
+                                getFile={getWatermarkedBlob}
+                                className="w-full justify-between"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -376,5 +415,13 @@ export default function IDWatermarkPage() {
                 </div>
             </section>
         </div>
+    );
+}
+
+export default function IDWatermarkPage() {
+    return (
+        <Suspense fallback={null}>
+            <IDWatermarkContent />
+        </Suspense>
     );
 }

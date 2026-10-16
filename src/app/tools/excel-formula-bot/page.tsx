@@ -6,6 +6,7 @@ import { longTailPages } from "@/lib/long-tail-content";
 import { ExcelFormulaBotTool } from "@/components/tools/ExcelFormulaBotTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "Free Excel Formula Generator & AI Bot | YuliusBox",
@@ -60,7 +61,10 @@ export default function Page() {
                     </p>
                 </div>
 
-                <ExcelFormulaBotTool />
+                <div className="relative w-full">
+                    <PrivacyBadge mode="api" className="absolute top-3 right-3 z-10" />
+                    <ExcelFormulaBotTool />
+                </div>
             </div>
 
             <HubBody
