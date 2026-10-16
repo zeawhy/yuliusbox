@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Mail, Copy, Check, Info, PenTool } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function EmailParaphraserPage() {
     const { language } = useLanguage();
@@ -39,12 +40,21 @@ export default function EmailParaphraserPage() {
         tipsDesc: { en: "Different situations require different communication styles. Being overly formal can distance colleagues, while being too casual might undermine your authority.", cn: "不同的场合需要不同的沟通风格。过于正式可能会疏远同事，而过于随意可能会削弱您的权威。" }
     };
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "email-paraphraser" });
+        }
+    }, []);
+
     const handleRewrite = async () => {
         if (!draft.trim()) return;
         setLoading(true);
         setError("");
         setResult("");
         setCopied(false);
+        trackToolEvent("process_started", { tool: "email-paraphraser", detail: `tone:${tone}` });
 
         try {
             const workerUrl = process.env.NEXT_PUBLIC_CF_WORKER_URL;
@@ -64,7 +74,7 @@ export default function EmailParaphraserPage() {
             let data;
             try {
                 data = await response.json();
-            } catch (e) {
+            } catch {
                 // If JSON parsing fails, use status text
                 throw new Error(`Server Error: ${response.status} ${response.statusText}`);
             }
@@ -76,7 +86,9 @@ export default function EmailParaphraserPage() {
             if (data.error) throw new Error(data.error);
 
             setResult(data.result);
+            trackToolEvent("process_success", { tool: "email-paraphraser" });
         } catch (err: any) {
+            trackToolEvent("process_error", { tool: "email-paraphraser", errorCode: "api_request_failed" });
             setError(err.message || "Something went wrong. Please try again.");
         } finally {
             setLoading(false);
@@ -85,6 +97,7 @@ export default function EmailParaphraserPage() {
 
     const handleCopy = () => {
         if (!result) return;
+        trackToolEvent("download_clicked", { tool: "email-paraphraser", detail: "format:text" });
         navigator.clipboard.writeText(result);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);

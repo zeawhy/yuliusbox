@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import {
     ShieldCheck,
     FileText,
@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 export interface RedactionRule {
     id: string;
@@ -478,6 +479,30 @@ export function LogSanitizerTool() {
     const [copied, setCopied] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "log-sanitizer" });
+        }
+    }, []);
+
+    const prevInputRef = useRef("");
+    useEffect(() => {
+        if (!rawInput.trim() || rawInput === prevInputRef.current) return;
+        const timer = setTimeout(() => {
+            prevInputRef.current = rawInput;
+            trackToolEvent("process_started", { tool: "log-sanitizer" });
+            try {
+                processHar(rawInput, rules);
+                trackToolEvent("process_success", { tool: "log-sanitizer" });
+            } catch {
+                trackToolEvent("process_error", { tool: "log-sanitizer", errorCode: "sanitize_failed" });
+            }
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [rawInput, rules]);
+
     const isLargeFile = useMemo(() => rawInput.length > 2 * 1024 * 1024, [rawInput]);
 
     const sanitizedData = useMemo(() => {
@@ -499,6 +524,7 @@ export function LogSanitizerTool() {
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "log-sanitizer", detail: "count:1" });
         setFileName(file.name);
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -514,6 +540,7 @@ export function LogSanitizerTool() {
         e.preventDefault();
         const file = e.dataTransfer.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "log-sanitizer", detail: "count:1" });
         setFileName(file.name);
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -545,6 +572,7 @@ export function LogSanitizerTool() {
 
     const downloadResult = () => {
         if (!sanitizedData.text) return;
+        trackToolEvent("download_clicked", { tool: "log-sanitizer", detail: sanitizedData.isHar ? "format:har" : "format:txt" });
         const isHar = sanitizedData.isHar;
         let exportName = "sanitized-log.txt";
         let mime = "text/plain;charset=utf-8";

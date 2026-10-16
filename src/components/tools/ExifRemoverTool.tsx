@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 // Logic ported from wipefey (MIT, github.com/seizmann/wipefey):
 // canvas re-encode discards EXIF/XMP/IPTC/ICC/PNG text chunks entirely.
@@ -167,10 +168,19 @@ export function ExifRemoverTool() {
     const [isDragging, setIsDragging] = useState(false);
     const [zipping, setZipping] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "exif-remover" });
+        }
+    }, []);
 
     const addFiles = useCallback((files: FileList | File[]) => {
         const arr = Array.from(files).filter((f) => f.type.startsWith("image/"));
         if (arr.length === 0) return;
+        trackToolEvent("file_selected", { tool: "exif-remover", detail: `count:${arr.length}` });
         const newcomers: ExifFileItem[] = arr.map((file) => ({
             id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
             file,
@@ -218,15 +228,18 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
         setItems((prev) => prev.map((p) => (p.id === id ? { ...p, status: "cleaning" } : p)));
         const item = items.find((p) => p.id === id);
         if (!item) return;
+        trackToolEvent("process_started", { tool: "exif-remover" });
         try {
             const blob = await stripImage(item.file);
             const cleanedName = cleanName(item.file.name, blob.type);
+            trackToolEvent("process_success", { tool: "exif-remover" });
             setItems((prev) =>
                 prev.map((p) =>
                     p.id === id ? { ...p, status: "done", cleanedBlob: blob, cleanedName } : p
                 )
             );
         } catch {
+            trackToolEvent("process_error", { tool: "exif-remover", errorCode: "exif_clean_failed" });
             setItems((prev) =>
                 prev.map((p) =>
                     p.id === id ? { ...p, status: "error", error: t("Cleaning failed.", "清理失败。") } : p
@@ -246,6 +259,7 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
     const downloadZip = useCallback(async () => {
         const done = items.filter((p) => p.status === "done" && p.cleanedBlob);
         if (done.length === 0) return;
+        trackToolEvent("download_clicked", { tool: "exif-remover", detail: "format:zip" });
         setZipping(true);
         try {
             const zip = new JSZip();
@@ -452,7 +466,10 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                                 )}
                                 {item.status === "done" && item.cleanedBlob && (
                                     <button
-                                        onClick={() => downloadBlob(item.cleanedBlob as Blob, item.cleanedName)}
+                                        onClick={() => {
+                                            trackToolEvent("download_clicked", { tool: "exif-remover", detail: "format:single" });
+                                            downloadBlob(item.cleanedBlob as Blob, item.cleanedName);
+                                        }}
                                         className="px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-medium transition-colors flex items-center gap-1.5"
                                     >
                                         <Download className="w-4 h-4" />{t("Download clean copy", "下载干净版本")}

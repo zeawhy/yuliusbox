@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Copy, Check, Code, FileJson, Languages, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { trackToolEvent } from "@/lib/analytics";
 
 type OutputLanguage = "typescript" | "go" | "dart";
 
@@ -16,6 +17,14 @@ export default function JsonConverterClient() {
     const [result, setResult] = useState("");
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState("");
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "json-to-code" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -111,6 +120,8 @@ export default function JsonConverterClient() {
         setError("");
         if (!jsonInput.trim()) return;
 
+        trackToolEvent("process_started", { tool: "json-to-code", detail: `lang:${outputLanguage}` });
+
         try {
             const parsed = JSON.parse(jsonInput);
             let code = "";
@@ -118,9 +129,11 @@ export default function JsonConverterClient() {
             else if (outputLanguage === "go") code = convertToGo(parsed);
             else if (outputLanguage === "dart") code = convertToDart(parsed);
             setResult(code);
+            trackToolEvent("process_success", { tool: "json-to-code", detail: `lang:${outputLanguage}` });
         } catch (err) {
             setError("Invalid JSON format");
             setResult("");
+            trackToolEvent("process_error", { tool: "json-to-code", errorCode: "invalid_json" });
         }
     };
 
@@ -129,6 +142,7 @@ export default function JsonConverterClient() {
         navigator.clipboard.writeText(result);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+        trackToolEvent("download_clicked", { tool: "json-to-code", detail: `copy:${outputLanguage}` });
     };
 
     return (

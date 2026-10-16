@@ -28,6 +28,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { setToolComputeStatus } from "@/lib/tool-compute-status";
 import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
+import { trackToolEvent } from "@/lib/analytics";
 
 export interface SubtitleCue {
     index: number;
@@ -359,6 +360,14 @@ export function SubtitleToolsTool() {
 
     const autoDetected = useMemo(() => detectFormat(inputText), [inputText]);
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "subtitle-tools" });
+        }
+    }, []);
+
     const handleLoadSample = () => {
         setInputText(SAMPLE_SRT);
         setParseError(null);
@@ -370,6 +379,7 @@ export function SubtitleToolsTool() {
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "subtitle-tools", detail: "count:1" });
         const reader = new FileReader();
         reader.onload = (evt) => {
             const text = evt.target?.result as string;
@@ -387,6 +397,7 @@ export function SubtitleToolsTool() {
     const handleConvertToVtt = () => {
         if (!inputText.trim()) return;
         setParseError(null);
+        trackToolEvent("process_started", { tool: "subtitle-tools", detail: "mode:convert_to_vtt" });
         try {
             // Auto-parse: if user entered VTT or SRT, parse accordingly
             const isVtt = autoDetected === "vtt";
@@ -395,17 +406,20 @@ export function SubtitleToolsTool() {
             setOutputText(result);
             setCurrentFormat("vtt");
             setStats(computeStats(cues));
+            trackToolEvent("process_success", { tool: "subtitle-tools" });
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : String(err);
             setParseError(msg);
             setOutputText("");
             setStats(null);
+            trackToolEvent("process_error", { tool: "subtitle-tools", errorCode: "parse_vtt_failed" });
         }
     };
 
     const handleConvertToSrt = () => {
         if (!inputText.trim()) return;
         setParseError(null);
+        trackToolEvent("process_started", { tool: "subtitle-tools", detail: "mode:convert_to_srt" });
         try {
             const isVtt = autoDetected === "vtt";
             const cues = isVtt ? parseVtt(inputText) : parseSrt(inputText);
@@ -413,11 +427,13 @@ export function SubtitleToolsTool() {
             setOutputText(result);
             setCurrentFormat("srt");
             setStats(computeStats(cues));
+            trackToolEvent("process_success", { tool: "subtitle-tools" });
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : String(err);
             setParseError(msg);
             setOutputText("");
             setStats(null);
+            trackToolEvent("process_error", { tool: "subtitle-tools", errorCode: "parse_srt_failed" });
         }
     };
 
@@ -434,6 +450,7 @@ export function SubtitleToolsTool() {
 
     const handleDownloadSub = () => {
         if (!outputText || !currentFormat) return;
+        trackToolEvent("download_clicked", { tool: "subtitle-tools", detail: `format:${currentFormat}` });
         const ext = currentFormat === "vtt" ? "vtt" : "srt";
         const mime = currentFormat === "vtt" ? "text/vtt" : "application/x-subrip";
         const blob = new Blob([outputText], { type: mime });
@@ -479,9 +496,11 @@ export function SubtitleToolsTool() {
         setBurnError(null);
         setBurnedVideoUrl(null);
         setBurnedVideoSize(null);
+        trackToolEvent("process_started", { tool: "subtitle-tools", detail: "mode:burn" });
 
         // Security check
         if (typeof window !== "undefined" && !window.crossOriginIsolated) {
+            trackToolEvent("process_error", { tool: "subtitle-tools", errorCode: "cross_origin_isolation_required" });
             setBurnError(
                 t(
                     "SharedArrayBuffer is disabled in this browser context (requires HTTPS and Cross-Origin-Opener-Policy). If running locally, please use localhost or test on a secure HTTPS server.",
@@ -591,6 +610,7 @@ export function SubtitleToolsTool() {
             const blob = new Blob([(data as any).buffer || data], { type: "video/mp4" });
             setBurnedVideoSize(blob.size);
             setBurnedVideoUrl(URL.createObjectURL(blob));
+            trackToolEvent("process_success", { tool: "subtitle-tools" });
 
             // Clean up temporary files
             try {
@@ -602,6 +622,7 @@ export function SubtitleToolsTool() {
             }
         } catch (err: unknown) {
             console.error("Subtitle burn error:", err);
+            trackToolEvent("process_error", { tool: "subtitle-tools", errorCode: "burn_failed" });
             const msg = err instanceof Error ? err.message : String(err);
             setBurnError(msg);
 
@@ -882,6 +903,7 @@ export function SubtitleToolsTool() {
                                     disabled={isBurning}
                                     onChange={(e) => {
                                         if (e.target.files?.[0]) {
+                                            trackToolEvent("file_selected", { tool: "subtitle-tools", detail: "count:1" });
                                             setVideoFile(e.target.files[0]);
                                             setBurnedVideoUrl(null);
                                             setBurnError(null);
@@ -925,6 +947,7 @@ export function SubtitleToolsTool() {
                                     disabled={isBurning}
                                     onChange={(e) => {
                                         if (e.target.files?.[0]) {
+                                            trackToolEvent("file_selected", { tool: "subtitle-tools", detail: "count:1" });
                                             setSubFile(e.target.files[0]);
                                             setBurnedVideoUrl(null);
                                             setBurnError(null);
@@ -1089,6 +1112,7 @@ export function SubtitleToolsTool() {
                                 <a
                                     href={burnedVideoUrl}
                                     download="video-subtitled.mp4"
+                                    onClick={() => trackToolEvent("download_clicked", { tool: "subtitle-tools", detail: "format:mp4" })}
                                     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs sm:text-sm font-semibold transition-colors shadow-sm"
                                 >
                                     <Download className="w-4 h-4" />

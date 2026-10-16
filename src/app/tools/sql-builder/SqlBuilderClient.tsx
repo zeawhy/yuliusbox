@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Send, Copy, Check, Database, Terminal, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 type Dialect = "MySQL" | "PostgreSQL" | "SQLite";
 
@@ -15,6 +16,14 @@ export default function SqlBuilderClient() {
     const [result, setResult] = useState("");
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "sql-builder" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -29,6 +38,7 @@ export default function SqlBuilderClient() {
         if (!userInput.trim() || loading) return;
         setLoading(true);
         setResult("");
+        trackToolEvent("process_started", { tool: "sql-builder", detail: `dialect:${dialect}` });
 
         try {
             const response = await fetch(process.env.NEXT_PUBLIC_CF_WORKER_URL!, {
@@ -47,11 +57,14 @@ export default function SqlBuilderClient() {
                 // Clean up any potential markdown code blocks
                 const cleaned = data.result.replace(/```sql\n?|```/g, "").trim();
                 setResult(cleaned);
+                trackToolEvent("process_success", { tool: "sql-builder", detail: `dialect:${dialect}` });
             } else {
                 setResult("-- Error generating query: " + (data.error || "Unknown error"));
+                trackToolEvent("process_error", { tool: "sql-builder", errorCode: "api_generation_failed" });
             }
         } catch (err) {
             setResult("-- Worker connection error");
+            trackToolEvent("process_error", { tool: "sql-builder", errorCode: "api_network_failed" });
         } finally {
             setLoading(false);
         }
@@ -62,6 +75,7 @@ export default function SqlBuilderClient() {
         navigator.clipboard.writeText(result);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+        trackToolEvent("download_clicked", { tool: "sql-builder", detail: "action:copy" });
     };
 
     return (

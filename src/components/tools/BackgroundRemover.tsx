@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { setToolComputeStatus } from "@/lib/tool-compute-status";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function BackgroundRemover() {
     const { language } = useLanguage();
@@ -21,9 +22,14 @@ export default function BackgroundRemover() {
     const [progress, setProgress] = useState(0);
     const [sliderPos, setSliderPos] = useState(50);
     const containerRef = useRef<HTMLDivElement>(null);
+    const hasTrackedView = useRef(false);
 
     useEffect(() => {
         setIsMounted(true);
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "background-remover" });
+        }
     }, []);
 
     if (!isMounted) return null;
@@ -42,6 +48,7 @@ export default function BackgroundRemover() {
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
+            trackToolEvent("file_selected", { tool: "background-remover", detail: "count:1" });
             setOriginalImg(URL.createObjectURL(file));
             setResultImg(null);
             handleRemoveBackground(file);
@@ -51,6 +58,7 @@ export default function BackgroundRemover() {
     const handleRemoveBackground = async (image: File | string) => {
         setIsProcessing(true);
         setProgress(0);
+        trackToolEvent("process_started", { tool: "background-remover" });
 
         try {
             // Use esm.sh which automatically resolves deep dependencies like onnxruntime-web
@@ -94,10 +102,12 @@ export default function BackgroundRemover() {
             };
 
             const blob = await removeBackground(image, config);
+            trackToolEvent("process_success", { tool: "background-remover" });
             const url = URL.createObjectURL(blob);
             setResultImg(url);
         } catch (error) {
             console.error("Background removal failed:", error);
+            trackToolEvent("process_error", { tool: "background-remover", errorCode: "bg_removal_failed" });
             alert("Failed to remove background. Please try again with a different image.");
         } finally {
             setIsProcessing(false);
@@ -106,6 +116,7 @@ export default function BackgroundRemover() {
 
     const downloadResult = () => {
         if (!resultImg) return;
+        trackToolEvent("download_clicked", { tool: "background-remover", detail: "format:png" });
         const link = document.createElement("a");
         link.href = resultImg;
         link.download = "yuliusbox-no-bg.png";

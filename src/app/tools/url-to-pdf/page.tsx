@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, CheckCircle, Loader2, AlertCircle, Globe, Link2 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function UrlToPdfPage() {
     const { language } = useLanguage();
@@ -12,6 +13,14 @@ export default function UrlToPdfPage() {
     const [url, setUrl] = useState("");
     const [status, setStatus] = useState<"idle" | "converting" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "url-to-pdf" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -39,6 +48,7 @@ export default function UrlToPdfPage() {
 
         setStatus("converting");
         setErrorMessage("");
+        trackToolEvent("process_started", { tool: "url-to-pdf" });
 
         const formData = new FormData();
         formData.append("url", validUrl);
@@ -80,11 +90,14 @@ export default function UrlToPdfPage() {
             URL.revokeObjectURL(objectUrl);
 
             setStatus("success");
+            trackToolEvent("process_success", { tool: "url-to-pdf" });
+            trackToolEvent("download_clicked", { tool: "url-to-pdf", detail: "format:pdf" });
 
         } catch (error: any) {
             console.error("Conversion failed:", error);
             setStatus("error");
             setErrorMessage(error.message || (language === "en" ? "Conversion failed. Please verify the URL." : "转换失败，请检查链接是否正确公开。"));
+            trackToolEvent("process_error", { tool: "url-to-pdf", errorCode: "conversion_failed" });
         }
     };
 

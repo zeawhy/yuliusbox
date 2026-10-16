@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     Search, Globe, Loader2, CheckCircle2, XCircle, AlertTriangle,
     ExternalLink, Sparkles, Layers, ListChecks,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackToolEvent } from "@/lib/analytics";
 
 // ---------------------------------------------------------------------------
 // Affiliate links (empty = feature hidden). When filled, each template must
@@ -146,6 +147,14 @@ export function DomainLookupTool() {
     const [tab, setTab] = useState<Tab>("lookup");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "domain-lookup" });
+        }
+    }, []);
 
     // Lookup tab
     const [singleInput, setSingleInput] = useState("");
@@ -163,10 +172,13 @@ export function DomainLookupTool() {
     async function run(domains: string[], onDone: (r: DomainResult[]) => void) {
         setLoading(true);
         setError(null);
+        trackToolEvent("process_started", { tool: "domain-lookup", detail: `count:${domains.length}` });
         try {
             const results = await queryDomains(domains);
+            trackToolEvent("process_success", { tool: "domain-lookup", detail: `count:${domains.length}` });
             onDone(results);
         } catch (e) {
+            trackToolEvent("process_error", { tool: "domain-lookup", errorCode: "api_request_failed", detail: `count:${domains.length}` });
             setError(e instanceof Error ? e.message : "Query failed");
         } finally {
             setLoading(false);

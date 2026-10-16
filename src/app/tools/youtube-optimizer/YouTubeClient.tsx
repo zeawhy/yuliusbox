@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Youtube, Sparkles, Copy, Loader2, Hash, Type, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface OptimizationResult {
     titles: string[];
@@ -17,6 +18,14 @@ export default function YoutubeOptimizer() {
     const [result, setResult] = useState<OptimizationResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "youtube-optimizer" });
+        }
+    }, []);
 
     const t = {
         title: language === 'cn' ? "YouTube 爆款标题生成器" : "YouTube Title Optimizer",
@@ -35,6 +44,7 @@ export default function YoutubeOptimizer() {
         setLoading(true);
         setError(null);
         setResult(null);
+        trackToolEvent("process_started", { tool: "youtube-optimizer" });
 
         try {
             const workerUrl = process.env.NEXT_PUBLIC_CF_WORKER_URL;
@@ -77,9 +87,11 @@ export default function YoutubeOptimizer() {
             }
 
             setResult(parsedResult);
+            trackToolEvent("process_success", { tool: "youtube-optimizer" });
 
         } catch (err: any) {
             setError(err.message || "Failed to generate optimization.");
+            trackToolEvent("process_error", { tool: "youtube-optimizer", errorCode: "api_generation_failed" });
         } finally {
             setLoading(false);
         }
@@ -89,6 +101,7 @@ export default function YoutubeOptimizer() {
         navigator.clipboard.writeText(text);
         setCopiedIndex(index);
         setTimeout(() => setCopiedIndex(null), 2000);
+        trackToolEvent("download_clicked", { tool: "youtube-optimizer", detail: "action:copy" });
     };
 
     return (

@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 /* -------------------------------------------------------------------------
  * MD5 Pure TypeScript Implementation
@@ -250,12 +251,15 @@ function Base64Tab() {
             setError(null);
             return;
         }
+        trackToolEvent("process_started", { tool: "codec-toolbox", detail: "action:encode_base64" });
         try {
             const bytes = new TextEncoder().encode(textInput);
             const encoded = bytesToBase64(bytes, urlSafe);
             setTextOutput(encoded);
             setError(null);
+            trackToolEvent("process_success", { tool: "codec-toolbox", detail: "action:encode_base64" });
         } catch (e) {
+            trackToolEvent("process_error", { tool: "codec-toolbox", errorCode: "base64_encode_failed", detail: "action:encode_base64" });
             setError(e instanceof Error ? e.message : "Encoding failed");
             setTextOutput("");
         }
@@ -267,12 +271,15 @@ function Base64Tab() {
             setError(null);
             return;
         }
+        trackToolEvent("process_started", { tool: "codec-toolbox", detail: "action:decode_base64" });
         try {
             const bytes = base64ToBytes(textInput, urlSafe);
             const decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
             setTextOutput(decoded);
             setError(null);
-        } catch (e) {
+            trackToolEvent("process_success", { tool: "codec-toolbox", detail: "action:decode_base64" });
+        } catch {
+            trackToolEvent("process_error", { tool: "codec-toolbox", errorCode: "base64_decode_failed", detail: "action:decode_base64" });
             setError(
                 t(
                     "Invalid Base64 or UTF-8 sequence. Please ensure the input is valid Base64 encoded text.",
@@ -293,17 +300,21 @@ function Base64Tab() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "codec-toolbox", detail: "count:1" });
         setFileInfo({
             name: file.name,
             size: file.size,
             type: file.type || "application/octet-stream",
         });
+        trackToolEvent("process_started", { tool: "codec-toolbox", detail: "action:file_base64" });
         try {
             const buffer = await file.arrayBuffer();
             const bytes = new Uint8Array(buffer);
             const b64 = bytesToBase64(bytes, false);
             setFileB64(b64);
+            trackToolEvent("process_success", { tool: "codec-toolbox", detail: "action:file_base64" });
         } catch (err) {
+            trackToolEvent("process_error", { tool: "codec-toolbox", errorCode: "file_read_failed", detail: "action:file_base64" });
             console.error("Failed to read file", err);
         }
     };
@@ -530,6 +541,7 @@ function HashTab() {
                 return;
             }
             setIsComputing(true);
+            trackToolEvent("process_started", { tool: "codec-toolbox", detail: "action:compute_hash" });
             const results: Partial<Record<HashAlgorithm, string>> = {};
 
             try {
@@ -564,7 +576,9 @@ function HashTab() {
                         .join("");
                 }
                 setHashes(results);
+                trackToolEvent("process_success", { tool: "codec-toolbox", detail: "action:compute_hash" });
             } catch (err) {
+                trackToolEvent("process_error", { tool: "codec-toolbox", errorCode: "hash_failed", detail: "action:compute_hash" });
                 console.error("Hash calculation failed", err);
             } finally {
                 setIsComputing(false);
@@ -593,6 +607,7 @@ function HashTab() {
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "codec-toolbox", detail: "count:1" });
         setFileMeta({ name: file.name, size: file.size });
         try {
             const buf = await file.arrayBuffer();
@@ -1166,6 +1181,14 @@ function TimestampTab() {
 export function CodecToolboxTool() {
     const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState<"base64" | "hash" | "timestamp">("base64");
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "codec-toolbox" });
+        }
+    }, []);
 
     const tabs: Array<{
         id: "base64" | "hash" | "timestamp";

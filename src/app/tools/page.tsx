@@ -7,7 +7,7 @@ import { ToolsDirectory } from "@/components/tools/ToolsDirectory";
 export const metadata: Metadata = {
     title: "All Free Online Tools — YuliusBox",
     description:
-        "Browse all free YuliusBox tools: image, video, PDF, developer and productivity utilities that run in your browser. No uploads, no accounts.",
+        "Browse all free YuliusBox tools. Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
     alternates: { canonical: "https://www.yuliusbox.com/tools" },
     openGraph: {
         url: "/tools",

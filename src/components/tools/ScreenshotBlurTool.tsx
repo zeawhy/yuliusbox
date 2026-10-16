@@ -20,6 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 export interface BlurBox {
     id: string;
@@ -220,6 +221,14 @@ export function ScreenshotBlurTool() {
         };
     }, []);
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "screenshot-blur" });
+        }
+    }, []);
+
     // Load image from File
     const loadImageFile = useCallback((file: File) => {
         setErrorMessage(null);
@@ -227,6 +236,8 @@ export function ScreenshotBlurTool() {
             setErrorMessage(t("Please upload an image file (PNG, JPG, WebP).", "请上传图片格式文件（PNG、JPG、WebP）。"));
             return;
         }
+
+        trackToolEvent("file_selected", { tool: "screenshot-blur", detail: "count:1" });
 
         if (objectUrlRef.current) {
             URL.revokeObjectURL(objectUrlRef.current);
@@ -250,6 +261,7 @@ export function ScreenshotBlurTool() {
             setTempBox(null);
         };
         img.onerror = () => {
+            trackToolEvent("process_error", { tool: "screenshot-blur", errorCode: "image_load_failed" });
             setErrorMessage(t("Failed to load image. Please try another file.", "加载图片失败，请尝试其他文件。"));
         };
         img.src = url;
@@ -469,6 +481,7 @@ export function ScreenshotBlurTool() {
     const handleExport = async () => {
         if (!imageElement || !naturalDims.width || !naturalDims.height) return;
         setIsExporting(true);
+        trackToolEvent("process_started", { tool: "screenshot-blur", detail: `method:${method}` });
 
         try {
             const nw = naturalDims.width;
@@ -509,8 +522,11 @@ export function ScreenshotBlurTool() {
             exportCanvas.toBlob((blob) => {
                 if (!blob) {
                     setIsExporting(false);
+                    trackToolEvent("process_error", { tool: "screenshot-blur", errorCode: "blob_create_failed" });
                     return;
                 }
+                trackToolEvent("process_success", { tool: "screenshot-blur" });
+                trackToolEvent("download_clicked", { tool: "screenshot-blur", detail: "format:png" });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.download = `${fileName || "screenshot"}-blurred.png`;
@@ -523,6 +539,7 @@ export function ScreenshotBlurTool() {
             }, "image/png");
         } catch (err: any) {
             console.error("Export error:", err);
+            trackToolEvent("process_error", { tool: "screenshot-blur", errorCode: "export_failed" });
             setErrorMessage(t("Export failed: " + (err.message || "Unknown error"), "导出失败：" + (err.message || "未知错误")));
             setIsExporting(false);
         }

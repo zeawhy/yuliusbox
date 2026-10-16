@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Upload, Copy, Check, Info, Palette, ArrowLeft } from "lucide-react";
 import ColorThief, { Palette as ColorPalette } from "color-thief-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function ColorPaletteGenerator() {
     const { language } = useLanguage();
@@ -33,15 +34,27 @@ export default function ColorPaletteGenerator() {
         ]
     };
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "color-palette" });
+        }
+    }, []);
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            trackToolEvent("file_selected", { tool: "color-palette", detail: "count:1" });
+            trackToolEvent("process_started", { tool: "color-palette" });
             const url = URL.createObjectURL(file);
             setImage(url);
+            trackToolEvent("process_success", { tool: "color-palette" });
         }
     };
 
     const copyToClipboard = (color: string) => {
+        trackToolEvent("download_clicked", { tool: "color-palette", detail: "format:hex" });
         navigator.clipboard.writeText(color);
         setCopiedColor(color);
         setTimeout(() => setCopiedColor(null), 2000);

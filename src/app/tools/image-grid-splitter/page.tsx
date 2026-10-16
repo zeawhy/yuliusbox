@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { ArrowLeft, ShieldCheck, Upload, Download, Grid3X3, Settings, AlertCircle, FileImage, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
@@ -10,6 +10,7 @@ import { saveAs } from "file-saver";
 import Image from "next/image";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function ImageGridSplitterPage() {
     const { language } = useLanguage();
@@ -27,6 +28,14 @@ export default function ImageGridSplitterPage() {
     const [isDraggingOver, setIsDraggingOver] = useState(false);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "image-grid-splitter" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -52,6 +61,8 @@ export default function ImageGridSplitterPage() {
             setStatus("error");
             return;
         }
+
+        trackToolEvent("file_selected", { tool: "image-grid-splitter", detail: "count:1" });
 
         if (previewUrl) {
             URL.revokeObjectURL(previewUrl);
@@ -85,6 +96,7 @@ export default function ImageGridSplitterPage() {
 
         setStatus("splitting");
         setErrorMessage("");
+        trackToolEvent("process_started", { tool: "image-grid-splitter", detail: `grid:${columns}x${rows}` });
 
         try {
             // 1. Load native Image object
@@ -181,11 +193,14 @@ export default function ImageGridSplitterPage() {
             saveAs(zipBlob, `${originalBaseName}_split_${columns}x${rows}_lossless.zip`);
 
             setStatus("success");
+            trackToolEvent("process_success", { tool: "image-grid-splitter" });
+            trackToolEvent("download_clicked", { tool: "image-grid-splitter", detail: "format:zip" });
 
         } catch (error: any) {
             console.error("Splitting error:", error);
             setErrorMsg(language === "en" ? "Failed to split image." : "图片切分失败。");
             setStatus("error");
+            trackToolEvent("process_error", { tool: "image-grid-splitter", errorCode: "split_failed" });
         }
     };
 

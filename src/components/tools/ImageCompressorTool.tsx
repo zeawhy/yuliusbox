@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
 import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2, AlertCircle } from "lucide-react";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { ContinueWith } from "@/components/tools/ContinueWith";
+import { trackToolEvent } from "@/lib/analytics";
 
 
 // Constant outside component to avoid dependency issues
@@ -82,6 +83,14 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
     const [quality, setQuality] = useState(0.8);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isProcessing, setIsProcessing] = useState(false);
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "image-compressor" });
+        }
+    }, []);
 
     // Translations
     const t = {
@@ -125,6 +134,7 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
 
     const processFiles = useCallback(async (fileList: CompressedFile[]) => {
         setIsProcessing(true);
+        trackToolEvent("process_started", { tool: "image-compressor" });
 
         for (const fileObj of fileList) {
             setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "compressing" } : f));
@@ -165,6 +175,10 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
                 // If still over the limit after retries, mark as error.
                 if (effectiveLimitBytes != null && finalFile.size > effectiveLimitBytes) {
                     const limitKb = Math.round(effectiveLimitBytes / 1000);
+                    trackToolEvent("process_error", {
+                        tool: "image-compressor",
+                        errorCode: "size_limit_exceeded",
+                    });
                     setFileState(prev => prev.map(f =>
                         f.id === fileObj.id
                             ? {
@@ -177,6 +191,7 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
                     continue;
                 }
 
+                trackToolEvent("process_success", { tool: "image-compressor" });
                 setFileState(prev => prev.map(f => {
                     if (f.id === fileObj.id) {
                         const ratio = ((f.originalSize - finalFile.size) / f.originalSize) * 100;
@@ -193,6 +208,10 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
 
             } catch (error) {
                 console.error("Compression error:", error);
+                trackToolEvent("process_error", {
+                    tool: "image-compressor",
+                    errorCode: "compression_failed",
+                });
                 setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "error", errorMsg: "Compression failed — please try again" } : f));
             }
         }
@@ -202,6 +221,12 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
     }, [quality, effectiveMaxSizeMB, effectiveLimitBytes, outputFormat]);
 
     const handleFiles = useCallback((newFiles: File[]) => {
+        if (newFiles.length > 0) {
+            trackToolEvent("file_selected", {
+                tool: "image-compressor",
+                detail: `count:${newFiles.length}`,
+            });
+        }
         const fileObjs: CompressedFile[] = newFiles.map(file => ({
             id: Math.random().toString(36).substring(7),
             originalFile: file,
@@ -252,6 +277,10 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
 
     const downloadFile = (file: CompressedFile) => {
         if (file.status !== "done") return;
+        trackToolEvent("download_clicked", {
+            tool: "image-compressor",
+            detail: outputFormat === "webp" ? "format:webp" : "format:single",
+        });
         const url = URL.createObjectURL(file.compressedBlob);
         const link = document.createElement("a");
         link.href = url;
@@ -263,6 +292,10 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
     };
 
     const downloadAll = async () => {
+        trackToolEvent("download_clicked", {
+            tool: "image-compressor",
+            detail: "format:zip",
+        });
         const zip = new JSZip();
         const completedFiles = fileState.filter(f => f.status === "done");
 
@@ -415,6 +448,7 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
                                             <ContinueWith
                                                 links={[{ label: "Image Editor", href: "/tools/image-editor" }]}
                                                 getFile={() => ({ blob: file.compressedBlob, name: outputName(file.originalFile.name) })}
+                                                toolId="image-compressor"
                                             />
                                             <button
                                                 onClick={() => downloadFile(file)}

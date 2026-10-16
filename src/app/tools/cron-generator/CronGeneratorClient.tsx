@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Send, Copy, Check, Clock, Loader2, Sparkles, HelpCircle, Activity } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface CronResult {
     expression: string;
@@ -18,6 +19,14 @@ export default function CronGeneratorClient() {
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState("");
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "cron-generator" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -34,6 +43,7 @@ export default function CronGeneratorClient() {
         setLoading(true);
         setResult(null);
         setError("");
+        trackToolEvent("process_started", { tool: "cron-generator" });
 
         try {
             const response = await fetch(process.env.NEXT_PUBLIC_CF_WORKER_URL!, {
@@ -57,11 +67,14 @@ export default function CronGeneratorClient() {
                     // Fallback if AI didn't return valid JSON
                     setResult({ expression: data.result.trim(), description: "" });
                 }
+                trackToolEvent("process_success", { tool: "cron-generator" });
             } else {
                 setError(data.error || "Generation failed");
+                trackToolEvent("process_error", { tool: "cron-generator", errorCode: "api_request_failed" });
             }
         } catch (err) {
             setError("Connection error");
+            trackToolEvent("process_error", { tool: "cron-generator", errorCode: "api_request_failed" });
         } finally {
             setLoading(false);
         }
@@ -69,6 +82,7 @@ export default function CronGeneratorClient() {
 
     const handleCopy = () => {
         if (!result?.expression) return;
+        trackToolEvent("download_clicked", { tool: "cron-generator", detail: "format:cron" });
         navigator.clipboard.writeText(result.expression);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);

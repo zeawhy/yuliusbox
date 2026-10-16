@@ -41,6 +41,7 @@ export default function PptToPdfPage() {
                 </div>
 
                 <FileUploadZone
+                    toolId="ppt-to-pdf"
                     acceptedFileTypes=".pptx,.ppt,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
                     apiEndpoint="/api/tools/ppt-to-pdf"
                     maxSizeMB={50}

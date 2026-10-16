@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Zap, Download, Upload, Activity, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import dynamic from "next/dynamic";
+import { trackToolEvent } from "@/lib/analytics";
 
 // Dynamic import for GaugeChart to avoid SSR issues
 const GaugeChart = dynamic(() => import("react-gauge-chart"), { ssr: false });
@@ -90,19 +91,30 @@ export default function SpeedTest() {
         }
     };
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "speed-test" });
+        }
+    }, []);
+
     const startTest = async () => {
         setError(null);
         setPing(null);
         setDownloadSpeed(0);
         setUploadSpeed(0);
+        trackToolEvent("process_started", { tool: "speed-test" });
 
         try {
             await runPingTest();
             await runDownloadTest();
             await runUploadTest();
             setStatus("complete");
-        } catch (err) {
+            trackToolEvent("process_success", { tool: "speed-test" });
+        } catch {
             setStatus("idle");
+            trackToolEvent("process_error", { tool: "speed-test", errorCode: "speed_test_failed" });
         }
     };
 

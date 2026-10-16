@@ -34,11 +34,11 @@ export default function AboutPage() {
 
             <div className="text-zinc-400 leading-relaxed space-y-5 text-[15px]">
                 <p>
-                    YuliusBox is a collection of <strong className="text-zinc-200">free online
-                    tools that run entirely in your browser</strong>: compress images, merge and
-                    compress PDFs, convert video to GIF, generate Excel formulas with AI,
-                    beautify screenshots, and transcribe audio with on-device AI. There are no
-                    accounts to create, no software to install, and no files to upload.
+                    YuliusBox is a collection of free online tools. Most tools run entirely in
+                    your browser — a few server-powered tools are the exception, and each one is
+                    clearly labeled: compress images, merge and compress PDFs, convert video to
+                    GIF, generate Excel formulas with AI, beautify screenshots, and transcribe
+                    audio with on-device AI. There are no accounts to create and no software to install.
                 </p>
                 <p>
                     The project started from a simple frustration: every &ldquo;free online

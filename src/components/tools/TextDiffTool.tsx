@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 export type DiffType = "equal" | "added" | "removed";
 
@@ -433,6 +434,14 @@ export function TextDiffTool() {
     const [ignoreWhitespace, setIgnoreWhitespace] = useState<boolean>(false);
     const [ignoreCase, setIgnoreCase] = useState<boolean>(false);
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "text-diff" });
+        }
+    }, []);
+
     // Debounced diff state
     const [diffLines, setDiffLines] = useState<DiffLine[]>([]);
     const [isComputing, setIsComputing] = useState<boolean>(false);
@@ -456,6 +465,7 @@ export function TextDiffTool() {
     const isLarge = (origLineCount > 5000 || modLineCount > 5000) && !isOverCap;
     const bothEmpty = originalText.trim().length === 0 && modifiedText.trim().length === 0;
 
+    const prevInputsRef = useRef("");
     // Debounced computation effect
     useEffect(() => {
         if (bothEmpty || isOverCap) {
@@ -464,13 +474,19 @@ export function TextDiffTool() {
             return;
         }
 
+        const inputKey = `${originalText.length}:${modifiedText.length}:${ignoreWhitespace}:${ignoreCase}`;
         setIsComputing(true);
         const timer = setTimeout(() => {
+            if (inputKey !== prevInputsRef.current) {
+                prevInputsRef.current = inputKey;
+                trackToolEvent("process_started", { tool: "text-diff" });
+            }
             const a = originalText ? originalText.split(/\r?\n/) : [];
             const b = modifiedText ? modifiedText.split(/\r?\n/) : [];
             const result = computeMyersDiff(a, b, { ignoreWhitespace, ignoreCase });
             setDiffLines(result);
             setIsComputing(false);
+            trackToolEvent("process_success", { tool: "text-diff" });
         }, 300);
 
         return () => clearTimeout(timer);
@@ -521,6 +537,7 @@ export function TextDiffTool() {
     ) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "text-diff", detail: "count:1" });
         const reader = new FileReader();
         reader.onload = (event) => {
             const content = event.target?.result as string;
