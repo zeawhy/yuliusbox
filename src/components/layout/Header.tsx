@@ -33,7 +33,7 @@ export function Header() {
                         >
                             Tools <ChevronDown className="w-3.5 h-3.5" />
                         </button>
-                        <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150 z-50">
+                        <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150 z-50">
                             <div className="w-64 rounded-xl border border-zinc-800 bg-zinc-900 p-2 shadow-2xl shadow-black/60">
                                 {HUB_ORDER.map((id) => (
                                     <Link

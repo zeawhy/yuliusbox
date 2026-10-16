@@ -9,7 +9,7 @@ import { toolsData } from "@/lib/tools-data";
 export const metadata: Metadata = {
     title: "Free Online Tools That Run in Your Browser | YuliusBox",
     description:
-        "Compress images, merge PDFs, convert video to GIF, and transcribe audio — right in your browser. Your files never leave your device.",
+        "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
     keywords: [
         "free online tools",
         "compress image online",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         type: "website",
         title: "Free Online Tools That Run in Your Browser | YuliusBox",
         description:
-            "Compress images, merge PDFs, convert video to GIF, and more — right in your browser. Your files never leave your device.",
+            "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
         images: [
             {
                 url: "/og/home.png",
@@ -113,10 +113,10 @@ export default function Home() {
                         <span className="text-zinc-500">in your browser.</span>
                     </h1>
                     <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl">
-                        Your files never leave your device. Compress images, merge PDFs,
-                        convert video to GIF, and transcribe audio —
-                        no uploads, no accounts. A few server-powered tools are the
-                        exception, and each one is clearly labeled.
+                        Most tools run entirely in your browser — a few server-powered tools
+                        are the exception, and each one is clearly labeled. Compress images,
+                        merge PDFs, convert video to GIF, and transcribe audio —
+                        no uploads, no accounts.
                     </p>
                     <Link
                         href="/tools/id-watermark"

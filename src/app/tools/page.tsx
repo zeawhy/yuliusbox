@@ -37,8 +37,8 @@ export default function ToolsIndexPage() {
                         All Tools
                     </h1>
                     <p className="text-zinc-400 max-w-2xl mx-auto">
-                        Every free YuliusBox tool in one place. Most run 100% in your
-                        browser — your files never leave your device.
+                        Every free YuliusBox tool in one place. Most tools run entirely in your
+                        browser — a few server-powered tools are the exception, and each one is clearly labeled.
                     </p>
                 </div>
 

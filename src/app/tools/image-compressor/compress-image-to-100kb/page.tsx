@@ -56,7 +56,7 @@ export default function CompressImageTo100kbPage() {
                 </div>
 
                 <ImageCompressorTool
-                    targetSizeMB={content.preset?.targetSizeMB}
+                    targetSizeBytes={100000}
                     outputFormat={content.preset?.outputFormat}
                 />
             </div>

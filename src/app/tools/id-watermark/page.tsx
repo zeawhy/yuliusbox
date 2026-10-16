@@ -17,7 +17,9 @@ function IDWatermarkContent() {
     const [file, setFile] = useState<File | null>(null);
 
     // Settings
-    const [text, setText] = useState("仅供 2026年办理租房业务使用 他用无效");
+    // Default watermark text is language-sensitive; set once on mount / language change.
+    const [text, setText] = useState("");
+    const [textInitialized, setTextInitialized] = useState(false);
     const [fontSize, setFontSize] = useState(24);
     const [opacity, setOpacity] = useState(0.3);
     const [rotate, setRotate] = useState(-45);
@@ -28,7 +30,7 @@ function IDWatermarkContent() {
         back: { en: "Back to Tools", cn: "返回工具列表" },
         privacy: { en: "Privacy Protected • 100% Local Processing", cn: "隐私保护 • 100% 本地处理" },
         title: { en: "Secure ID Watermarker", cn: "证件安全水印助手" },
-        desc: { en: "Add security watermarks to your ID card / passport photos locally. Prevent unauthorized use.", cn: "为您的身份证/护照照片添加安全水印。纯本地处理，防止被盗用。" },
+        desc: { en: "Add a visible purpose label to your ID card / passport photos to deter misuse. Watermarking marks the intended use and raises the cost of misuse, but cannot guarantee against forgery or removal.", cn: "为证件照标注用途、增加盗用成本，但无法完全防止伪造或去除水印。纯本地处理，照片不会离开您的设备。" },
         upload: {
             title: { en: "Click or Drag ID Photo Here", cn: "点击或拖拽证件照到此处" },
             supported: { en: "Supports JPG, PNG, WebP", cn: "支持 JPG, PNG, WebP" }
@@ -44,13 +46,41 @@ function IDWatermarkContent() {
             density: { en: "Density (Uncheck to manual)", cn: "密度" } // Simplified label
         },
         presets: [
-            { label: { en: "Rent", cn: "租房" }, value: "仅供 2026年办理租房业务使用 他用无效" },
-            { label: { en: "Sim Card", cn: "办卡" }, value: "仅供 2026年办理手机卡业务使用 他用无效" },
-            { label: { en: "Loan", cn: "贷款" }, value: "仅供 2026年办理贷款业务使用 他用无效" },
-            { label: { en: "Identity", cn: "验证身份" }, value: "仅供 2026年身份验证使用 他用无效" },
+            {
+                label: { en: "Rent", cn: "租房" },
+                value: { en: "For rental application only - 2026", cn: "仅供 2026年办理租房业务使用 他用无效" }
+            },
+            {
+                label: { en: "Sim Card", cn: "办卡" },
+                value: { en: "For SIM card application only - 2026", cn: "仅供 2026年办理手机卡业务使用 他用无效" }
+            },
+            {
+                label: { en: "Loan", cn: "贷款" },
+                value: { en: "For loan application only - 2026", cn: "仅供 2026年办理贷款业务使用 他用无效" }
+            },
+            {
+                label: { en: "Identity", cn: "验证身份" },
+                value: { en: "For identity verification only - 2026", cn: "仅供 2026年身份验证使用 他用无效" }
+            },
         ],
-        download: { en: "Download Image", cn: "下载处理后的图片" }
+        download: { en: "Download Image", cn: "下载处理后的图片" },
+        reminder: {
+            en: "Please confirm the receiving institution accepts a watermarked copy, and avoid covering essential information on the ID.",
+            cn: "请确认接收机构接受带水印的版本，并避免遮挡证件必要信息。"
+        }
     };
+
+    // Initialize (and re-initialize on language switch) the default watermark text.
+    useEffect(() => {
+        if (!textInitialized) {
+            setText(
+                language === "en"
+                    ? "For rental application only - 2026"
+                    : "仅供 2026年办理租房业务使用 他用无效"
+            );
+            setTextInitialized(true);
+        }
+    }, [language, textInitialized]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
@@ -241,7 +271,7 @@ function IDWatermarkContent() {
                                 {t.presets.map((preset, idx) => (
                                     <button
                                         key={idx}
-                                        onClick={() => setText(preset.value)}
+                                        onClick={() => setText(language === "en" ? preset.value.en : preset.value.cn)}
                                         className="px-3 py-1 text-xs rounded-full bg-zinc-800 border border-zinc-700 hover:border-emerald-500 hover:text-emerald-400 transition-colors"
                                     >
                                         {language === "en" ? preset.label.en : preset.label.cn}
@@ -341,6 +371,10 @@ function IDWatermarkContent() {
                     </div>
 
                     <div className="pt-4 space-y-3">
+                        <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-300/90 leading-relaxed">
+                            {language === "en" ? t.reminder.en : t.reminder.cn}
+                        </div>
+
                         <button
                             onClick={downloadImage}
                             disabled={!image}
