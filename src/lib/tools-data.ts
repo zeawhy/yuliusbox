@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -551,6 +551,32 @@ export const toolsData: Tool[] = [
         href: "/tools/exif-remover",
         popular: true,
         keywords: ["exif", "metadata", "remove metadata", "gps", "location", "privacy", "photo metadata", "strip exif"],
+    },
+    {
+        id: "subtitle-tools",
+        category: "media",
+        name: {
+            en: "Subtitle Tools",
+            cn: "字幕工具",
+        },
+        description: {
+            en: "Convert subtitles between SRT and VTT, or burn them into video — all locally in your browser.",
+            cn: "SRT/VTT 字幕互转、把字幕烧录进视频——全程本地浏览器完成。",
+        },
+        icon: Captions,
+        href: "/tools/subtitle-tools",
+        keywords: [
+            "subtitle",
+            "srt",
+            "vtt",
+            "webvtt",
+            "convert subtitle",
+            "burn subtitles",
+            "hardcode subtitles",
+            "subtitle converter",
+            "subtitle burn-in",
+            "closed captions",
+        ],
     },
     {
         id: "jwt-decoder",

@@ -39,6 +39,7 @@ export const toolRoutes: ToolRoute[] = [
     { href: "/tools/safe-zone-overlay" },
     { href: "/tools/screenshot-blur" },
     { href: "/tools/speed-test" },
+    { href: "/tools/subtitle-tools" },
     { href: "/tools/sql-builder" },
     { href: "/tools/url-to-pdf" },
     { href: "/tools/video-downloader" },
