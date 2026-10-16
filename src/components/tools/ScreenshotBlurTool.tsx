@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
+import { ContinueWith } from "@/components/tools/ContinueWith";
 
 export interface BlurBox {
     id: string;
@@ -152,6 +153,7 @@ export function ScreenshotBlurTool() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isDraggingFile, setIsDraggingFile] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
+    const [exportedFile, setExportedFile] = useState<{ blob: Blob; name: string } | null>(null);
 
     // Blur / redaction parameters
     const [method, setMethod] = useState<BlurMethod>("blur");
@@ -259,6 +261,7 @@ export function ScreenshotBlurTool() {
             setBoxes([]);
             setSelectedId(null);
             setTempBox(null);
+            setExportedFile(null);
         };
         img.onerror = () => {
             trackToolEvent("process_error", { tool: "screenshot-blur", errorCode: "image_load_failed" });
@@ -529,12 +532,14 @@ export function ScreenshotBlurTool() {
                 trackToolEvent("download_clicked", { tool: "screenshot-blur", detail: "format:png" });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
-                link.download = `${fileName || "screenshot"}-blurred.png`;
+                const outName = `${fileName || "screenshot"}-blurred.png`;
+                link.download = outName;
                 link.href = url;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
+                setExportedFile({ blob, name: outName });
                 setIsExporting(false);
             }, "image/png");
         } catch (err: any) {
@@ -945,6 +950,28 @@ export function ScreenshotBlurTool() {
                             </span>
                         </div>
                     </div>
+
+                    {exportedFile && (
+                        <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                            <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                                <Check className="w-4 h-4 shrink-0" />
+                                <span>
+                                    {t(
+                                        `Exported ${exportedFile.name}. Ready for publishing or metadata removal:`,
+                                        `已导出 ${exportedFile.name}。可直接发布，或继续清除元数据：`
+                                    )}
+                                </span>
+                            </div>
+                            <ContinueWith
+                                links={[
+                                    { label: t("Strip EXIF Metadata →", "清除 EXIF 元数据 →"), href: "/tools/exif-remover" },
+                                    { label: t("Compress Image →", "压缩图片体积 →"), href: "/tools/image-compressor/compress-image-to-100kb" },
+                                ]}
+                                getFile={() => exportedFile}
+                                toolId="screenshot-blur"
+                            />
+                        </div>
+                    )}
 
                     {/* Local processing note */}
                     <div className="pt-2">

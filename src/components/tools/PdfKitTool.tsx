@@ -206,6 +206,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
     // Last operation results for tab transitions
     const [lastMergedFile, setLastMergedFile] = useState<File | null>(null);
     const [lastCompressedFile, setLastCompressedFile] = useState<File | null>(null);
+    const [lastConvertedFile, setLastConvertedFile] = useState<File | null>(null);
 
     const handleChainFile = useCallback((chain: ChainFile) => {
         const isImage = chain.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chain.name);
@@ -377,6 +378,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
             trackToolEvent("process_success", { tool: "pdf-kit", detail: "mode:jpg-to-pdf" });
             trackToolEvent("download_clicked", { tool: "pdf-kit", detail: "mode:jpg-to-pdf" });
             downloadBlob(pdfBytes, "images_yuliusbox.pdf", "application/pdf");
+            setLastConvertedFile(new File([pdfBytes as unknown as BlobPart], "images_yuliusbox.pdf", { type: "application/pdf" }));
         } catch (e) {
             trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "jpg_to_pdf_failed", detail: "mode:jpg-to-pdf" });
             setError(e instanceof Error ? e.message : "Conversion failed.");
@@ -689,6 +691,38 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                             icon={<ImagePlus className="w-5 h-5" />}
                             label="Convert to PDF"
                         />
+                        {lastConvertedFile && (
+                            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                                <span className="text-emerald-400 font-medium">✓ Converted {lastConvertedFile.name}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-zinc-500">Continue with:</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=merge" });
+                                            setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file: lastConvertedFile }]);
+                                            setActiveTab("merge");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=merge");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Merge PDF →
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=compress" });
+                                            setCompressFile(lastConvertedFile);
+                                            setActiveTab("compress");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=compress");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Compress PDF →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 

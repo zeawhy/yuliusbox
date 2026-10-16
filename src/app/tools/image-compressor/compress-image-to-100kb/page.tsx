@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
 import { ImageCompressorTool } from "@/components/tools/ImageCompressorTool";
+import { Compress100kbScenario } from "@/components/tools/Compress100kbScenario";
 import { compressImageTo100kb } from "@/lib/long-tail-content";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -59,6 +60,8 @@ export default function CompressImageTo100kbPage() {
                     targetSizeBytes={100000}
                     outputFormat={content.preset?.outputFormat}
                 />
+
+                <Compress100kbScenario />
             </div>
 
             <HubBody content={content} />

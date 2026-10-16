@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
+import { ContinueWith } from "@/components/tools/ContinueWith";
 
 // Logic ported from wipefey (MIT, github.com/seizmann/wipefey):
 // canvas re-encode discards EXIF/XMP/IPTC/ICC/PNG text chunks entirely.
@@ -465,15 +466,31 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                                     </button>
                                 )}
                                 {item.status === "done" && item.cleanedBlob && (
-                                    <button
-                                        onClick={() => {
-                                            trackToolEvent("download_clicked", { tool: "exif-remover", detail: "format:single" });
-                                            downloadBlob(item.cleanedBlob as Blob, item.cleanedName);
-                                        }}
-                                        className="px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-medium transition-colors flex items-center gap-1.5"
-                                    >
-                                        <Download className="w-4 h-4" />{t("Download clean copy", "下载干净版本")}
-                                    </button>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <button
+                                            onClick={() => {
+                                                trackToolEvent("download_clicked", { tool: "exif-remover", detail: "format:single" });
+                                                downloadBlob(item.cleanedBlob as Blob, item.cleanedName);
+                                            }}
+                                            className="px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-medium transition-colors flex items-center gap-1.5"
+                                        >
+                                            <Download className="w-4 h-4" />{t("Download clean copy", "下载干净版本")}
+                                        </button>
+                                        <ContinueWith
+                                            links={[
+                                                {
+                                                    label: t("Compress Image →", "压缩图片分享 →"),
+                                                    href: "/tools/image-compressor/compress-image-to-100kb",
+                                                },
+                                                {
+                                                    label: t("Screenshot Blur →", "截图脱敏打码 →"),
+                                                    href: "/tools/screenshot-blur",
+                                                },
+                                            ]}
+                                            getFile={() => ({ blob: item.cleanedBlob as Blob, name: item.cleanedName })}
+                                            toolId="exif-remover"
+                                        />
+                                    </div>
                                 )}
                             </div>
                         </div>
