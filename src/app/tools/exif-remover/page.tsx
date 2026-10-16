@@ -1,9 +1,13 @@
+"use client";
+
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { ExifRemoverTool } from "@/components/tools/ExifRemoverTool";
+import { ExifRemoverScenario } from "@/components/tools/ExifRemoverScenario";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FAQS = [
     {
@@ -29,6 +33,19 @@ const FAQS = [
 ];
 
 export default function ExifRemoverPage() {
+    const { language } = useLanguage();
+
+    const t = {
+        title: {
+            en: "Remove EXIF Data from Photos — Free Online",
+            cn: "清除照片 EXIF 拍照元数据 — 本地免费隐私脱敏",
+        },
+        desc: {
+            en: "See hidden metadata inside your photos — camera, timestamps, GPS location — then wipe it all with one click. 100% in your browser, nothing uploaded.",
+            cn: "一键透视照片暗藏的敏感元数据（相机型号、拍摄时间、GPS 经纬度），秒级纯净抹除。100% 本地浏览器离线运行，绝不上传云端。",
+        },
+    };
+
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
             <Header />
@@ -37,11 +54,10 @@ export default function ExifRemoverPage() {
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
                     <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-                        Remove EXIF Data from Photos — Free Online
+                        {language === "en" ? t.title.en : t.title.cn}
                     </h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        See the hidden metadata inside your photos — camera, timestamps, GPS location —
-                        then wipe it all with one click. 100% in your browser, nothing uploaded.
+                        {language === "en" ? t.desc.en : t.desc.cn}
                     </p>
                 </div>
 
@@ -51,6 +67,8 @@ export default function ExifRemoverPage() {
                         <ExifRemoverTool />
                     </Suspense>
                 </div>
+
+                <ExifRemoverScenario />
 
                 <div className="prose prose-invert prose-zinc max-w-none text-zinc-400 text-sm space-y-4">
                     <h2 className="text-xl font-semibold text-white">What your photos reveal about you</h2>

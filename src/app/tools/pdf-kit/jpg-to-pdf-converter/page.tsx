@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
 import { PdfKitTool } from "@/components/tools/PdfKitTool";
+import { PdfWorkflowNextStep } from "@/components/tools/PdfWorkflowNextStep";
 import { longTailPages } from "@/lib/long-tail-content";
 import { hubContent } from "@/lib/hub-content";
 import { Header } from "@/components/layout/Header";
@@ -53,6 +54,8 @@ export default function JpgToPdfConverterPage() {
                 </div>
 
                 <PdfKitTool defaultMode={content.preset?.pdfMode} />
+
+                <PdfWorkflowNextStep current="jpg-to-pdf" />
             </div>
 
             <HubBody content={content} />

@@ -2,9 +2,11 @@
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { ScreenshotBlurTool } from "@/components/tools/ScreenshotBlurTool";
+import { ScreenshotChecklistScenario } from "@/components/tools/ScreenshotChecklistScenario";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FAQS = [
     {
@@ -43,6 +45,19 @@ const faqJsonLd = {
 };
 
 export default function ScreenshotBlurPage() {
+    const { language } = useLanguage();
+
+    const t = {
+        title: {
+            en: "Screenshot Blur — Blur & Pixelate Sensitive Areas Online Free",
+            cn: "截图打码 — 敏感隐私在线模糊、马赛克与纯色脱敏",
+        },
+        desc: {
+            en: "Blur, pixelate, or cover sensitive areas in screenshots before sharing. Protect usernames, tokens, credentials, and private messages — 100% in your browser.",
+            cn: "在公开发布截图前快速模糊、马赛克打码或纯黑遮盖敏感区域。保护头像、账号、密钥与私信——100% 本地浏览器离线处理。",
+        },
+    };
+
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
             <Header />
@@ -57,11 +72,10 @@ export default function ScreenshotBlurPage() {
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
                     <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-                        Screenshot Blur — Blur & Pixelate Sensitive Areas Online Free
+                        {language === "en" ? t.title.en : t.title.cn}
                     </h1>
                     <p className="text-zinc-400 max-w-2xl mx-auto text-base">
-                        Blur, pixelate, or cover sensitive areas in screenshots before sharing.
-                        Protect usernames, tokens, credentials, and private messages — 100% in your browser.
+                        {language === "en" ? t.desc.en : t.desc.cn}
                     </p>
                 </div>
 
@@ -69,6 +83,8 @@ export default function ScreenshotBlurPage() {
                     <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
                     <ScreenshotBlurTool />
                 </div>
+
+                <ScreenshotChecklistScenario />
 
                 <div className="prose prose-invert prose-zinc max-w-none text-zinc-400 text-sm space-y-6">
                     <h2 className="text-xl font-semibold text-white">
