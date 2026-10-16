@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { setToolComputeStatus } from "@/lib/tool-compute-status";
 
 interface VideoToGifToolProps {
     /** Starting FPS value; falls back to 10 when unset. */
@@ -40,6 +41,10 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
     const messageRef = useRef<HTMLParagraphElement | null>(null);
 
     const [ffmpegLoading, setFfmpegLoading] = useState(false);
+
+    useEffect(() => {
+        setToolComputeStatus("video-to-gif", loaded ? "ready" : ffmpegLoading ? "loading" : "idle");
+    }, [loaded, ffmpegLoading]);
 
     const load = async () => {
         if (!ffmpegRef.current) {

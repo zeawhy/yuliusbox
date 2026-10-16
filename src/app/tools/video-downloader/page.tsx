@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Download, Link2, Loader2, AlertCircle, FileVideo, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export default function VideoDownloader() {
     const { language } = useLanguage();
@@ -105,7 +106,8 @@ export default function VideoDownloader() {
                 <p className="text-zinc-400 text-lg">{t.subtitle[language]}</p>
             </div>
 
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+            <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                <PrivacyBadge mode="api" className="absolute -top-3 right-4 z-10" />
                 <form onSubmit={handleExtract} className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

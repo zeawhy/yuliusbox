@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BackgroundRemoverWrapper from "@/components/tools/BackgroundRemoverWrapper";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "Free AI Online Background Remover - 100% Private (No Uploads)",
@@ -37,7 +38,10 @@ export default function BackgroundRemoverPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <BackgroundRemoverWrapper />
+            <div className="relative w-full">
+                <PrivacyBadge mode="local" toolId="background-remover" className="absolute top-3 right-3 z-10" />
+                <BackgroundRemoverWrapper />
+            </div>
         </div>
     );
 }

@@ -7,6 +7,7 @@ import { longTailPages } from "@/lib/long-tail-content";
 import { ImageCompressorTool } from "@/components/tools/ImageCompressorTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export default function ImageCompressorPage() {
     const content = hubContent["image-compressor"];
@@ -24,7 +25,10 @@ export default function ImageCompressorPage() {
                     </p>
                 </div>
 
-                <ImageCompressorTool />
+                <div className="relative w-full">
+                    <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
+                    <ImageCompressorTool />
+                </div>
             </div>
 
             <HubBody

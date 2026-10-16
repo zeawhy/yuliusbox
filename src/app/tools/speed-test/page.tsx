@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import SpeedTest from "@/components/tools/SpeedTest";
+import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "Free Online Internet Speed Test - Check Your Connection Speed",
@@ -37,7 +38,10 @@ export default function SpeedTestPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <SpeedTest />
+            <div className="relative w-full">
+                <PrivacyBadge mode="api" className="absolute top-3 right-3 z-20" />
+                <SpeedTest />
+            </div>
         </div>
     );
 }

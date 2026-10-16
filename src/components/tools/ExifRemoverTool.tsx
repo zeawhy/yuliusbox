@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect, Suspense } from "react";
 import exifr from "exifr";
 import JSZip from "jszip";
+import { useChainFile } from "@/lib/use-chain-file";
 import {
     Upload, Download, Trash2, ShieldCheck, ShieldAlert, MapPin,
     Camera, Calendar, FileImage, Loader2, CheckCircle, X, Eye, EyeOff, Package,
@@ -200,6 +201,19 @@ export function ExifRemoverTool() {
         });
     }, [t]);
 
+function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
+    const chainFile = useChainFile();
+    useEffect(() => {
+        if (!chainFile) return;
+        const isImage = chainFile.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chainFile.name);
+        if (isImage) {
+            const f = new File([chainFile.blob], chainFile.name, { type: chainFile.blob.type || "image/jpeg" });
+            onChainFile(f);
+        }
+    }, [chainFile, onChainFile]);
+    return null;
+}
+
     const cleanOne = useCallback(async (id: string) => {
         setItems((prev) => prev.map((p) => (p.id === id ? { ...p, status: "cleaning" } : p)));
         const item = items.find((p) => p.id === id);
@@ -262,6 +276,9 @@ export function ExifRemoverTool() {
 
     return (
         <div className="w-full flex flex-col gap-6">
+            <Suspense fallback={null}>
+                <ExifChainSync onChainFile={(file) => addFiles([file])} />
+            </Suspense>
             {/* Drop zone */}
             <div
                 onClick={() => inputRef.current?.click()}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useCallback, useEffect, Suspense, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 import { PDFDocument } from "pdf-lib";
 import JSZip from "jszip";
 import {
@@ -16,12 +17,41 @@ import {
 import { cn } from "@/lib/utils";
 import { DraggableFileList } from "@/components/ui/DraggableFileList";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { useChainFile } from "@/lib/use-chain-file";
+import { type ChainFile } from "@/lib/tool-chain";
 
 export type PdfKitMode = "merge" | "compress" | "split" | "extract" | "jpg-to-pdf";
 
 interface PdfKitToolProps {
     /** Which tab the tool opens on. Defaults to "merge". */
     defaultMode?: PdfKitMode;
+}
+
+function PdfParamsSync({
+    onTabParam,
+    onChainFile,
+}: {
+    onTabParam: (tab: PdfKitMode) => void;
+    onChainFile: (file: ChainFile) => void;
+}) {
+    const searchParams = useSearchParams();
+    const chainFile = useChainFile();
+
+    useEffect(() => {
+        const tab = searchParams.get("tab") as PdfKitMode | null;
+        const validTabs: PdfKitMode[] = ["merge", "compress", "split", "extract", "jpg-to-pdf"];
+        if (tab && validTabs.includes(tab)) {
+            onTabParam(tab);
+        }
+    }, [searchParams, onTabParam]);
+
+    useEffect(() => {
+        if (chainFile) {
+            onChainFile(chainFile);
+        }
+    }, [chainFile, onChainFile]);
+
+    return null;
 }
 
 interface PDFFile {
@@ -164,6 +194,30 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
     const [jpgFiles, setJpgFiles] = useState<PDFFile[]>([]);
     const [isConverting, setIsConverting] = useState(false);
 
+    // Last operation results for tab transitions
+    const [lastMergedFile, setLastMergedFile] = useState<File | null>(null);
+    const [lastCompressedFile, setLastCompressedFile] = useState<File | null>(null);
+
+    const handleChainFile = useCallback((chain: ChainFile) => {
+        const isImage = chain.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chain.name);
+        const isPdf = chain.blob.type === "application/pdf" || /\.pdf$/i.test(chain.name);
+
+        if (isImage) {
+            const file = new File([chain.blob], chain.name, { type: chain.blob.type || "image/jpeg" });
+            setJpgFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file }]);
+            setActiveTab("jpg-to-pdf");
+        } else if (isPdf) {
+            const file = new File([chain.blob], chain.name, { type: "application/pdf" });
+            if (activeTab === "compress") {
+                setCompressFile(file);
+            } else if (activeTab === "split") {
+                setSplitFile(file);
+            } else {
+                setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file }]);
+            }
+        }
+    }, [activeTab]);
+
     const [error, setError] = useState<string | null>(null);
 
     const mergePDFs = async () => {
@@ -180,6 +234,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
             }
             const pdfBytes = await mergedPdf.save();
             downloadBlob(pdfBytes, "merged_yuliusbox.pdf", "application/pdf");
+            setLastMergedFile(new File([pdfBytes as unknown as BlobPart], "merged_yuliusbox.pdf", { type: "application/pdf" }));
         } catch {
             setError("Merge failed. Please check that all files are valid PDFs.");
         } finally {
@@ -202,7 +257,9 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
             pdf.setProducer("YuliusBox PDF Tool");
             pdf.setCreator("YuliusBox");
             const pdfBytes = await pdf.save();
-            downloadBlob(pdfBytes, `compressed_${compressFile.name}`, "application/pdf");
+            const outputName = `compressed_${compressFile.name}`;
+            downloadBlob(pdfBytes, outputName, "application/pdf");
+            setLastCompressedFile(new File([pdfBytes as unknown as BlobPart], outputName, { type: "application/pdf" }));
         } catch {
             setError("Compression failed. Please check that the file is a valid PDF.");
         } finally {
@@ -271,9 +328,17 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 const buf = await fileObj.file.arrayBuffer();
                 let img;
                 try {
-                    img = await out.embedJpg(buf);
+                    if (fileObj.file.type === "image/png" || fileObj.file.name.toLowerCase().endsWith(".png")) {
+                        img = await out.embedPng(buf);
+                    } else {
+                        img = await out.embedJpg(buf);
+                    }
                 } catch {
-                    throw new Error(`"${fileObj.file.name}" is not a valid JPG file.`);
+                    try {
+                        img = await out.embedPng(buf);
+                    } catch {
+                        img = await out.embedJpg(buf);
+                    }
                 }
                 // One full-size page per image.
                 const page = out.addPage([img.width, img.height]);
@@ -290,6 +355,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
 
     return (
         <div className="w-full">
+            <Suspense fallback={null}>
+                <PdfParamsSync
+                    onTabParam={(tab) => setActiveTab(tab)}
+                    onChainFile={handleChainFile}
+                />
+            </Suspense>
             {/* Tabs */}
             <div className="flex justify-center mb-8">
                 <div className="flex flex-wrap justify-center p-1 bg-zinc-900 rounded-xl border border-zinc-800 gap-1">
@@ -351,6 +422,36 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                             icon={<Layers className="w-5 h-5" />}
                             label="Merge Files"
                         />
+                        {lastMergedFile && (
+                            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                                <span className="text-emerald-400 font-medium">✓ Merged {lastMergedFile.name}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-zinc-500">Continue with:</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setCompressFile(lastMergedFile);
+                                            setActiveTab("compress");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=compress");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Compress PDF →
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setSplitFile(lastMergedFile);
+                                            setActiveTab("split");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=split");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Split PDF →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -373,6 +474,40 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                             icon={<Minimize2 className="w-5 h-5" />}
                             label="Compress (Metadata Cleanup)"
                         />
+                        {(lastCompressedFile || compressFile) && (
+                            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                                <span className="text-zinc-400 font-medium">
+                                    {lastCompressedFile ? `✓ Compressed ${lastCompressedFile.name}` : `Current file: ${compressFile?.name}`}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-zinc-500">Continue with:</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const f = lastCompressedFile || compressFile;
+                                            if (f) setSplitFile(f);
+                                            setActiveTab("split");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=split");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Split PDF →
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const f = lastCompressedFile || compressFile;
+                                            if (f) setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file: f }]);
+                                            setActiveTab("merge");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=merge");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Merge PDF →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -395,6 +530,36 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                             icon={<Scissors className="w-5 h-5" />}
                             label="Split into Pages"
                         />
+                        {splitFile && (
+                            <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                                <span className="text-zinc-400 font-medium">File: {splitFile.name}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-zinc-500">Continue with:</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setCompressFile(splitFile);
+                                            setActiveTab("compress");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=compress");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Compress PDF →
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file: splitFile }]);
+                                            setActiveTab("merge");
+                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=merge");
+                                        }}
+                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+                                    >
+                                        Merge PDF →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -445,8 +610,8 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                 ])
                             }
                             multiple
-                            accept="image/jpeg"
-                            label="Drag & drop or click to upload JPG images"
+                            accept="image/jpeg,image/png"
+                            label="Drag & drop or click to upload JPG or PNG images"
                         />
                         <DraggableFileList
                             files={jpgFiles}
