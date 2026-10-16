@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -592,6 +592,21 @@ export const toolsData: Tool[] = [
         icon: KeyRound,
         href: "/tools/jwt-decoder",
         keywords: ["jwt", "json web token", "token", "decode", "bearer", "auth", "authentication", "claims"],
+    },
+    {
+        id: "svg-optimizer",
+        category: "developer",
+        name: {
+            en: "SVG Optimizer",
+            cn: "SVG 优化器",
+        },
+        description: {
+            en: "Shrink SVG files: remove editor bloat, comments, hidden elements, round precision — preview before/after.",
+            cn: "压缩 SVG：清除编辑器冗余、注释、隐藏元素、数值精度取舍——支持前后对比预览。",
+        },
+        icon: Shapes,
+        href: "/tools/svg-optimizer",
+        keywords: ["svg", "optimize svg", "compress svg", "minify svg", "svg minifier", "remove svg bloat", "svg cleaner", "inkscape"],
     },
     {
         id: "more-tools",
