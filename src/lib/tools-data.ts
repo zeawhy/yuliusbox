@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -553,6 +553,32 @@ export const toolsData: Tool[] = [
         keywords: ["exif", "metadata", "remove metadata", "gps", "location", "privacy", "photo metadata", "strip exif"],
     },
     {
+        id: "subtitle-tools",
+        category: "media",
+        name: {
+            en: "Subtitle Tools",
+            cn: "字幕工具",
+        },
+        description: {
+            en: "Convert subtitles between SRT and VTT, or burn them into video — all locally in your browser.",
+            cn: "SRT/VTT 字幕互转、把字幕烧录进视频——全程本地浏览器完成。",
+        },
+        icon: Captions,
+        href: "/tools/subtitle-tools",
+        keywords: [
+            "subtitle",
+            "srt",
+            "vtt",
+            "webvtt",
+            "convert subtitle",
+            "burn subtitles",
+            "hardcode subtitles",
+            "subtitle converter",
+            "subtitle burn-in",
+            "closed captions",
+        ],
+    },
+    {
         id: "jwt-decoder",
         category: "developer",
         name: {
@@ -566,6 +592,36 @@ export const toolsData: Tool[] = [
         icon: KeyRound,
         href: "/tools/jwt-decoder",
         keywords: ["jwt", "json web token", "token", "decode", "bearer", "auth", "authentication", "claims"],
+    },
+    {
+        id: "svg-optimizer",
+        category: "developer",
+        name: {
+            en: "SVG Optimizer",
+            cn: "SVG 优化器",
+        },
+        description: {
+            en: "Shrink SVG files: remove editor bloat, comments, hidden elements, round precision — preview before/after.",
+            cn: "压缩 SVG：清除编辑器冗余、注释、隐藏元素、数值精度取舍——支持前后对比预览。",
+        },
+        icon: Shapes,
+        href: "/tools/svg-optimizer",
+        keywords: ["svg", "optimize svg", "compress svg", "minify svg", "svg minifier", "remove svg bloat", "svg cleaner", "inkscape"],
+    },
+    {
+        id: "text-diff",
+        category: "developer",
+        name: {
+            en: "Text Diff",
+            cn: "文本 Diff 对比",
+        },
+        description: {
+            en: "Compare two texts side by side: line-level diff with character-level highlights, fully local.",
+            cn: "左右对照比较两段文本：行级 diff + 字符级高亮，全程本地。",
+        },
+        icon: GitCompare,
+        href: "/tools/text-diff",
+        keywords: ["text diff", "diff", "compare text", "diff checker", "text compare", "file diff", "diff online", "line diff"],
     },
     {
         id: "more-tools",
