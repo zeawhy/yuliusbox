@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -55,6 +55,33 @@ export const toolsData: Tool[] = [
         keywords: ["compress", "image", "jpg", "png", "webp", "resize", "shrink", "reduce", "optimize", "photo", "bulk"],
     },
     {
+        id: "screenshot-blur",
+        category: "media",
+        name: {
+            en: "Screenshot Blur",
+            cn: "截图隐私打码",
+        },
+        description: {
+            en: "Blur, pixelate, or cover sensitive areas in screenshots before sharing. Multiple regions, undo support, PNG export — 100% in-browser.",
+            cn: "分享截图前给敏感区域打码：高斯模糊/像素化/纯色块，多选区、可撤销，纯本地处理。",
+        },
+        icon: EyeOff,
+        href: "/tools/screenshot-blur",
+        keywords: [
+            "blur",
+            "pixelate",
+            "mosaic",
+            "censor",
+            "screenshot",
+            "anonymize",
+            "redact image",
+            "hide info",
+            "png",
+            "打码",
+            "马赛克",
+        ],
+    },
+    {
         id: "pdf-toolkit",
         category: "productivity",
         name: {
@@ -69,6 +96,62 @@ export const toolsData: Tool[] = [
         href: "/tools/pdf-kit",
         comingSoon: false,
         keywords: ["pdf", "merge", "split", "compress", "combine", "join", "extract pages", "jpg to pdf", "pdf merge", "pdf split"],
+    },
+    {
+        id: "pdf-redact-sign",
+        category: "productivity",
+        name: {
+            en: "PDF Redact & Sign",
+            cn: "PDF 涂黑脱敏 + 电子签名",
+        },
+        description: {
+            en: "Black out sensitive text in PDFs (true rasterized redaction) and add handwritten or image signatures. 100% in-browser.",
+            cn: "PDF 敏感信息彻底涂黑（光栅化真删除）+ 手写/图片签名，纯浏览器本地处理。",
+        },
+        icon: FileSignature,
+        href: "/tools/pdf-redact-sign",
+        keywords: [
+            "pdf",
+            "redact",
+            "redaction",
+            "blackout",
+            "black out",
+            "sanitize",
+            "sign",
+            "signature",
+            "esign",
+            "esignature",
+            "pdf sign",
+            "pdf signature",
+            "handwritten signature",
+        ],
+    },
+    {
+        id: "file-encryptor",
+        category: "productivity",
+        name: {
+            en: "File Encryptor",
+            cn: "文件加密器",
+        },
+        description: {
+            en: "Encrypt any file with AES-256-GCM in your browser. PBKDF2 key derivation, password-protected .enc files — nothing uploaded.",
+            cn: "浏览器端 AES-256-GCM 文件加密，PBKDF2 派生密钥，密码保护，纯本地。",
+        },
+        icon: Lock,
+        href: "/tools/file-encryptor",
+        keywords: [
+            "encrypt",
+            "decrypt",
+            "aes",
+            "aes-256",
+            "aes-256-gcm",
+            "pbkdf2",
+            "file encryption",
+            "password protect",
+            "secure file",
+            "enc",
+            ".enc",
+        ],
     },
     {
         id: "video-to-gif",
