@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare, Binary, ScanEye } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -622,6 +622,36 @@ export const toolsData: Tool[] = [
         icon: GitCompare,
         href: "/tools/text-diff",
         keywords: ["text diff", "diff", "compare text", "diff checker", "text compare", "file diff", "diff online", "line diff"],
+    },
+    {
+        id: "codec-toolbox",
+        category: "developer",
+        name: {
+            en: "Codec Toolbox",
+            cn: "编解码工具箱"
+        },
+        description: {
+            en: "Base64 encode/decode (URL-safe + file), MD5/SHA hash calculator, and Unix timestamp converter — 3 tools in 1, all local.",
+            cn: "Base64 编解码（URL-safe+文件）、MD5/SHA 哈希计算、Unix 时间戳互转——三合一，全程本地。"
+        },
+        icon: Binary,
+        href: "/tools/codec-toolbox",
+        keywords: ["base64", "base64 encode", "base64 decode", "base64url", "url-safe base64", "md5", "sha1", "sha256", "sha512", "hash", "checksum", "unix timestamp", "epoch converter", "timestamp to date", "date to timestamp"],
+    },
+    {
+        id: "log-sanitizer",
+        category: "developer",
+        name: {
+            en: "Log Sanitizer",
+            cn: "HAR/日志脱敏器"
+        },
+        description: {
+            en: "Redact secrets from HAR files and logs before posting to issues: Bearer tokens, cookies, phones, ID numbers, emails, IPs — 100% local.",
+            cn: "发 issue/工单前一键脱敏 HAR 与日志：Bearer token、Cookie、手机号、身份证、邮箱、IP——100% 本地处理。"
+        },
+        icon: ScanEye,
+        href: "/tools/log-sanitizer",
+        keywords: ["har", "har sanitizer", "redact har", "har file redactor", "log redactor", "mask secrets", "pii redaction", "sanitize logs", "redact secrets", "bearer token", "cookie redact", "日志脱敏", "har 脱敏"],
     },
     {
         id: "more-tools",
