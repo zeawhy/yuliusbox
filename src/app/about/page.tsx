@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 export const metadata: Metadata = {
     title: "About | YuliusBox",
     description:
-        "YuliusBox is a collection of free, privacy-first online tools that run entirely in your browser. Your files never leave your device.",
+        "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
     alternates: { canonical: "/about" },
     openGraph: {
         url: "/about",
@@ -53,10 +53,11 @@ export default function AboutPage() {
                 <h2 className="text-xl font-bold text-white pt-4">Why you can trust it</h2>
                 <ul className="list-disc pl-5 space-y-2">
                     <li>
-                        <strong className="text-zinc-200">Verifiable privacy.</strong> You
-                        don&apos;t have to take our word for it — open your browser&apos;s
-                        network inspector while using any tool and watch: your files never
-                        leave your device.
+                        <strong className="text-zinc-200">Verifiable privacy.</strong> Most
+                        tools run entirely in your browser — a few server-powered tools are
+                        the exception, and each one is clearly labeled. You don&apos;t have to
+                        take our word for it — open your browser&apos;s network inspector while
+                        using any on-device tool and watch your files go nowhere.
                     </li>
                     <li>
                         <strong className="text-zinc-200">Open source.</strong> The full source

@@ -55,7 +55,7 @@ const siteJsonLd = {
       name: "YuliusBox",
       url: "https://www.yuliusbox.com",
       description:
-        "Free privacy-first online tools that run in your browser. Your files never leave your device.",
+        "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
       inLanguage: "en",
     },
     {
@@ -64,7 +64,7 @@ const siteJsonLd = {
       url: "https://www.yuliusbox.com",
       logo: "https://www.yuliusbox.com/og/home.png",
       description:
-        "Free privacy-first online tools that run entirely in your browser. Your files never leave your device.",
+        "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
       sameAs: ["https://github.com/zeawhy/yuliusbox"],
       contactPoint: {
         "@type": "ContactPoint",

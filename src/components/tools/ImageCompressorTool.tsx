@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
-import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2 } from "lucide-react";
+import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,6 +16,14 @@ const MAX_WIDTH_OR_HEIGHT = 1920;
 interface ImageCompressorToolProps {
     /** When set, each image is iteratively compressed to stay under this size (MB). */
     targetSizeMB?: number;
+    /**
+     * Byte-exact target (e.g. 100_000 for a strict 100 000-byte limit).
+     * When provided, overrides targetSizeMB for compression and display.
+     * The library maxSizeMB is derived as targetSizeBytes / 1_048_576 so the
+     * internal ceiling stays ≤ targetSizeBytes; a post-pass size check retries
+     * at lower quality (up to 2 times) if the result still exceeds the limit.
+     */
+    targetSizeBytes?: number;
     /** When "webp", the compressed result is re-encoded to WebP via canvas. */
     outputFormat?: "webp";
 }
@@ -50,7 +58,7 @@ const toWebp = (blob: Blob, quality: number): Promise<Blob> =>
         img.src = url;
     });
 
-export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompressorToolProps) {
+export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputFormat }: ImageCompressorToolProps) {
     const { language } = useLanguage();
     // Wait, I should import the interface or redefine it. I'll redefine it here to keep file self-contained as before.
     // Or copy from previous implementation.
@@ -62,6 +70,8 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
         originalSize: number;
         status: "pending" | "compressing" | "done" | "error";
         compressionRatio: number;
+        /** Set when status==="error" to show a user-visible reason. */
+        errorMsg?: string;
     }
 
     // Re-declare state with proper type
@@ -87,6 +97,32 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
         open: { en: "Open", cn: "打开" } // Not used
     };
 
+    /**
+     * Resolve the effective byte limit and the maxSizeMB to pass to the library.
+     * - targetSizeBytes takes priority over targetSizeMB.
+     * - We use targetSizeBytes / 1_048_576 as maxSizeMB so the library's internal
+     *   ceiling is always ≤ targetSizeBytes (the library uses 1024*1024 = 1_048_576).
+     */
+    const effectiveLimitBytes: number | undefined =
+        targetSizeBytes ?? (targetSizeMB != null ? Math.round(targetSizeMB * 1_048_576) : undefined);
+
+    const effectiveMaxSizeMB: number =
+        targetSizeBytes != null
+            ? targetSizeBytes / 1_048_576      // exact byte ceiling for the library
+            : (targetSizeMB ?? 1);
+
+    /** Human-readable label shown in the UI (e.g. "100 KB" or "0.5 MB"). */
+    const targetLabel: string | null = (() => {
+        if (targetSizeBytes != null) {
+            // Show as KB (decimal) — e.g. 100,000 bytes → "100 KB"
+            return `${Math.round(targetSizeBytes / 1000)} KB`;
+        }
+        if (targetSizeMB != null) {
+            return targetSizeMB < 1 ? `${Math.round(targetSizeMB * 1024)} KB` : `${targetSizeMB} MB`;
+        }
+        return null;
+    })();
+
     const processFiles = useCallback(async (fileList: CompressedFile[]) => {
         setIsProcessing(true);
 
@@ -94,18 +130,52 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
             setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "compressing" } : f));
 
             try {
-                const options = {
-                    maxSizeMB: targetSizeMB ?? 1,
+                const baseOptions = {
+                    maxSizeMB: effectiveMaxSizeMB,
                     maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
                     useWebWorker: true,
                     initialQuality: quality,
                 };
 
-                const compressedFile = await imageCompression(fileObj.originalFile, options);
+                let compressedFile = await imageCompression(fileObj.originalFile, baseOptions);
 
                 // Optional WebP re-encode (e.g. the "Convert Images to WebP" long-tail page).
-                const finalFile =
+                let finalFile: Blob =
                     outputFormat === "webp" ? await toWebp(compressedFile, quality) : compressedFile;
+
+                // ── Post-compression byte-exact validation (only when targetSizeBytes is set) ──
+                // The browser-image-compression library uses 1_048_576 bytes per MB internally,
+                // so 0.1 MB → 104,858 bytes which may exceed a strict 100,000-byte portal limit.
+                // We retry with progressively lower quality (up to 2 passes) to get under the cap.
+                if (effectiveLimitBytes != null && finalFile.size > effectiveLimitBytes) {
+                    const retryQualities = [0.6, 0.4];
+                    for (const retryQ of retryQualities) {
+                        const retryOptions = {
+                            maxSizeMB: effectiveMaxSizeMB,
+                            maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
+                            useWebWorker: true,
+                            initialQuality: retryQ,
+                        };
+                        compressedFile = await imageCompression(fileObj.originalFile, retryOptions);
+                        finalFile = outputFormat === "webp" ? await toWebp(compressedFile, retryQ) : compressedFile;
+                        if (finalFile.size <= effectiveLimitBytes) break;
+                    }
+                }
+
+                // If still over the limit after retries, mark as error.
+                if (effectiveLimitBytes != null && finalFile.size > effectiveLimitBytes) {
+                    const limitKb = Math.round(effectiveLimitBytes / 1000);
+                    setFileState(prev => prev.map(f =>
+                        f.id === fileObj.id
+                            ? {
+                                ...f,
+                                status: "error",
+                                errorMsg: `Could not compress under ${limitKb} KB — try a smaller image`,
+                            }
+                            : f
+                    ));
+                    continue;
+                }
 
                 setFileState(prev => prev.map(f => {
                     if (f.id === fileObj.id) {
@@ -123,12 +193,13 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
 
             } catch (error) {
                 console.error("Compression error:", error);
-                setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "error" } : f));
+                setFileState(prev => prev.map(f => f.id === fileObj.id ? { ...f, status: "error", errorMsg: "Compression failed — please try again" } : f));
             }
         }
 
         setIsProcessing(false);
-    }, [quality, targetSizeMB, outputFormat]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [quality, effectiveMaxSizeMB, effectiveLimitBytes, outputFormat]);
 
     const handleFiles = useCallback((newFiles: File[]) => {
         const fileObjs: CompressedFile[] = newFiles.map(file => ({
@@ -250,9 +321,9 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
                     Output format: WebP — downloads will be .webp files.
                 </p>
             )}
-            {targetSizeMB != null && (
+            {targetLabel != null && (
                 <p className="text-center text-sm text-emerald-400 font-medium -mt-4">
-                    Target size: {targetSizeMB < 1 ? `${Math.round(targetSizeMB * 1024)} KB` : `${targetSizeMB} MB`} per image — quality adjusts automatically.
+                    Target size: {targetLabel} per image — quality adjusts automatically.
                 </p>
             )}
                 {/* Settings & Actions */}
@@ -298,25 +369,43 @@ export function ImageCompressorTool({ targetSizeMB, outputFormat }: ImageCompres
                                         {file.status === "pending" || file.status === "compressing" ? (
                                             <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
                                         ) : file.status === "error" ? (
-                                            <FileImage className="w-6 h-6 text-red-500" />
+                                            <AlertCircle className="w-6 h-6 text-red-500" />
                                         ) : (
                                             <CheckCircle className="w-6 h-6 text-green-500" />
                                         )}
                                     </div>
                                     <div className="min-w-0">
                                         <p className="font-medium text-zinc-200 truncate max-w-[200px] sm:max-w-md">{file.originalFile.name}</p>
-                                        <p className="text-xs text-zinc-500 flex items-center gap-2">
-                                            {formatSize(file.originalSize)}
-                                            {file.status === "done" && (
-                                                <>
-                                                    <span className="text-zinc-600">→</span>
-                                                    <span className="text-green-400 font-bold">{formatSize(file.compressedSize)}</span>
-                                                    <span className="px-1.5 py-0.5 rounded bg-green-500/10 text-green-500 text-[10px] border border-green-500/20">
-                                                        {file.compressionRatio.toFixed(0)}%
-                                                    </span>
-                                                </>
-                                            )}
-                                        </p>
+                                        {file.status === "error" ? (
+                                            <p className="text-xs text-red-400 flex items-center gap-1">
+                                                <span>✗</span>
+                                                <span>{file.errorMsg ?? "Compression failed"}</span>
+                                            </p>
+                                        ) : (
+                                            <p className="text-xs text-zinc-500 flex items-center gap-2">
+                                                {formatSize(file.originalSize)}
+                                                {file.status === "done" && (
+                                                    <>
+                                                        <span className="text-zinc-600">→</span>
+                                                        <span className="text-green-400 font-bold">{formatSize(file.compressedSize)}</span>
+                                                        <span className="px-1.5 py-0.5 rounded bg-green-500/10 text-green-500 text-[10px] border border-green-500/20">
+                                                            {file.compressionRatio.toFixed(0)}%
+                                                        </span>
+                                                        {/* ✓/✗ target compliance indicator */}
+                                                        {effectiveLimitBytes != null && (
+                                                            <span className={cn(
+                                                                "px-1.5 py-0.5 rounded text-[10px] border font-semibold",
+                                                                file.compressedSize <= effectiveLimitBytes
+                                                                    ? "bg-green-500/10 text-green-400 border-green-500/20"
+                                                                    : "bg-red-500/10 text-red-400 border-red-500/20"
+                                                            )}>
+                                                                {file.compressedSize <= effectiveLimitBytes ? "✓ Under limit" : "✗ Over limit"}
+                                                            </span>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
