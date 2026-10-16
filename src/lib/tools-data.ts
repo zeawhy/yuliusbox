@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -607,6 +607,21 @@ export const toolsData: Tool[] = [
         icon: Shapes,
         href: "/tools/svg-optimizer",
         keywords: ["svg", "optimize svg", "compress svg", "minify svg", "svg minifier", "remove svg bloat", "svg cleaner", "inkscape"],
+    },
+    {
+        id: "text-diff",
+        category: "developer",
+        name: {
+            en: "Text Diff",
+            cn: "文本 Diff 对比",
+        },
+        description: {
+            en: "Compare two texts side by side: line-level diff with character-level highlights, fully local.",
+            cn: "左右对照比较两段文本：行级 diff + 字符级高亮，全程本地。",
+        },
+        icon: GitCompare,
+        href: "/tools/text-diff",
+        keywords: ["text diff", "diff", "compare text", "diff checker", "text compare", "file diff", "diff online", "line diff"],
     },
     {
         id: "more-tools",

@@ -40,6 +40,7 @@ export const toolRoutes: ToolRoute[] = [
     { href: "/tools/screenshot-blur" },
     { href: "/tools/speed-test" },
     { href: "/tools/subtitle-tools" },
+    { href: "/tools/text-diff" },
     { href: "/tools/sql-builder" },
     { href: "/tools/svg-optimizer" },
     { href: "/tools/url-to-pdf" },
