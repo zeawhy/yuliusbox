@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import {
     Shapes,
     Upload,
@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 export interface OptimizerOptions {
     precision: number;
@@ -456,6 +457,30 @@ export function SvgOptimizerTool() {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "svg-optimizer" });
+        }
+    }, []);
+
+    const prevInputRef = useRef("");
+    useEffect(() => {
+        if (!input.trim() || input === prevInputRef.current) return;
+        const timer = setTimeout(() => {
+            prevInputRef.current = input;
+            trackToolEvent("process_started", { tool: "svg-optimizer", detail: `precision:${options.precision}` });
+            const out = optimizeSvg(input, options);
+            if (out.error) {
+                trackToolEvent("process_error", { tool: "svg-optimizer", errorCode: "svg_parse_failed" });
+            } else {
+                trackToolEvent("process_success", { tool: "svg-optimizer" });
+            }
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [input, options]);
+
     // Compute optimization output synchronously with useMemo
     const { result, error } = useMemo(() => {
         if (!input.trim() || typeof window === "undefined") {
@@ -482,6 +507,7 @@ export function SvgOptimizerTool() {
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        trackToolEvent("file_selected", { tool: "svg-optimizer", detail: "count:1" });
         setFileName(file.name);
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -499,6 +525,7 @@ export function SvgOptimizerTool() {
         setIsDragging(false);
         const file = e.dataTransfer.files?.[0];
         if (file && (file.type === "image/svg+xml" || file.name.endsWith(".svg"))) {
+            trackToolEvent("file_selected", { tool: "svg-optimizer", detail: "count:1" });
             setFileName(file.name);
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -534,6 +561,7 @@ export function SvgOptimizerTool() {
 
     const downloadOptimized = () => {
         if (!result?.optimized) return;
+        trackToolEvent("download_clicked", { tool: "svg-optimizer", detail: "format:svg" });
         const blob = new Blob([result.optimized], { type: "image/svg+xml;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");

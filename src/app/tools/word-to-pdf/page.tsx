@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { ArrowLeft, Upload, FileText, CheckCircle, Loader2, ShieldCheck, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function WordToPdfPage() {
     const { language } = useLanguage();
@@ -14,6 +15,14 @@ export default function WordToPdfPage() {
     const [isDragging, setIsDragging] = useState(false);
     const [status, setStatus] = useState<"idle" | "converting" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "word-to-pdf" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -41,6 +50,7 @@ export default function WordToPdfPage() {
             return;
         }
 
+        trackToolEvent("file_selected", { tool: "word-to-pdf", detail: "count:1" });
         setFile(selectedFile);
         setStatus("idle");
         setErrorMessage("");
@@ -59,6 +69,7 @@ export default function WordToPdfPage() {
 
         setStatus("converting");
         setErrorMessage("");
+        trackToolEvent("process_started", { tool: "word-to-pdf" });
 
         const formData = new FormData();
         formData.append("file", file);
@@ -85,6 +96,9 @@ export default function WordToPdfPage() {
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
 
+            trackToolEvent("process_success", { tool: "word-to-pdf" });
+            trackToolEvent("download_clicked", { tool: "word-to-pdf", detail: "format:pdf" });
+
             // Programmatically download
             const link = document.createElement("a");
             link.href = url;
@@ -98,6 +112,7 @@ export default function WordToPdfPage() {
 
         } catch (error: any) {
             console.error("Conversion failed:", error);
+            trackToolEvent("process_error", { tool: "word-to-pdf", errorCode: "convert_failed" });
             setStatus("error");
             setErrorMessage(error.message || (language === "en" ? "Conversion failed. Please try again." : "转换失败，请重试。"));
         }

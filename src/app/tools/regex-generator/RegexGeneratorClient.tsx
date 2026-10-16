@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Code, Copy, Check, Eye, BookOpen, AlertCircle, Info } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function RegexGeneratorPage() {
     const { language } = useLanguage();
@@ -14,6 +15,14 @@ export default function RegexGeneratorPage() {
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState("");
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "regex-generator" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -45,6 +54,8 @@ export default function RegexGeneratorPage() {
         setError("");
         setResult("");
         setCopied(false);
+
+        trackToolEvent("process_started", { tool: "regex-generator", detail: `mode:${mode}` });
 
         try {
             const workerUrl = process.env.NEXT_PUBLIC_CF_WORKER_URL;
@@ -87,8 +98,10 @@ export default function RegexGeneratorPage() {
             }
 
             setResult(cleanResult);
+            trackToolEvent("process_success", { tool: "regex-generator", detail: `mode:${mode}` });
         } catch (err: any) {
             setError(err.message || "Something went wrong. Please try again.");
+            trackToolEvent("process_error", { tool: "regex-generator", errorCode: "api_request_failed" });
         } finally {
             setLoading(false);
         }
@@ -99,6 +112,7 @@ export default function RegexGeneratorPage() {
         navigator.clipboard.writeText(result);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+        trackToolEvent("download_clicked", { tool: "regex-generator", detail: "action:copy" });
     };
 
     return (

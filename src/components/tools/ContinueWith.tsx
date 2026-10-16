@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { putChainFile, type ChainFile } from "@/lib/tool-chain";
 import { cn } from "@/lib/utils";
+import { trackToolEvent } from "@/lib/analytics";
 
 export interface ContinueWithLink {
     label: string;
@@ -13,12 +14,19 @@ export interface ContinueWithProps {
     links: ContinueWithLink[];
     getFile: () => ChainFile | null | Promise<ChainFile | null>;
     className?: string;
+    toolId?: string;
 }
 
-export function ContinueWith({ links, getFile, className }: ContinueWithProps) {
+export function ContinueWith({ links, getFile, className, toolId }: ContinueWithProps) {
     const router = useRouter();
 
     const handleClick = async (link: ContinueWithLink) => {
+        if (toolId) {
+            trackToolEvent("related_tool_clicked", {
+                tool: toolId,
+                detail: `target:${link.href}`,
+            });
+        }
         try {
             const file = await getFile();
             if (!file) {

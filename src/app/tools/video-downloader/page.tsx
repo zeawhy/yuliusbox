@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Download, Link2, Loader2, AlertCircle, FileVideo, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { trackToolEvent } from "@/lib/analytics";
 
 export default function VideoDownloader() {
     const { language } = useLanguage();
@@ -12,6 +13,14 @@ export default function VideoDownloader() {
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<any>(null);
     const [downloading, setDownloading] = useState(false);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "video-downloader" });
+        }
+    }, []);
 
     const t = {
         title: { en: "Social Media Video Downloader", cn: "全网无水印视频下载" },
@@ -31,6 +40,7 @@ export default function VideoDownloader() {
         setIsLoading(true);
         setError(null);
         setResult(null);
+        trackToolEvent("process_started", { tool: "video-downloader" });
 
         try {
             const res = await fetch("/api/extract-video", {
@@ -46,8 +56,10 @@ export default function VideoDownloader() {
             }
 
             setResult(data);
+            trackToolEvent("process_success", { tool: "video-downloader" });
         } catch (err: any) {
             setError(err.message || t.error[language]);
+            trackToolEvent("process_error", { tool: "video-downloader", errorCode: "extract_failed" });
         } finally {
             setIsLoading(false);
         }
@@ -60,6 +72,7 @@ export default function VideoDownloader() {
             return;
         }
 
+        trackToolEvent("download_clicked", { tool: "video-downloader", detail: "format:mp4" });
         console.log("[Download] Starting download for:", result.videoUrl);
         setDownloading(true);
         const videoUrl = result.videoUrl;

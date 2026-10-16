@@ -41,6 +41,7 @@ export default function ExcelToPdfPage() {
                 </div>
 
                 <FileUploadZone
+                    toolId="excel-to-pdf"
                     acceptedFileTypes=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
                     apiEndpoint="/api/tools/excel-to-pdf"
                     maxSizeMB={50}

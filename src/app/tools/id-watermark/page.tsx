@@ -9,6 +9,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 import { ContinueWith } from "@/components/tools/ContinueWith";
 import { useChainFile } from "@/lib/use-chain-file";
+import { trackToolEvent } from "@/lib/analytics";
 
 function IDWatermarkContent() {
     const { language } = useLanguage();
@@ -25,6 +26,14 @@ function IDWatermarkContent() {
     const [rotate, setRotate] = useState(-45);
     const [gap, setGap] = useState(80);
     const [color, setColor] = useState("#808080");
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "id-watermark" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -85,10 +94,18 @@ function IDWatermarkContent() {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const f = e.target.files[0];
+            trackToolEvent("file_selected", { tool: "id-watermark", detail: "count:1" });
             setFile(f);
+            trackToolEvent("process_started", { tool: "id-watermark" });
             const img = new Image();
             img.src = URL.createObjectURL(f);
-            img.onload = () => setImage(img);
+            img.onload = () => {
+                setImage(img);
+                trackToolEvent("process_success", { tool: "id-watermark" });
+            };
+            img.onerror = () => {
+                trackToolEvent("process_error", { tool: "id-watermark", errorCode: "image_decode_failed" });
+            };
         }
     };
 
@@ -96,59 +113,56 @@ function IDWatermarkContent() {
         const canvas = canvasRef.current;
         if (!canvas || !image) return;
 
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        // Set canvas dimensions to match image
-        canvas.width = image.width;
-        canvas.height = image.height;
-
-        // Draw original image
-        ctx.drawImage(image, 0, 0);
-
-        // Prepare watermark
-        ctx.font = `${fontSize}px sans-serif`;
-        ctx.fillStyle = color;
-        ctx.globalAlpha = opacity;
-        ctx.textBaseline = "middle";
-        ctx.textAlign = "center";
-
-        // Setup tiling
-        const textMetrics = ctx.measureText(text);
-        const textWidth = textMetrics.width;
-        // Calculate diagonal box size to ensure coverage when rotated
-        const tileSize = Math.max(textWidth, fontSize * 2) + gap;
-
-        // We need to cover the whole canvas with rotated text.
-        // Easiest is to draw a grid larger than canvas and rotate context, 
-        // or rotate context at each point. Rotating context at each point is simpler for logic.
-        // Actually, improved approach: render pattern or simple loop.
-
-        // Let's loop through the canvas
-        const cols = Math.ceil(canvas.width / tileSize) + 2;
-        const rows = Math.ceil(canvas.height / tileSize) + 2;
-
-        // To handle rotation correctly without complex bounds, we can draw a larger grid
-        // centered on the canvas.
-
-        ctx.save();
-        // Move to center to rotate the whole grid (optional, but per-item rotation is standard for this type of tool)
-        // Actually standard ID watermark is: text rotated around its own center, tiled.
-
-        for (let i = -1; i < cols; i++) {
-            for (let j = -1; j < rows; j++) {
-                const x = i * tileSize;
-                const y = j * tileSize;
-
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.rotate((rotate * Math.PI) / 180);
-                ctx.fillText(text, 0, 0);
-                ctx.restore();
+        try {
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+                trackToolEvent("process_error", { tool: "id-watermark", errorCode: "canvas_context_failed" });
+                return;
             }
-        }
 
-        ctx.restore();
+            // Set canvas dimensions to match image
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            // Draw original image
+            ctx.drawImage(image, 0, 0);
+
+            // Prepare watermark
+            ctx.font = `${fontSize}px sans-serif`;
+            ctx.fillStyle = color;
+            ctx.globalAlpha = opacity;
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+
+            // Setup tiling
+            const textMetrics = ctx.measureText(text);
+            const textWidth = textMetrics.width;
+            // Calculate diagonal box size to ensure coverage when rotated
+            const tileSize = Math.max(textWidth, fontSize * 2) + gap;
+
+            // Let's loop through the canvas
+            const cols = Math.ceil(canvas.width / tileSize) + 2;
+            const rows = Math.ceil(canvas.height / tileSize) + 2;
+
+            ctx.save();
+
+            for (let i = -1; i < cols; i++) {
+                for (let j = -1; j < rows; j++) {
+                    const x = i * tileSize;
+                    const y = j * tileSize;
+
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate((rotate * Math.PI) / 180);
+                    ctx.fillText(text, 0, 0);
+                    ctx.restore();
+                }
+            }
+
+            ctx.restore();
+        } catch {
+            trackToolEvent("process_error", { tool: "id-watermark", errorCode: "watermark_render_failed" });
+        }
 
     }, [image, text, fontSize, opacity, rotate, gap, color]);
 
@@ -162,11 +176,19 @@ function IDWatermarkContent() {
         if (!chainFile) return;
         const isImage = chainFile.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chainFile.name);
         if (isImage) {
+            trackToolEvent("file_selected", { tool: "id-watermark", detail: "count:1" });
             const f = new File([chainFile.blob], chainFile.name, { type: chainFile.blob.type || "image/png" });
             setFile(f);
+            trackToolEvent("process_started", { tool: "id-watermark" });
             const img = new Image();
             img.src = URL.createObjectURL(f);
-            img.onload = () => setImage(img);
+            img.onload = () => {
+                setImage(img);
+                trackToolEvent("process_success", { tool: "id-watermark" });
+            };
+            img.onerror = () => {
+                trackToolEvent("process_error", { tool: "id-watermark", errorCode: "image_decode_failed" });
+            };
         }
     }, [chainFile]);
 
@@ -187,6 +209,7 @@ function IDWatermarkContent() {
     const downloadImage = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+        trackToolEvent("download_clicked", { tool: "id-watermark" });
         const link = document.createElement("a");
         link.download = `watermarked_${file?.name || "image.png"}`;
         link.href = canvas.toDataURL("image/png");
@@ -392,6 +415,7 @@ function IDWatermarkContent() {
                                 ]}
                                 getFile={getWatermarkedBlob}
                                 className="w-full justify-between"
+                                toolId="id-watermark"
                             />
                         )}
                     </div>

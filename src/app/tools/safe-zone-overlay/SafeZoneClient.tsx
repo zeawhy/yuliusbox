@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { trackToolEvent } from "@/lib/analytics";
 
 type Platform = "tiktok" | "reels" | "shorts";
 
@@ -15,6 +16,14 @@ export default function SafeZoneOverlay() {
     const [platform, setPlatform] = useState<Platform>("tiktok");
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "safe-zone-overlay" });
+        }
+    }, []);
 
     const t = {
         title: language === 'cn' ? "社交媒体安全区域检测" : "Social Media Safe Zone",
@@ -31,6 +40,7 @@ export default function SafeZoneOverlay() {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            trackToolEvent("file_selected", { tool: "safe-zone-overlay", detail: "count:1" });
             const url = URL.createObjectURL(file);
             setImage(url);
         }
@@ -43,6 +53,8 @@ export default function SafeZoneOverlay() {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
+
+        trackToolEvent("process_started", { tool: "safe-zone-overlay", detail: `platform:${platform}` });
 
         const img = new window.Image();
         img.src = image;
@@ -59,6 +71,10 @@ export default function SafeZoneOverlay() {
 
             // Update download URL
             setDownloadUrl(canvas.toDataURL("image/png"));
+            trackToolEvent("process_success", { tool: "safe-zone-overlay", detail: `platform:${platform}` });
+        };
+        img.onerror = () => {
+            trackToolEvent("process_error", { tool: "safe-zone-overlay", errorCode: "image_load_failed" });
         };
     }, [image, platform]);
 
@@ -185,6 +201,7 @@ export default function SafeZoneOverlay() {
                             <a
                                 href={downloadUrl}
                                 download={`safe-zone-${platform}-${Date.now()}.png`}
+                                onClick={() => trackToolEvent("download_clicked", { tool: "safe-zone-overlay", detail: `platform:${platform}` })}
                                 className="block w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold py-3 rounded-xl text-center transition-colors flex items-center justify-center gap-2 border border-zinc-700"
                             >
                                 <Download className="w-5 h-5" />

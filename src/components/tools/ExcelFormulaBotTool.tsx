@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Copy, Check, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackToolEvent } from "@/lib/analytics";
 
 export interface ExcelFormulaBotToolProps {
     /** Prefills the question textarea (initial state only; user can edit). */
@@ -28,6 +29,14 @@ export function ExcelFormulaBotTool({ defaultPrompt, defaultPlatform }: ExcelFor
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState("");
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "excel-formula-bot" });
+        }
+    }, []);
 
     const handleGenerate = async () => {
         if (!prompt.trim()) return;
@@ -35,6 +44,7 @@ export function ExcelFormulaBotTool({ defaultPrompt, defaultPlatform }: ExcelFor
         setError("");
         setResult("");
         setCopied(false);
+        trackToolEvent("process_started", { tool: "excel-formula-bot", detail: `platform:${platform}` });
 
         try {
             const workerUrl = process.env.NEXT_PUBLIC_CF_WORKER_URL;
@@ -55,12 +65,12 @@ export function ExcelFormulaBotTool({ defaultPrompt, defaultPlatform }: ExcelFor
             let data;
             try {
                 data = await response.json();
-            } catch (e) {
+            } catch {
                 throw new Error(`Server Error: ${response.status} ${response.statusText}`);
             }
 
             if (!response.ok) {
-                throw new Error(data.error || `Request failed: ${response.status} ${response.statusText}`);
+                throw new Error(data?.error || `Request failed: ${response.status} ${response.statusText}`);
             }
 
             if (data.error) throw new Error(data.error);
@@ -69,8 +79,10 @@ export function ExcelFormulaBotTool({ defaultPrompt, defaultPlatform }: ExcelFor
             let cleanResult = data.result.trim();
             cleanResult = cleanResult.replace(/^```(excel|csv)?/, '').replace(/```$/, '').trim();
 
+            trackToolEvent("process_success", { tool: "excel-formula-bot", detail: `platform:${platform}` });
             setResult(cleanResult);
         } catch (err: any) {
+            trackToolEvent("process_error", { tool: "excel-formula-bot", errorCode: "api_request_failed", detail: `platform:${platform}` });
             setError(err.message || "Something went wrong. Please try again.");
         } finally {
             setLoading(false);

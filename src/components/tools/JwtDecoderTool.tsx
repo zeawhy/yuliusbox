@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import {
     ShieldCheck, KeyRound, AlertTriangle, Copy, Check, Eraser,
     Clock3, Fingerprint, FileJson, ChevronDown, Sparkles,
@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface DecodedPart {
     raw: string;
@@ -176,6 +177,33 @@ export function JwtDecoderTool() {
     const { t } = useLanguage();
     const [input, setInput] = useState("");
     const [showClaims, setShowClaims] = useState(false);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "jwt-decoder" });
+        }
+    }, []);
+
+    const prevInputRef = useRef("");
+    useEffect(() => {
+        if (!input.trim() || input === prevInputRef.current) return;
+        const timer = setTimeout(() => {
+            prevInputRef.current = input;
+            trackToolEvent("process_started", { tool: "jwt-decoder" });
+            const res = decodeJwt(input);
+            if (res.error) {
+                trackToolEvent("process_error", {
+                    tool: "jwt-decoder",
+                    errorCode: res.error.replace(/-/g, "_"),
+                });
+            } else {
+                trackToolEvent("process_success", { tool: "jwt-decoder" });
+            }
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [input]);
 
     const result = useMemo(() => (input.trim() ? decodeJwt(input) : null), [input]);
     const now = useMemo(() => Math.floor(Date.now() / 1000), [result]);

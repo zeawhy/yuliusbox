@@ -95,7 +95,7 @@ const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
 ];
 
 const TRUST_POINTS = [
-    { icon: ShieldCheck, title: "No upload", text: "Files are processed on your device and never sent to a server." },
+    { icon: ShieldCheck, title: "Private by default", text: "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled." },
     { icon: UserX, title: "No signup", text: "Every tool works instantly. No accounts, no email walls." },
     { icon: BadgeCheck, title: "Free", text: "All core tools are free to use, with no watermarks." },
 ];

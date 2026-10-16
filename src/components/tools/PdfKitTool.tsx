@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, Suspense, type ReactNode } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { PDFDocument } from "pdf-lib";
 import JSZip from "jszip";
@@ -19,6 +19,7 @@ import { DraggableFileList } from "@/components/ui/DraggableFileList";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useChainFile } from "@/lib/use-chain-file";
 import { type ChainFile } from "@/lib/tool-chain";
+import { trackToolEvent } from "@/lib/analytics";
 
 export type PdfKitMode = "merge" | "compress" | "split" | "extract" | "jpg-to-pdf";
 
@@ -172,6 +173,14 @@ function ActionButton({
 
 export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
     const [activeTab, setActiveTab] = useState<PdfKitMode>(defaultMode);
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "pdf-kit" });
+        }
+    }, []);
 
     // Merge state
     const [mergeFiles, setMergeFiles] = useState<PDFFile[]>([]);
@@ -203,10 +212,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
         const isPdf = chain.blob.type === "application/pdf" || /\.pdf$/i.test(chain.name);
 
         if (isImage) {
+            trackToolEvent("file_selected", { tool: "pdf-kit", detail: "count:1" });
             const file = new File([chain.blob], chain.name, { type: chain.blob.type || "image/jpeg" });
             setJpgFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file }]);
             setActiveTab("jpg-to-pdf");
         } else if (isPdf) {
+            trackToolEvent("file_selected", { tool: "pdf-kit", detail: "count:1" });
             const file = new File([chain.blob], chain.name, { type: "application/pdf" });
             if (activeTab === "compress") {
                 setCompressFile(file);
@@ -224,6 +235,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
         if (mergeFiles.length < 2) return;
         setIsMerging(true);
         setError(null);
+        trackToolEvent("process_started", { tool: "pdf-kit", detail: "mode:merge" });
         try {
             const mergedPdf = await PDFDocument.create();
             for (const fileObj of mergeFiles) {
@@ -233,9 +245,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 copiedPages.forEach((page) => mergedPdf.addPage(page));
             }
             const pdfBytes = await mergedPdf.save();
+            trackToolEvent("process_success", { tool: "pdf-kit", detail: "mode:merge" });
+            trackToolEvent("download_clicked", { tool: "pdf-kit", detail: "mode:merge" });
             downloadBlob(pdfBytes, "merged_yuliusbox.pdf", "application/pdf");
             setLastMergedFile(new File([pdfBytes as unknown as BlobPart], "merged_yuliusbox.pdf", { type: "application/pdf" }));
         } catch {
+            trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "merge_failed", detail: "mode:merge" });
             setError("Merge failed. Please check that all files are valid PDFs.");
         } finally {
             setIsMerging(false);
@@ -246,6 +261,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
         if (!compressFile) return;
         setIsCompressing(true);
         setError(null);
+        trackToolEvent("process_started", { tool: "pdf-kit", detail: "mode:compress" });
         try {
             const fileBuffer = await compressFile.arrayBuffer();
             const pdf = await PDFDocument.load(fileBuffer);
@@ -258,9 +274,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
             pdf.setCreator("YuliusBox");
             const pdfBytes = await pdf.save();
             const outputName = `compressed_${compressFile.name}`;
+            trackToolEvent("process_success", { tool: "pdf-kit", detail: "mode:compress" });
+            trackToolEvent("download_clicked", { tool: "pdf-kit", detail: "mode:compress" });
             downloadBlob(pdfBytes, outputName, "application/pdf");
             setLastCompressedFile(new File([pdfBytes as unknown as BlobPart], outputName, { type: "application/pdf" }));
         } catch {
+            trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "compress_failed", detail: "mode:compress" });
             setError("Compression failed. Please check that the file is a valid PDF.");
         } finally {
             setIsCompressing(false);
@@ -271,6 +290,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
         if (!splitFile) return;
         setIsSplitting(true);
         setError(null);
+        trackToolEvent("process_started", { tool: "pdf-kit", detail: "mode:split" });
         try {
             const fileBuffer = await splitFile.arrayBuffer();
             const src = await PDFDocument.load(fileBuffer);
@@ -284,8 +304,11 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 zip.file(`page-${i + 1}.pdf`, bytes);
             }
             const blob = await zip.generateAsync({ type: "blob" });
+            trackToolEvent("process_success", { tool: "pdf-kit", detail: "mode:split" });
+            trackToolEvent("download_clicked", { tool: "pdf-kit", detail: "mode:split" });
             downloadBlob(blob, `split_${splitFile.name.replace(/\.pdf$/i, "")}.zip`, "application/zip");
         } catch {
+            trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "split_failed", detail: "mode:split" });
             setError("Split failed. Please check that the file is a valid PDF.");
         } finally {
             setIsSplitting(false);
@@ -296,11 +319,13 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
         if (!extractFile || !extractRanges.trim()) return;
         setIsExtracting(true);
         setError(null);
+        trackToolEvent("process_started", { tool: "pdf-kit", detail: "mode:extract" });
         try {
             const fileBuffer = await extractFile.arrayBuffer();
             const src = await PDFDocument.load(fileBuffer);
             const pages = parsePageRanges(extractRanges, src.getPageCount());
             if (pages.length === 0) {
+                trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "invalid_page_range", detail: "mode:extract" });
                 setError("No valid pages found. Use page numbers like 1-3, 5, 8-10.");
                 setIsExtracting(false);
                 return;
@@ -310,8 +335,11 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
             const copied = await out.copyPages(src, pages.map((p) => p - 1));
             copied.forEach((page) => out.addPage(page));
             const pdfBytes = await out.save();
+            trackToolEvent("process_success", { tool: "pdf-kit", detail: "mode:extract" });
+            trackToolEvent("download_clicked", { tool: "pdf-kit", detail: "mode:extract" });
             downloadBlob(pdfBytes, `extracted_${extractFile.name}`, "application/pdf");
         } catch {
+            trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "extract_failed", detail: "mode:extract" });
             setError("Extraction failed. Please check that the file is a valid PDF.");
         } finally {
             setIsExtracting(false);
@@ -322,6 +350,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
         if (jpgFiles.length === 0) return;
         setIsConverting(true);
         setError(null);
+        trackToolEvent("process_started", { tool: "pdf-kit", detail: "mode:jpg-to-pdf" });
         try {
             const out = await PDFDocument.create();
             for (const fileObj of jpgFiles) {
@@ -345,8 +374,11 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
             }
             const pdfBytes = await out.save();
+            trackToolEvent("process_success", { tool: "pdf-kit", detail: "mode:jpg-to-pdf" });
+            trackToolEvent("download_clicked", { tool: "pdf-kit", detail: "mode:jpg-to-pdf" });
             downloadBlob(pdfBytes, "images_yuliusbox.pdf", "application/pdf");
         } catch (e) {
+            trackToolEvent("process_error", { tool: "pdf-kit", errorCode: "jpg_to_pdf_failed", detail: "mode:jpg-to-pdf" });
             setError(e instanceof Error ? e.message : "Conversion failed.");
         } finally {
             setIsConverting(false);
@@ -395,15 +427,18 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 {activeTab === "merge" && (
                     <div className="flex flex-col gap-6">
                         <UploadZone
-                            onFiles={(files) =>
+                            onFiles={(files) => {
+                                if (files.length > 0) {
+                                    trackToolEvent("file_selected", { tool: "pdf-kit", detail: `count:${files.length}` });
+                                }
                                 setMergeFiles((prev) => [
                                     ...prev,
                                     ...files.map((file) => ({
                                         id: Math.random().toString(36).substring(7),
                                         file,
                                     })),
-                                ])
-                            }
+                                ]);
+                            }}
                             multiple
                             accept=".pdf"
                             label="Drag & drop or click to upload multiple PDFs"
@@ -430,6 +465,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                     <button
                                         type="button"
                                         onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=compress" });
                                             setCompressFile(lastMergedFile);
                                             setActiveTab("compress");
                                             if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=compress");
@@ -441,6 +477,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                     <button
                                         type="button"
                                         onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=split" });
                                             setSplitFile(lastMergedFile);
                                             setActiveTab("split");
                                             if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=split");
@@ -458,7 +495,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 {activeTab === "compress" && (
                     <div className="flex flex-col gap-6">
                         <UploadZone
-                            onFiles={(files) => setCompressFile(files[0] ?? null)}
+                            onFiles={(files) => {
+                                if (files.length > 0) {
+                                    trackToolEvent("file_selected", { tool: "pdf-kit", detail: `count:${files.length}` });
+                                }
+                                setCompressFile(files[0] ?? null);
+                            }}
                             accept=".pdf"
                             label="Drag & drop or click to upload a PDF"
                             fileName={compressFile?.name}
@@ -484,6 +526,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                     <button
                                         type="button"
                                         onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=split" });
                                             const f = lastCompressedFile || compressFile;
                                             if (f) setSplitFile(f);
                                             setActiveTab("split");
@@ -496,6 +539,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                     <button
                                         type="button"
                                         onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=merge" });
                                             const f = lastCompressedFile || compressFile;
                                             if (f) setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file: f }]);
                                             setActiveTab("merge");
@@ -514,7 +558,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 {activeTab === "split" && (
                     <div className="flex flex-col gap-6">
                         <UploadZone
-                            onFiles={(files) => setSplitFile(files[0] ?? null)}
+                            onFiles={(files) => {
+                                if (files.length > 0) {
+                                    trackToolEvent("file_selected", { tool: "pdf-kit", detail: `count:${files.length}` });
+                                }
+                                setSplitFile(files[0] ?? null);
+                            }}
                             accept=".pdf"
                             label="Drag & drop or click to upload a PDF"
                             fileName={splitFile?.name}
@@ -538,6 +587,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                     <button
                                         type="button"
                                         onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=compress" });
                                             setCompressFile(splitFile);
                                             setActiveTab("compress");
                                             if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=compress");
@@ -549,6 +599,7 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                                     <button
                                         type="button"
                                         onClick={() => {
+                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=merge" });
                                             setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file: splitFile }]);
                                             setActiveTab("merge");
                                             if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=merge");
@@ -566,7 +617,12 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 {activeTab === "extract" && (
                     <div className="flex flex-col gap-6">
                         <UploadZone
-                            onFiles={(files) => setExtractFile(files[0] ?? null)}
+                            onFiles={(files) => {
+                                if (files.length > 0) {
+                                    trackToolEvent("file_selected", { tool: "pdf-kit", detail: `count:${files.length}` });
+                                }
+                                setExtractFile(files[0] ?? null);
+                            }}
                             accept=".pdf"
                             label="Drag & drop or click to upload a PDF"
                             fileName={extractFile?.name}
@@ -600,15 +656,18 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                 {activeTab === "jpg-to-pdf" && (
                     <div className="flex flex-col gap-6">
                         <UploadZone
-                            onFiles={(files) =>
+                            onFiles={(files) => {
+                                if (files.length > 0) {
+                                    trackToolEvent("file_selected", { tool: "pdf-kit", detail: `count:${files.length}` });
+                                }
                                 setJpgFiles((prev) => [
                                     ...prev,
                                     ...files.map((file) => ({
                                         id: Math.random().toString(36).substring(7),
                                         file,
                                     })),
-                                ])
-                            }
+                                ]);
+                            }}
                             multiple
                             accept="image/jpeg,image/png"
                             label="Drag & drop or click to upload JPG or PNG images"

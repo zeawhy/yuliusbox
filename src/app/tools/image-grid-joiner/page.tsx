@@ -9,6 +9,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface UploadedImage {
     id: string;
@@ -33,6 +34,14 @@ export default function ImageGridJoinerPage() {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "image-grid-joiner" });
+        }
+    }, []);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -64,6 +73,7 @@ export default function ImageGridJoinerPage() {
     const handleFiles = async (files: FileList | File[]) => {
         setErrorMsg("");
         const newImagesConfigs: UploadedImage[] = [];
+        trackToolEvent("file_selected", { tool: "image-grid-joiner", detail: `count:${files.length}` });
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -132,6 +142,7 @@ export default function ImageGridJoinerPage() {
         }
 
         setIsProcessing(true);
+        trackToolEvent("process_started", { tool: "image-grid-joiner", detail: `grid:${columns}x${rows}` });
 
         try {
             // 1. Load all native Image objects
@@ -200,6 +211,8 @@ export default function ImageGridJoinerPage() {
             // 5. Export and Download
             canvas.toBlob((blob) => {
                 if (!blob) throw new Error("Blob creation failed");
+                trackToolEvent("process_success", { tool: "image-grid-joiner" });
+                trackToolEvent("download_clicked", { tool: "image-grid-joiner", detail: "format:jpg" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -213,6 +226,7 @@ export default function ImageGridJoinerPage() {
 
         } catch (error) {
             console.error("Stitching error:", error);
+            trackToolEvent("process_error", { tool: "image-grid-joiner", errorCode: "stitch_failed" });
             setErrorMsg(language === "en" ? "Failed to stitch images." : "图片拼接失败。");
             setIsProcessing(false);
         }

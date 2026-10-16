@@ -6,6 +6,7 @@ import { fetchFile } from "@ffmpeg/util";
 import { Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { setToolComputeStatus } from "@/lib/tool-compute-status";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface VideoToGifToolProps {
     /** Starting FPS value; falls back to 10 when unset. */
@@ -42,6 +43,14 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
 
     const [ffmpegLoading, setFfmpegLoading] = useState(false);
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "video-to-gif" });
+        }
+    }, []);
+
     useEffect(() => {
         setToolComputeStatus("video-to-gif", loaded ? "ready" : ffmpegLoading ? "loading" : "idle");
     }, [loaded, ffmpegLoading]);
@@ -70,6 +79,7 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
             setLoaded(true);
         } catch (err) {
             console.error("FFmpeg load failed", err);
+            trackToolEvent("process_error", { tool: "video-to-gif", errorCode: "ffmpeg_load_failed" });
             setError("Failed to load FFmpeg. Please check your browser supports SharedArrayBuffer (requires HTTPS and a modern browser).");
         } finally {
             setFfmpegLoading(false);
@@ -87,6 +97,7 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
+            trackToolEvent("file_selected", { tool: "video-to-gif", detail: "count:1" });
             setVideoFile(e.target.files[0]);
             setGifUrl(null);
             setGifSize(null);
@@ -106,6 +117,7 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
         setGifUrl(null);
         setGifSize(null);
         setProgress(0);
+        trackToolEvent("process_started", { tool: "video-to-gif", detail: `fps:${fps}` });
 
         const ffmpeg = ffmpegRef.current;
 
@@ -132,8 +144,10 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
             const blob = new Blob([(data as any).buffer || data], { type: "image/gif" });
             setGifSize(blob.size);
             setGifUrl(URL.createObjectURL(blob));
+            trackToolEvent("process_success", { tool: "video-to-gif" });
         } catch (err) {
             console.error("Conversion failed", err);
+            trackToolEvent("process_error", { tool: "video-to-gif", errorCode: "gif_convert_failed" });
             setError("Conversion failed. Video might be too long or complex for browser. Try < 10s video.");
 
             // Reset FFmpeg so user can retry
@@ -279,6 +293,7 @@ export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToG
                                 <a
                                     href={gifUrl}
                                     download={`output-${Date.now()}.gif`}
+                                    onClick={() => trackToolEvent("download_clicked", { tool: "video-to-gif", detail: "format:gif" })}
                                     className="flex-1 py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2"
                                 >
                                     <Download className="w-5 h-5" /> Download GIF

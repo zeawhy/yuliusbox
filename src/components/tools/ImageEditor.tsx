@@ -10,6 +10,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { ContinueWith } from "@/components/tools/ContinueWith";
 import { useChainFile } from "@/lib/use-chain-file";
+import { trackToolEvent } from "@/lib/analytics";
 
 type FileFormat = "image/jpeg" | "image/png" | "image/webp";
 
@@ -53,8 +54,17 @@ export default function ImageEditor() {
         }
     };
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "image-editor" });
+        }
+    }, []);
+
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
+            trackToolEvent("file_selected", { tool: "image-editor", detail: `count:${e.target.files.length}` });
             setCrop(undefined);
             const reader = new FileReader();
             reader.addEventListener("load", () => setImgSrc(reader.result?.toString() || ""));
@@ -96,6 +106,7 @@ function ImageEditorChainSync({ onFileLoaded }: { onFileLoaded: (dataUrl: string
         if (!chainFile) return;
         const isImage = chainFile.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chainFile.name);
         if (isImage) {
+            trackToolEvent("file_selected", { tool: "image-editor", detail: "count:1" });
             const reader = new FileReader();
             reader.addEventListener("load", () => onFileLoaded(reader.result?.toString() || ""));
             reader.readAsDataURL(chainFile.blob);
@@ -149,11 +160,20 @@ function ImageEditorChainSync({ onFileLoaded }: { onFileLoaded: (dataUrl: string
 
     async function handleDownload() {
         setIsProcessing(true);
-        const canvas = renderExportCanvas();
-        if (canvas) {
-            download(canvas);
+        trackToolEvent("process_started", { tool: "image-editor" });
+        try {
+            const canvas = renderExportCanvas();
+            if (canvas) {
+                download(canvas);
+                trackToolEvent("process_success", { tool: "image-editor" });
+            } else {
+                trackToolEvent("process_error", { tool: "image-editor", errorCode: "render_failed" });
+            }
+        } catch {
+            trackToolEvent("process_error", { tool: "image-editor", errorCode: "export_failed" });
+        } finally {
+            setIsProcessing(false);
         }
-        setIsProcessing(false);
     }
 
     async function getOutputBlob(): Promise<{ blob: Blob; name: string } | null> {
@@ -169,6 +189,7 @@ function ImageEditorChainSync({ onFileLoaded }: { onFileLoaded: (dataUrl: string
     }
 
     function download(canvas: HTMLCanvasElement) {
+        trackToolEvent("download_clicked", { tool: "image-editor", detail: `format:${format.split("/")[1]}` });
         const dataUrl = canvas.toDataURL(format, quality);
         const link = document.createElement("a");
         link.download = `yuliusbox-edited.${format.split("/")[1]}`;
@@ -375,6 +396,7 @@ function ImageEditorChainSync({ onFileLoaded }: { onFileLoaded: (dataUrl: string
                             </button>
 
                             <ContinueWith
+                                toolId="image-editor"
                                 links={[{ label: "ID Watermark", href: "/tools/id-watermark" }]}
                                 getFile={getOutputBlob}
                                 className="w-full justify-between"

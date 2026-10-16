@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Upload, FileText, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface FileUploadZoneProps {
     acceptedFileTypes: string; // e.g. ".xlsx,.xls,.csv"
@@ -11,6 +12,7 @@ interface FileUploadZoneProps {
     maxSizeMB?: number;
     titleEn?: string;
     titleCn?: string;
+    toolId?: string;
 }
 
 export function FileUploadZone({
@@ -19,6 +21,7 @@ export function FileUploadZone({
     maxSizeMB = 50,
     titleEn = "Document",
     titleCn = "文档",
+    toolId,
 }: FileUploadZoneProps) {
     const { language } = useLanguage();
 
@@ -26,6 +29,14 @@ export function FileUploadZone({
     const [isDragging, setIsDragging] = useState(false);
     const [status, setStatus] = useState<"idle" | "converting" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (toolId && !hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: toolId });
+        }
+    }, [toolId]);
 
     const t = {
         drop: { en: "Drop document here", cn: "释放以添文加档" },
@@ -55,6 +66,9 @@ export function FileUploadZone({
             return;
         }
 
+        if (toolId) {
+            trackToolEvent("file_selected", { tool: toolId, detail: "count:1" });
+        }
         setFile(selectedFile);
         setStatus("idle");
         setErrorMessage("");
@@ -73,6 +87,9 @@ export function FileUploadZone({
 
         setStatus("converting");
         setErrorMessage("");
+        if (toolId) {
+            trackToolEvent("process_started", { tool: toolId });
+        }
 
         const formData = new FormData();
         formData.append("file", file);
@@ -98,6 +115,11 @@ export function FileUploadZone({
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
 
+            if (toolId) {
+                trackToolEvent("process_success", { tool: toolId });
+                trackToolEvent("download_clicked", { tool: toolId, detail: "format:pdf" });
+            }
+
             const link = document.createElement("a");
             link.href = url;
             link.download = `${file.name.replace(/\.[^/.]+$/, "")}.pdf`;
@@ -110,6 +132,9 @@ export function FileUploadZone({
 
         } catch (error: any) {
             console.error("Conversion failed:", error);
+            if (toolId) {
+                trackToolEvent("process_error", { tool: toolId, errorCode: "convert_failed" });
+            }
             setStatus("error");
             setErrorMessage(error.message || (language === "en" ? "Conversion failed. Please try again." : "转换失败，请重试。"));
         }

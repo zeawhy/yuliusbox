@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useId } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import {
     Lock,
     Unlock,
@@ -20,6 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 /**
  * File Encryptor binary format (YLBXENC1):
@@ -142,6 +143,7 @@ function formatBytes(bytes: number): string {
 }
 
 function triggerBlobDownload(data: Uint8Array, filename: string) {
+    trackToolEvent("download_clicked", { tool: "file-encryptor" });
     const blob = new Blob([data as unknown as BlobPart], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -170,6 +172,14 @@ interface DecryptSuccessInfo {
 export function FileEncryptorTool() {
     const { t, language } = useLanguage();
     const [activeTab, setActiveTab] = useState<"encrypt" | "decrypt">("encrypt");
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "file-encryptor" });
+        }
+    }, []);
 
     // Encrypt state
     const [encryptFile, setEncryptFile] = useState<File | null>(null);
@@ -204,12 +214,14 @@ export function FileEncryptorTool() {
     const strength = evaluatePasswordStrength(password);
 
     const handleEncryptFileSelect = (file: File) => {
+        trackToolEvent("file_selected", { tool: "file-encryptor", detail: "count:1" });
         setEncryptFile(file);
         setEncryptError(null);
         setEncryptSuccess(null);
     };
 
     const handleDecryptFileSelect = (file: File) => {
+        trackToolEvent("file_selected", { tool: "file-encryptor", detail: "count:1" });
         setDecryptFile(file);
         setDecryptError(null);
         setDecryptSuccess(null);
@@ -233,6 +245,7 @@ export function FileEncryptorTool() {
         setEncryptError(null);
         setEncryptSuccess(null);
         setStatusMessage(t("Reading file into memory...", "正在读取文件数据..."));
+        trackToolEvent("process_started", { tool: "file-encryptor", detail: "mode:encrypt" });
 
         try {
             // Give browser thread a moment to update UI
@@ -302,6 +315,7 @@ export function FileEncryptorTool() {
 
             const downloadFilename = `${encryptFile.name}.enc`;
             triggerBlobDownload(outBuffer, downloadFilename);
+            trackToolEvent("process_success", { tool: "file-encryptor", detail: "mode:encrypt" });
 
             setEncryptSuccess({
                 originalFilename: encryptFile.name,
@@ -312,6 +326,7 @@ export function FileEncryptorTool() {
             });
         } catch (err) {
             console.error("Encryption error:", err);
+            trackToolEvent("process_error", { tool: "file-encryptor", errorCode: "encrypt_failed", detail: "mode:encrypt" });
             setEncryptError(
                 err instanceof Error
                     ? err.message
@@ -337,6 +352,7 @@ export function FileEncryptorTool() {
         setDecryptError(null);
         setDecryptSuccess(null);
         setStatusMessage(t("Reading encrypted file...", "正在读取加密文件..."));
+        trackToolEvent("process_started", { tool: "file-encryptor", detail: "mode:decrypt" });
 
         try {
             await new Promise((resolve) => setTimeout(resolve, 50));
@@ -433,6 +449,7 @@ export function FileEncryptorTool() {
 
             const plainBytes = new Uint8Array(plaintextBuffer);
             triggerBlobDownload(plainBytes, outputFilename);
+            trackToolEvent("process_success", { tool: "file-encryptor", detail: "mode:decrypt" });
 
             setDecryptSuccess({
                 decryptedFilename: outputFilename,
@@ -441,6 +458,7 @@ export function FileEncryptorTool() {
             });
         } catch (err) {
             console.error("Decryption error:", err);
+            trackToolEvent("process_error", { tool: "file-encryptor", errorCode: "decrypt_failed", detail: "mode:decrypt" });
             setDecryptError(
                 err instanceof Error
                     ? err.message

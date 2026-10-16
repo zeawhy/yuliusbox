@@ -27,6 +27,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
+import { trackToolEvent } from "@/lib/analytics";
 
 // Configure pdfjs worker in the browser
 if (typeof window !== "undefined" && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
@@ -137,10 +138,19 @@ export function PdfRedactSignTool() {
     const currentPageSignatures = placedSignatures.filter((s) => s.page === currentPage);
     const selectedSig = placedSignatures.find((s) => s.id === selectedSigId) || null;
 
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "pdf-redact-sign" });
+        }
+    }, []);
+
     // Handle initial PDF upload
     const handlePdfUpload = useCallback(async (selectedFile: File) => {
         setIsLoadingPdf(true);
         setError(null);
+        trackToolEvent("file_selected", { tool: "pdf-redact-sign", detail: "count:1" });
         try {
             const buffer = await selectedFile.arrayBuffer();
             // Verify with pdf-lib
@@ -163,6 +173,7 @@ export function PdfRedactSignTool() {
             setStep(2);
             setToolMode("redact");
         } catch {
+            trackToolEvent("process_error", { tool: "pdf-redact-sign", errorCode: "pdf_load_failed" });
             setError(
                 t(
                     "Failed to open PDF. The file may be password-protected or corrupted.",
@@ -470,6 +481,7 @@ export function PdfRedactSignTool() {
         setIsExporting(true);
         setError(null);
         setExportProgress(t("Preparing document export...", "正在准备文档导出..."));
+        trackToolEvent("process_started", { tool: "pdf-redact-sign", detail: `thorough:${thoroughMode}` });
 
         try {
             const origPdf = await PDFDocument.load(fileBuffer.slice(0));
@@ -597,10 +609,13 @@ export function PdfRedactSignTool() {
 
             setExportProgress(t("Saving and downloading...", "正在打包下载..."));
             const finalBytes = await outPdf.save();
+            trackToolEvent("process_success", { tool: "pdf-redact-sign" });
+            trackToolEvent("download_clicked", { tool: "pdf-redact-sign", detail: "format:pdf" });
             const baseName = file.name.replace(/\.[^/.]+$/, "");
             downloadBlob(finalBytes, `${baseName}-redacted-signed.pdf`, "application/pdf");
         } catch (err) {
             console.error("Export error:", err);
+            trackToolEvent("process_error", { tool: "pdf-redact-sign", errorCode: "export_failed" });
             setError(
                 t(
                     "Export failed. Please try again with thorough mode or check for corrupted pages.",

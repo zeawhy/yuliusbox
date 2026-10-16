@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Copy, Check, FileText, Shield, User, Mail, Globe, Apple, Smartphone, Layout, Send, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { trackToolEvent } from "@/lib/analytics";
 
 interface GeneratorState {
     companyName: string;
@@ -26,6 +27,27 @@ export default function PrivacyPolicyGenerator() {
     });
     const [activeTab, setActiveTab] = useState<"privacy" | "terms">("privacy");
     const [copied, setCopied] = useState(false);
+
+    const hasTrackedView = useRef(false);
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "privacy-generator" });
+        }
+    }, []);
+
+    const prevInputsRef = useRef("");
+    useEffect(() => {
+        const key = `${state.companyName}|${state.appName}|${state.contactEmail}|${state.platforms.join()}|${state.adNetworks.join()}`;
+        if (!state.companyName && !state.appName && !state.contactEmail) return;
+        if (key === prevInputsRef.current) return;
+        const timer = setTimeout(() => {
+            prevInputsRef.current = key;
+            trackToolEvent("process_started", { tool: "privacy-generator" });
+            trackToolEvent("process_success", { tool: "privacy-generator" });
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [state]);
 
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
@@ -135,6 +157,7 @@ If you have any questions or suggestions about the Terms and Conditions, do not 
 
     const handleCopy = () => {
         const text = activeTab === "privacy" ? templates.privacy : templates.terms;
+        trackToolEvent("download_clicked", { tool: "privacy-generator", detail: `type:${activeTab}` });
         navigator.clipboard.writeText(text);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);

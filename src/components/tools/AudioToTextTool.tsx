@@ -5,6 +5,7 @@ import { Mic, FileAudio, Loader2, Copy, Download, Square, Languages, Cpu } from 
 import { cn } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { setToolComputeStatus } from "@/lib/tool-compute-status";
+import { trackToolEvent } from "@/lib/analytics";
 
 export function AudioToTextTool() {
     // State
@@ -46,6 +47,14 @@ export function AudioToTextTool() {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const recordStartRef = useRef<number>(0);
     const audioChunksRef = useRef<Blob[]>([]);
+    const hasTrackedView = useRef(false);
+
+    useEffect(() => {
+        if (!hasTrackedView.current) {
+            hasTrackedView.current = true;
+            trackToolEvent("tool_view", { tool: "audio-to-text" });
+        }
+    }, []);
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
@@ -68,12 +77,14 @@ export function AudioToTextTool() {
                     setStatus("ready");
                     setProgress(null);
                 } else if (type === "complete") {
+                    trackToolEvent("process_success", { tool: "audio-to-text" });
                     setTranscription(data.text);
                     setStatus("ready");
                 } else if (type === "model_fallback") {
                     setModelNotice(`The "${TIER_LABEL[requested] || requested}" model files are not uploaded yet — fell back to "${TIER_LABEL[used] || used}" for this transcription.`);
                 } else if (type === "error") {
                     console.error("Worker error:", error);
+                    trackToolEvent("process_error", { tool: "audio-to-text", errorCode: "transcription_failed" });
                     alert("An error occurred: " + error);
                     setStatus("ready");
                 }
@@ -126,6 +137,7 @@ export function AudioToTextTool() {
 
         try {
             setStatus("processing");
+            trackToolEvent("process_started", { tool: "audio-to-text", detail: `tier:${modelTier}` });
             const audio = await decodeAudio(file);
             workerRef.current.postMessage({
                 type: "transcribe",
@@ -135,6 +147,7 @@ export function AudioToTextTool() {
             });
         } catch (err) {
             console.error("Decoding error", err);
+            trackToolEvent("process_error", { tool: "audio-to-text", errorCode: "audio_decode_failed" });
             alert("Failed to process audio file.");
             setStatus("ready");
         }
@@ -153,6 +166,7 @@ export function AudioToTextTool() {
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const f = e.target.files[0];
+            trackToolEvent("file_selected", { tool: "audio-to-text", detail: "count:1" });
             setAudioFile(f);
             setShortWarn(null);
             startTranscription(f);
@@ -183,6 +197,7 @@ export function AudioToTextTool() {
                     const ext = mimeType.includes("mp4") ? "m4a" : mimeType.includes("wav") ? "wav" : "webm";
                     const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
                     const file = new File([audioBlob], `recording.${ext}`, { type: mimeType });
+                    trackToolEvent("file_selected", { tool: "audio-to-text", detail: "count:1" });
                     setAudioFile(file);
                     if (durSec < 3) {
                         setShortWarn(`Recording is only ${durSec.toFixed(1)}s: very short clips transcribe poorly. Try speaking one complete sentence for much better accuracy.`);
@@ -210,6 +225,7 @@ export function AudioToTextTool() {
     };
 
     const downloadTxt = () => {
+        trackToolEvent("download_clicked", { tool: "audio-to-text", detail: "format:txt" });
         const blob = new Blob([transcription], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
