@@ -111,8 +111,89 @@ async function readMetadata(file: File): Promise<MetaSummary> {
     };
 }
 
+/**
+ * Strip EXIF/APP1 segments from a JPEG binary without re-encoding.
+ * This preserves the original compression, so the output is never larger
+ * than the input (it only gets smaller by the removed segment sizes).
+ * Returns null if the data is not a valid JPEG or has no APP1 segments.
+ */
+function stripJpegApp1(buffer: ArrayBuffer): ArrayBuffer | null {
+    const data = new Uint8Array(buffer);
+    // Must start with SOI (FFD8)
+    if (data.length < 4 || data[0] !== 0xff || data[1] !== 0xd8) return null;
+
+    const out: number[] = [0xff, 0xd8];
+    let pos = 2;
+    let removedAny = false;
+
+    while (pos + 4 <= data.length) {
+        if (data[pos] !== 0xff) break; // Not a marker, stop parsing
+        const marker = data[pos + 1];
+        // Standalone markers (no length): RST0-7, SOI, EOI, TEM
+        if (marker === 0xd9) {
+            // EOI: copy rest and finish
+            for (let i = pos; i < data.length; i++) out.push(data[i]);
+            break;
+        }
+        if (marker === 0xda) {
+            // SOS: copy everything from here to end (compressed data)
+            for (let i = pos; i < data.length; i++) out.push(data[i]);
+            break;
+        }
+        if ((marker >= 0xd0 && marker <= 0xd7) || marker === 0x01) {
+            out.push(0xff, marker);
+            pos += 2;
+            continue;
+        }
+        // Markers with length
+        if (pos + 4 > data.length) break;
+        const len = (data[pos + 2] << 8) | data[pos + 3];
+        if (len < 2 || pos + 2 + len > data.length) break;
+
+        const isApp1 = marker === 0xe1;
+        let isExif = false;
+        if (isApp1 && len >= 8) {
+            // Check for "Exif\0\0" header
+            isExif =
+                data[pos + 4] === 0x45 && // E
+                data[pos + 5] === 0x78 && // x
+                data[pos + 6] === 0x69 && // i
+                data[pos + 7] === 0x66;   // f
+        }
+
+        if (isExif) {
+            // Skip this APP1/EXIF segment
+            removedAny = true;
+        } else {
+            // Copy segment as-is
+            for (let i = pos; i < pos + 2 + len; i++) out.push(data[i]);
+        }
+        pos += 2 + len;
+    }
+
+    if (!removedAny) return null;
+    return new Uint8Array(out).buffer;
+}
+
 /** Strip all metadata by re-encoding through canvas (pixel data only). */
-function stripImage(file: File): Promise<Blob> {
+async function stripImage(file: File): Promise<Blob> {
+    // For JPEG: try binary APP1 stripping first (lossless, never inflates size)
+    if (file.type === "image/jpeg" || /\.jpe?g$/i.test(file.name)) {
+        try {
+            const buffer = await file.arrayBuffer();
+            const stripped = stripJpegApp1(buffer);
+            if (stripped) {
+                return new Blob([stripped], { type: "image/jpeg" });
+            }
+        } catch {
+            // Fall through to canvas re-encode
+        }
+    }
+    return stripImageViaCanvas(file);
+}
+
+/** Fallback: re-encode through canvas (pixel data only). */
+function stripImageViaCanvas(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const img = new Image();
@@ -403,13 +484,19 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
 
                             {item.meta && (item.status === "ready" || item.status === "done") && (
                                 <div className="mt-2 flex flex-col gap-1.5 text-sm">
-                                    {item.meta.gps && (
+                                    {item.meta.gps && item.status === "ready" && (
                                         <p className="flex items-center gap-1.5 text-red-400 font-medium">
                                             <MapPin className="w-4 h-4" />
                                             {t("GPS location embedded", "含 GPS 定位")}
                                             <span className="text-red-400/70 font-normal">
                                                 ({item.meta.gps.lat.toFixed(4)}, {item.meta.gps.lng.toFixed(4)})
                                             </span>
+                                        </p>
+                                    )}
+                                    {item.meta.gps && item.status === "done" && (
+                                        <p className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                                            <MapPin className="w-4 h-4" />
+                                            {t("GPS location removed", "GPS 定位已清除")}
                                         </p>
                                     )}
                                     {item.meta.camera && (
@@ -512,7 +599,7 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
             {/* Privacy note */}
             <p className="text-xs text-zinc-600 flex items-center gap-1.5">
                 <Trash2 className="w-3.5 h-3.5" />
-                {t("Cleaning re-encodes the image from raw pixels (JPEG/WebP at 95% quality, PNG lossless). No server, no upload, no account.", "清理通过原始像素重新编码（JPEG/WebP 95% 质量，PNG 无损）。无服务器、无上传、无需账号。")}
+                {t("Cleaning strips metadata without touching pixels (JPEG keeps original quality; WebP at 95%, PNG lossless). No server, no upload, no account.", "清理只移除元数据、不碰像素（JPEG 保持原始画质；WebP 95% 质量，PNG 无损）。无服务器、无上传、无需账号。")}
             </p>
         </div>
     );

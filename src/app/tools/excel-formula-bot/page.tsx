@@ -61,7 +61,7 @@ export default function Page() {
                     </p>
                 </div>
 
-                <div className="relative w-full">
+                <div className="relative w-full pt-12">
                     <PrivacyBadge mode="api" className="absolute top-3 right-3 z-10" />
                     <ExcelFormulaBotTool />
                 </div>

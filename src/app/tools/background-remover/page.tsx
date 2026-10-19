@@ -38,7 +38,7 @@ export default function BackgroundRemoverPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <div className="relative w-full">
+            <div className="relative w-full pt-12">
                 <PrivacyBadge mode="local" toolId="background-remover" className="absolute top-3 right-3 z-10" />
                 <BackgroundRemoverWrapper />
             </div>

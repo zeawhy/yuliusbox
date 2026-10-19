@@ -19,6 +19,15 @@ interface DraggableFileListProps {
     }
 }
 
+function formatFileSize(bytes: number): string {
+    if (bytes === 0) return "0 B";
+    // Use decimal (1000) for consistency with upload portal limits.
+    const k = 1000;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
+
 export function DraggableFileList({ files, onReorder, onRemove, labels }: DraggableFileListProps) {
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) return;
@@ -66,7 +75,7 @@ export function DraggableFileList({ files, onReorder, onRemove, labels }: Dragga
 
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-medium text-zinc-200 truncate">{fileObj.file.name}</p>
-                                            <p className="text-xs text-zinc-500">{(fileObj.file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                            <p className="text-xs text-zinc-500">{formatFileSize(fileObj.file.size)}</p>
                                         </div>
 
                                         <button

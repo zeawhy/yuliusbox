@@ -23,7 +23,7 @@ export default function PDFToolkitPage() {
                     </p>
                 </div>
 
-                <div className="relative w-full">
+                <div className="relative w-full pt-12">
                     <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
                     <PdfKitTool />
                 </div>
