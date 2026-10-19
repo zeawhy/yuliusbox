@@ -39,7 +39,7 @@ export default function ImageEditorPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <div className="relative w-full">
+            <div className="relative w-full pt-12">
                 <PrivacyBadge mode="local" className="absolute top-3 right-3 z-20" />
                 <Suspense fallback={null}>
                     <ImageEditor />

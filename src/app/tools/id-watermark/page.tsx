@@ -262,6 +262,12 @@ function IDWatermarkContent() {
             img.src = URL.createObjectURL(f);
             img.onload = () => {
                 setImage(img);
+                // Scale watermark font size and gap proportionally to image width,
+                // so small ID photos get the same watermark density as large ones.
+                // Reference: 1000px wide -> 24px font, 80px gap.
+                const scale = img.width / 1000;
+                setFontSize(Math.max(10, Math.round(24 * scale)));
+                setGap(Math.max(24, Math.round(80 * scale)));
                 trackToolEvent("process_success", { tool: "id-watermark" });
             };
             img.onerror = () => {
@@ -345,6 +351,11 @@ function IDWatermarkContent() {
             img.src = URL.createObjectURL(f);
             img.onload = () => {
                 setImage(img);
+                // Scale watermark font size and gap proportionally to image width,
+                // so small ID photos get the same watermark density as large ones.
+                const scale = img.width / 1000;
+                setFontSize(Math.max(10, Math.round(24 * scale)));
+                setGap(Math.max(24, Math.round(80 * scale)));
                 trackToolEvent("process_success", { tool: "id-watermark" });
             };
             img.onerror = () => {
