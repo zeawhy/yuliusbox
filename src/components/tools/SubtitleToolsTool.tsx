@@ -64,6 +64,17 @@ Convert between SRT and WebVTT formats instantly in your browser.
 Or burn hardcoded subtitles directly into video with custom fonts!`;
 
 const FONT_URL = "https://unpkg.com/dejavu-fonts-ttf/ttf/DejaVuSans.ttf";
+// Noto Sans SC: fallback font for CJK glyphs (DejaVu Sans has no CJK coverage,
+// so Chinese subtitles render as boxes without it). Only downloaded when the
+// subtitle text actually contains CJK characters.
+const CJK_FONT_URL = "https://cdn.jsdelivr.net/npm/@expo-google-fonts/noto-sans-sc@0.2.3/NotoSansSC_400Regular.ttf";
+const CJK_FONT_FILENAME = "NotoSansSC.ttf";
+const CJK_DETECT_RE = /[一-鿿㐀-䶿豈-﫿]/u;
+
+/** Returns true if the text contains any CJK characters (Han, incl. extensions and compatibility). */
+export function containsCjk(text: string): boolean {
+    return CJK_DETECT_RE.test(text);
+}
 
 function formatMs(ms: number, sep: "," | "." | ":" = "."): string {
     const totalSecs = Math.floor(ms / 1000);
@@ -565,6 +576,20 @@ export function SubtitleToolsTool() {
             }
 
             await ffmpeg.writeFile("input_sub.srt", srtContent);
+
+            // CJK fallback font: only downloaded when the subtitle text contains
+            // CJK characters. fontconfig (via fonts.conf above, dir=/) picks up
+            // both fonts, so libass falls back to Noto Sans SC for glyphs
+            // DejaVu Sans doesn't cover. Pure-English flows skip this download.
+            if (containsCjk(srtContent)) {
+                setBurnStage(t("Downloading CJK subtitle font (NotoSansSC)...", "正在加载中文字幕字体 (NotoSansSC)..."));
+                const cjkFontResp = await fetch(CJK_FONT_URL);
+                if (!cjkFontResp.ok) {
+                    throw new Error("Failed to load CJK subtitle font NotoSansSC.ttf from CDN");
+                }
+                const cjkFontBuf = await cjkFontResp.arrayBuffer();
+                await ffmpeg.writeFile(CJK_FONT_FILENAME, new Uint8Array(cjkFontBuf));
+            }
 
             if (cancelRequestedRef.current) throw new Error("Cancelled by user");
 
