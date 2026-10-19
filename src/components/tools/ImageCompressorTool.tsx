@@ -264,7 +264,9 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
 
     const formatSize = (bytes: number) => {
         if (bytes === 0) return "0 B";
-        const k = 1024;
+        // Use decimal (1000) to match the target label (e.g. 100,000 bytes = "100 KB").
+        // Upload portal limits are decimal, so display must be consistent.
+        const k = 1000;
         const sizes = ["B", "KB", "MB", "GB"];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
