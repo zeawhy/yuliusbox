@@ -69,8 +69,9 @@ export default function FileEncryptorPage() {
                     </p>
                 </div>
 
-                <div className="relative w-full">
-                    <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
+                <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-wrap justify-end"><PrivacyBadge mode="local" /></div>
+                    
                     <FileEncryptorTool />
                 </div>
 

@@ -16,7 +16,7 @@ const FAQS = [
     },
     {
         q: "Does removing EXIF reduce image quality?",
-        a: "The tool re-encodes your image from raw pixel data — JPEG and WebP at 95% quality (visually identical), PNG losslessly. The pixels stay the same; only the hidden metadata is discarded. For maximum fidelity, always keep your original file archived.",
+        a: "For JPEGs, the tool removes the EXIF segment directly without re-encoding, so the original compression and quality are kept. Other formats are re-encoded from pixel data (JPEG/WebP at 95% quality, PNG losslessly). The pixels stay the same; the hidden metadata is removed from the downloaded copy. Always keep your original file archived.",
     },
     {
         q: "Can you detect AI-generated images?",
@@ -41,8 +41,8 @@ export default function ExifRemoverPage() {
             cn: "清除照片 EXIF 拍照元数据 — 本地免费隐私脱敏",
         },
         desc: {
-            en: "See hidden metadata inside your photos — camera, timestamps, GPS location — then wipe it all with one click. 100% in your browser, nothing uploaded.",
-            cn: "一键透视照片暗藏的敏感元数据（相机型号、拍摄时间、GPS 经纬度），秒级纯净抹除。100% 本地浏览器离线运行，绝不上传云端。",
+            en: "See hidden metadata inside your photos — camera, timestamps, GPS location — then remove it with one click. Runs in your browser, nothing uploaded.",
+            cn: "查看照片暗藏的敏感元数据（相机型号、拍摄时间、GPS 经纬度），再一键移除。在本地浏览器运行，不上传云端。",
         },
     };
 
@@ -61,8 +61,9 @@ export default function ExifRemoverPage() {
                     </p>
                 </div>
 
-                <div className="relative w-full">
-                    <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
+                <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-wrap justify-end"><PrivacyBadge mode="local" /></div>
+                    
                     <Suspense fallback={null}>
                         <ExifRemoverTool />
                     </Suspense>
@@ -85,10 +86,10 @@ export default function ExifRemoverPage() {
                     <p>
                         The tool first reads the file with a metadata parser and shows you a plain-language
                         summary: device, dates, software, and a red flag if GPS coordinates are present. When
-                        you hit clean, the image is redrawn from raw pixel data onto a canvas and re-encoded
-                        — a process that physically cannot carry EXIF, XMP, IPTC, or ICC data over, because
-                        the output stream is built from pixels alone. The result is visually identical and
-                        metadata-free.
+                        you hit clean, JPEG EXIF segments are removed directly from the file without
+                        re-encoding; other formats are redrawn from pixel data onto a canvas and re-encoded,
+                        so the downloaded copy carries no EXIF, GPS, IPTC or XMP metadata. Removing metadata
+                        can&apos;t hide landmarks, faces or text visible in the photo itself.
                     </p>
                     <h2 className="text-xl font-semibold text-white">Frequently asked questions</h2>
                     <div className="space-y-3">

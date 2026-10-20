@@ -120,7 +120,7 @@ export default function VideoDownloader() {
             </div>
 
             <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                <PrivacyBadge mode="api" className="absolute -top-3 right-4 z-10" />
+                <div className="flex flex-wrap justify-end mb-4"><PrivacyBadge mode="api" /></div>
                 <form onSubmit={handleExtract} className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
