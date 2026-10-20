@@ -36,7 +36,7 @@ export function Footer() {
                                             <a
                                                 href={tool.href}
                                                 target="_blank"
-                                                rel="noopener nofollow"
+                                                rel="noopener noreferrer"
                                                 className="inline-flex items-center gap-1 text-sm hover:text-white transition-colors"
                                             >
                                                 {tool.name.en}

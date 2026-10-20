@@ -11,6 +11,14 @@ export const metadata: Metadata = {
         url: "/tools/word-to-pdf",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-word-to-pdf.png",
+                width: 1200,
+                height: 630,
+                alt: "Word to PDF Converter Online Free",
+            },
+        ],
     },
 };
 

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "PowerPoint to PDF Converter - Secure Cloud Processing | YuliusBox",
-    description: "Convert PowerPoint presentations (.pptx, .ppt) to PDF format securely in the cloud. No files are stored permanently. Fast, free, and precise formatting retention.",
+    title: "PowerPoint to PDF Converter - Secure Cloud | YuliusBox",
+    description: "Convert PowerPoint presentations (.pptx, .ppt) to PDF securely in the cloud. No files are stored permanently. Fast, free, and precise formatting retention.",
     keywords: ["ppt to pdf", "pptx to pdf", "powerpoint to pdf", "convert ppt to pdf online", "free pdf converter privacy"],
     alternates: {
         canonical: "/tools/ppt-to-pdf",
@@ -11,6 +11,14 @@ export const metadata: Metadata = {
         url: "/tools/ppt-to-pdf",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-ppt-to-pdf.png",
+                width: 1200,
+                height: 630,
+                alt: "PowerPoint to PDF Converter Online Free",
+            },
+        ],
     },
 };
 

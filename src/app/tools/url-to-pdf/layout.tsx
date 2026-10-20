@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Website URL to PDF Converter - High Quality Render | YuliusBox",
+    title: "URL to PDF Converter - High Quality Render | YuliusBox",
     description: "Convert any public website or URL into a high-quality PDF document. Powered by Chromium for accurate CSS and JavaScript rendering. Free and secure.",
     keywords: ["url to pdf", "website to pdf", "webpage to pdf converter", "save website as pdf", "html to pdf url"],
     alternates: {
@@ -11,6 +11,14 @@ export const metadata: Metadata = {
         url: "/tools/url-to-pdf",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-url-to-pdf.png",
+                width: 1200,
+                height: 630,
+                alt: "Website URL to PDF Converter",
+            },
+        ],
     },
 };
 

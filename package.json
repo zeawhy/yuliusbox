@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "indexnow": "node scripts/indexnow.mjs",
-    "prebuild": "node scripts/sitemap-lastmod.mjs"
+    "prebuild": "node scripts/sitemap-lastmod.mjs",
+    "seo-check": "node --no-warnings --experimental-strip-types scripts/seo-check.ts"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",

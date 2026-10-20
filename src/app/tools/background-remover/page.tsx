@@ -18,6 +18,14 @@ export const metadata: Metadata = {
         url: "/tools/background-remover",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-background-remover.png",
+                width: 1200,
+                height: 630,
+                alt: "Free AI Online Background Remover",
+            },
+        ],
     },
 };
 

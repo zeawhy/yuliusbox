@@ -8,7 +8,7 @@ import { ToolSeoBody } from "@/components/tools/ToolSeoBody";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 
 export const metadata: Metadata = {
-    title: "Free Privacy Policy Generator for Apps & Websites (No Sign-up)",
+    title: "Privacy Policy Generator for Apps & Websites | YuliusBox",
     description: "Generate standard Privacy Policy and Terms of Service for your iOS/Android app or website instantly. GDPR compliant templates. 100% Free.",
     keywords: ["privacy policy generator", "terms of service generator", "app privacy policy", "gdpr privacy policy template", "free legal document generator"],
     alternates: {
@@ -18,6 +18,14 @@ export const metadata: Metadata = {
         url: "/tools/privacy-generator",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-privacy-generator.png",
+                width: 1200,
+                height: 630,
+                alt: "Free Privacy Policy Generator for Apps & Websites",
+            },
+        ],
     },
 };
 

@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import { NOINDEX_TOOL_PATHS } from "./src/lib/seo";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    turbopackUseSystemTlsCerts: true,
+  },
   async redirects() {
     return [
       {
