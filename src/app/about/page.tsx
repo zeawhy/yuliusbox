@@ -4,8 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
     title: "About | YuliusBox",
-    description:
-        "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
+    description: "About YuliusBox: free online tools that run in your browser, built for files that should never be uploaded. Open source, no accounts, and nothing to install.",
     alternates: { canonical: "/about" },
     openGraph: {
         url: "/about",

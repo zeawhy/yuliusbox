@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Screenshot Blur — Pixelate & Blur Sensitive Info Online Free | YuliusBox",
+    title: "Screenshot Blur — Hide Sensitive Info Free | YuliusBox",
     description:
         "Blur, pixelate, or cover sensitive areas in screenshots before sharing. Free, unlimited, 100% in-browser — your screenshots are never uploaded to any server.",
     keywords: [

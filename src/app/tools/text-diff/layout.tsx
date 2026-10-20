@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Text Diff — Compare Text Online Free, Line & Char Highlight | YuliusBox",
+    title: "Text Diff — Compare Two Texts Online Free | YuliusBox",
     description:
         "Compare two texts side by side online. Fast line-level diff with character-level intra-line highlights using the Myers algorithm. 100% private in-browser diff.",
     keywords: [

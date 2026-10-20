@@ -24,7 +24,7 @@ const vlookupVsXlookupGenerator: LongTailContent = {
         "Describe your lookup in plain English and get a working VLOOKUP or XLOOKUP formula — with an explanation of which one fits your Excel version.",
     metaTitle: "VLOOKUP vs XLOOKUP Formula Generator — Free AI | YuliusBox",
     metaDescription:
-        "Generate VLOOKUP and XLOOKUP formulas from plain English. Free AI tool explains which lookup fits your Excel version — no signup.",
+        "Generate VLOOKUP and XLOOKUP formulas from plain English. A free AI tool that explains which lookup fits your Excel version — no sign-up and no install.",
     keywords: [
         "vlookup vs xlookup",
         "xlookup formula generator",
@@ -126,7 +126,7 @@ const excelIfFormulaMultipleConditions: LongTailContent = {
         "Nested IFs, IFS, or AND/OR? Describe your logic in plain English and get a working multi-condition formula with a clear explanation.",
     metaTitle: "Excel IF with Multiple Conditions — Formula Generator",
     metaDescription:
-        "Generate Excel IF formulas with multiple conditions from plain English. Nested IF vs IFS vs AND/OR explained — free, no signup.",
+        "Generate Excel IF formulas with multiple conditions from plain English. Nested IF vs IFS vs AND/OR explained step by step — free to use, no sign-up needed.",
     keywords: [
         "excel if multiple conditions",
         "nested if formula",
@@ -228,7 +228,7 @@ const countUniqueValuesFormula: LongTailContent = {
         "Count distinct emails, customers, or SKUs without pivot tables. Describe your data and get the right unique-count formula for your Excel version.",
     metaTitle: "Count Unique Values in Excel — Formula Generator Free",
     metaDescription:
-        "Generate formulas to count unique values in Excel from plain English. UNIQUE/COUNTA for modern Excel, SUMPRODUCT for older versions — free.",
+        "Generate formulas to count unique values in Excel from plain English. UNIQUE and COUNTIF for modern Excel, SUMPRODUCT for older versions — free, no sign-up.",
     keywords: [
         "count unique values excel",
         "count distinct values formula",
@@ -329,7 +329,7 @@ const sumifsCountifsBuilder: LongTailContent = {
         "Sum or count rows matching multiple criteria — no pivot table needed. Describe your conditions and get a working SUMIFS or COUNTIFS formula.",
     metaTitle: "SUMIFS & COUNTIFS Formula Builder — Free AI Tool",
     metaDescription:
-        "Build SUMIFS and COUNTIFS formulas from plain English. Multi-criteria sums and counts with correct syntax — free, no signup.",
+        "Build SUMIFS and COUNTIFS formulas from plain English. Multi-criteria sums and counts with correct syntax and worked examples — free to use, no sign-up.",
     keywords: [
         "sumifs formula",
         "countifs formula",
@@ -431,7 +431,7 @@ const googleSheetsFormulaGenerator: LongTailContent = {
         "Excel formulas don't always translate to Sheets. Get formulas written for Google Sheets — QUERY, ARRAYFORMULA, and the right syntax the first time.",
     metaTitle: "Google Sheets Formula Generator — Free AI | YuliusBox",
     metaDescription:
-        "Generate Google Sheets formulas from plain English. Sheets-specific functions (QUERY, ARRAYFORMULA) with correct syntax — free, no signup.",
+        "Generate Google Sheets formulas from plain English. Sheets-specific functions like QUERY and ARRAYFORMULA with correct syntax — free to use, no sign-up.",
     keywords: [
         "google sheets formula generator",
         "google sheets query formula",
@@ -532,9 +532,9 @@ export const excelCountifFormulaGenerator: LongTailContent = {
     h1: "Excel COUNTIF Formula Generator — Free",
     subtitle:
         "Count cells that meet your condition without memorizing syntax. Describe it in plain English — get a working COUNTIF or COUNTIFS formula instantly.",
-    metaTitle: "Excel COUNTIF Formula Generator — Count With Conditions | YuliusBox",
+    metaTitle: "Excel COUNTIF Formula Generator — Free AI | YuliusBox",
     metaDescription:
-        "Generate Excel COUNTIF & COUNTIFS formulas from plain English. Count orders over $500, overdue tasks, survey answers — free, no signup.",
+        "Generate Excel COUNTIF and COUNTIFS formulas from plain English. Count orders over $500, overdue tasks, or survey answers — free to use, no sign-up needed.",
     keywords: [
         "excel countif formula",
         "countif formula generator",

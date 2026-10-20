@@ -10,7 +10,7 @@ import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "Free Excel Formula Generator & AI Bot | YuliusBox",
-    description: "Describe your problem in plain English, and AI will generate the formula. Supports Microsoft Excel and Google Sheets.",
+    description: "Describe your calculation in plain English and get a working Excel or Google Sheets formula, with an explanation of how it works. Free AI bot, no sign-up.",
     keywords: ["excel formula generator", "spreadsheet ai", "google sheets formula maker", "excel bot"],
     alternates: {
         canonical: "/tools/excel-formula-bot",

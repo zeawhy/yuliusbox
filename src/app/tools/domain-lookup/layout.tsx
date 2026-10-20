@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Free Domain WHOIS Lookup & Availability Checker | YuliusBox",
-    description:
-        "Look up any domain's WHOIS/RDAP data — registrar, creation & expiry dates, name servers — or check availability across .com, .io, .ai and more. Free, no sign-up.",
+    description: "Look up any domain's WHOIS/RDAP data — registrar, creation and expiry dates, name servers — or check availability across .com, .io, .ai and more. Free.",
     keywords: [
         "domain whois lookup",
         "rdap lookup",

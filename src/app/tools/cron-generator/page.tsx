@@ -4,8 +4,8 @@ import CronGeneratorClient from "./CronGeneratorClient";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
-    title: "AI Cron Expression Generator - Natural Language to Cron | YuliusBox",
-    description: "Convert natural language descriptions into valid Cron expressions instantly. AI-powered cron job maker with clear explanations.",
+    title: "Cron Generator — Turn Plain English into Cron | YuliusBox",
+    description: "Convert plain-English schedules like 'every weekday at 9am' into valid cron expressions instantly, with a clear explanation of each field. Free, no sign-up.",
     keywords: ["cron generator", "cron expression maker", "ai-cron", "crontab generator", "natural language to cron"],
     alternates: {
         canonical: "/tools/cron-generator",
@@ -14,6 +14,14 @@ export const metadata: Metadata = {
         url: "/tools/cron-generator",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-cron-generator.png",
+                width: 1200,
+                height: 630,
+                alt: "Cron Generator — Turn Plain English into Cron",
+            },
+        ],
     },
 };
 

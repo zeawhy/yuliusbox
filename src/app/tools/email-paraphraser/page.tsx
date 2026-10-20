@@ -5,7 +5,7 @@ import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "AI Email Rewriter & Politeness Checker | YuliusBox",
-    description: "Rewrite your emails to be professional, polite, and persuasive. AI-powered email assistant for better business communication.",
+    description: "Rewrite rough drafts into professional, polite, and persuasive emails with AI. Check tone before you send and communicate better at work. Free, no sign-up.",
     keywords: ["email rewriter", "polite email generator", "professional email paraphraser", "ai email tool"],
     alternates: {
         canonical: "/tools/email-paraphraser",
@@ -14,6 +14,14 @@ export const metadata: Metadata = {
         url: "/tools/email-paraphraser",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-email-paraphraser.png",
+                width: 1200,
+                height: 630,
+                alt: "AI Email Rewriter & Politeness Checker",
+            },
+        ],
     },
 };
 

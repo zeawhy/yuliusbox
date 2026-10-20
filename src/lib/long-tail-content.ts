@@ -55,7 +55,6 @@ export const longTailPages: LongTailContent[] = [
     ...pdfKitPages,
     ...videoToGifPages,
     ...excelFormulaBotPages,
-    ...videoToGifPages,
     ...audioToTextPages,
     ...exifRemoverPages,
 ];

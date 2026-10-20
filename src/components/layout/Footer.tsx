@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Twitter, Mail, Coffee } from "lucide-react";
+import { Twitter, Mail, Coffee, ExternalLink } from "lucide-react";
 import { toolsData } from "@/lib/tools-data";
 
 const LEGAL_LINKS = [
@@ -36,10 +36,11 @@ export function Footer() {
                                             <a
                                                 href={tool.href}
                                                 target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-sm hover:text-white transition-colors"
+                                                rel="noopener nofollow"
+                                                className="inline-flex items-center gap-1 text-sm hover:text-white transition-colors"
                                             >
                                                 {tool.name.en}
+                                                <ExternalLink className="w-3 h-3 shrink-0" />
                                             </a>
                                         ) : (
                                             <Link

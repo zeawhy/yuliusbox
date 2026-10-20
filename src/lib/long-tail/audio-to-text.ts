@@ -29,7 +29,7 @@ export const transcribeMp3ToText: LongTailContent = {
         "Drop in any MP3 — podcasts, lectures, voice recordings — and get a text transcript in your browser. Nothing is uploaded, ever.",
     metaTitle: "Transcribe MP3 to Text Free — Private & Local | YuliusBox",
     metaDescription:
-        "Transcribe MP3 to text free in your browser. Whisper AI runs 100% locally — no upload, no account. Copy or download the transcript as TXT.",
+        "Transcribe MP3 to text free in your browser. Whisper AI runs 100% locally — no upload, no account. Copy or download the transcript as a TXT file in seconds.",
     keywords: [
         "transcribe mp3 to text",
         "mp3 to text converter",
@@ -128,7 +128,7 @@ export const transcribeIphoneVoiceMemos: LongTailContent = {
         "Your Voice Memos app records great audio but keeps it locked away. Export the .m4a, drop it here, and get searchable text — privately, in your browser.",
     metaTitle: "Transcribe iPhone Voice Memos to Text — Free | YuliusBox",
     metaDescription:
-        "Transcribe iPhone Voice Memos free. Export the .m4a from the app, drop it in your browser, get text via local Whisper AI. No upload, no account.",
+        "Transcribe iPhone Voice Memos free. Export the .m4a from the app, drop it in your browser, and get text via local Whisper AI. No upload and no account needed.",
     keywords: [
         "transcribe iphone voice memos",
         "voice memo to text",
@@ -223,7 +223,7 @@ export const transcribeMeetingRecordings: LongTailContent = {
         "Turn Zoom and Teams recordings into readable notes without uploading them anywhere. Honest guidance on long files, accuracy, and the note-taking workflow.",
     metaTitle: "Transcribe Meeting Recordings to Text — Free | YuliusBox",
     metaDescription:
-        "Transcribe Zoom & Teams meeting recordings free in your browser. Local Whisper AI, no upload. Honest notes on long files and accuracy included.",
+        "Transcribe Zoom and Teams meeting recordings free in your browser. Local Whisper AI, no upload. Honest notes on long files and accuracy are included below.",
     keywords: [
         "transcribe meeting recordings",
         "meeting transcription free",
@@ -322,7 +322,7 @@ export const transcribeInterviewsFree: LongTailContent = {
         "Journalists, researchers, and podcasters: turn interview recordings into accurate, quotable text — free, unlimited, and completely private.",
     metaTitle: "Transcribe Interviews to Text — Free & Local | YuliusBox",
     metaDescription:
-        "Transcribe interviews free in your browser. Local Whisper AI, no per-minute fees, no upload. Accuracy tips for journalists and researchers included.",
+        "Transcribe interviews free in your browser. Local Whisper AI, no per-minute fees, no upload. Accuracy tips for journalists and researchers are included below.",
     keywords: [
         "transcribe interviews free",
         "interview transcription free",
@@ -421,7 +421,7 @@ export const privateVoiceTranscription: LongTailContent = {
         "Transcribe sensitive recordings — therapy notes, legal calls, medical dictation — with AI that runs entirely on your device. No server ever hears a word.",
     metaTitle: "Private Voice-to-Text — Nothing Uploaded | YuliusBox",
     metaDescription:
-        "Private voice transcription in your browser. Whisper AI runs 100% on-device — no upload, no account, no logs. For therapy, legal & medical audio.",
+        "Private voice transcription in your browser. Whisper AI runs 100% on-device — no upload, no account, no logs. Built for therapy, legal, and medical audio.",
     keywords: [
         "private voice transcription",
         "private speech to text",
@@ -518,9 +518,9 @@ export const transcribePodcastToText: LongTailContent = {
     h1: "Transcribe Podcast Episodes to Text — Free & Private",
     subtitle:
         "Turn episodes into show notes, pull quotes, and searchable text. Whisper AI runs 100% on your device — your unreleased episode never leaves your browser.",
-    metaTitle: "Transcribe Podcast to Text Free — Private, On-Device | YuliusBox",
+    metaTitle: "Transcribe Podcast to Text Free — On-Device | YuliusBox",
     metaDescription:
-        "Convert podcast episodes to text for show notes, quotes & SEO. Free Whisper transcription that runs 100% in your browser — nothing uploaded.",
+        "Convert podcast episodes to text for show notes, quotes, and SEO. Free Whisper transcription that runs 100% in your browser — nothing is ever uploaded.",
     keywords: [
         "transcribe podcast to text",
         "podcast transcription free",

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Subtitle Tools — Convert SRT/VTT & Burn Subtitles Online Free | YuliusBox",
-    description:
-        "Convert subtitles between SRT and WebVTT, or burn hardcoded subtitles into video online. Free, unlimited, 100% in-browser with zero uploads.",
+    title: "Subtitle Tools — SRT/VTT Convert & Burn-In | YuliusBox",
+    description: "Convert subtitles between SRT and WebVTT formats, or burn hardcoded subtitles into a video. Free, unlimited, 100% in-browser — your files are never uploaded.",
     keywords: [
         "subtitle",
         "srt",

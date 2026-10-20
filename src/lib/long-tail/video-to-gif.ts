@@ -124,7 +124,7 @@ const convertMovToGif: LongTailContent = {
         "iPhone screen recordings and camera clips are MOV files. Turn them into shareable GIFs in your browser — no app install, no upload, no watermark.",
     metaTitle: "Convert MOV to GIF Online Free — iPhone Clips | YuliusBox",
     metaDescription:
-        "Turn MOV files (iPhone recordings, QuickTime clips) into GIFs online, free. Runs 100% in your browser — no upload, no signup, no watermark.",
+        "Turn MOV files (iPhone recordings and QuickTime clips) into GIFs online, free. Runs 100% in your browser — no upload, no sign-up, and no watermark added.",
     keywords: [
         "convert mov to gif",
         "mov to gif online",
@@ -222,7 +222,7 @@ const webmToGifConverter: LongTailContent = {
         "WebM clips from Loom, OBS, and browser recorders don't play everywhere. Convert them to universally-readable GIFs in your browser — free, no upload.",
     metaTitle: "Convert WebM to GIF Online Free — No Upload | YuliusBox",
     metaDescription:
-        "Turn WebM videos (Loom, OBS, screen recorders) into GIFs online, free. Browser-local conversion — no upload, no signup, no watermark.",
+        "Turn WebM videos (Loom, OBS, and screen recorders) into GIFs online, free. Browser-local conversion — no upload, no sign-up, and no watermark ever added.",
     keywords: [
         "webm to gif",
         "convert webm to gif",
@@ -316,7 +316,7 @@ const screenRecordingToGif: LongTailContent = {
         "Looping GIFs beat static screenshots for READMEs, docs, and bug reports. Convert your screen captures to crisp, text-readable GIFs in your browser.",
     metaTitle: "Screen Recording to GIF — Free for Docs & Demos | YuliusBox",
     metaDescription:
-        "Turn screen recordings into crisp GIFs for READMEs, docs, and bug reports. Free online converter — runs in your browser, no upload, no watermark.",
+        "Turn screen recordings into crisp GIFs for READMEs, docs, and bug reports. A free online converter that runs in your browser — no upload, no watermark.",
     keywords: [
         "screen recording to gif",
         "convert screen capture to gif",
@@ -410,7 +410,7 @@ const compressGifOnline: LongTailContent = {
         "Got a bloated GIF that's too big to post? Re-encode it at lower FPS or width to shrink it — in your browser, with the output size shown before you download.",
     metaTitle: "Compress GIF Online Free — Shrink GIF File Size | YuliusBox",
     metaDescription:
-        "Reduce GIF file size online, free. Re-encode at lower FPS or width and preview the exact output size — all in your browser, no upload.",
+        "Reduce GIF file size online, free. Re-encode at a lower FPS or width and preview the exact output size first — all in your browser, with nothing uploaded.",
     keywords: [
         "compress gif online",
         "reduce gif file size",

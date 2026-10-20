@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     description:
         "SuiVault（随存）隐私政策：本地优先的个人信息保险箱，所有记录仅存储在您的设备上——无账号、无服务器、无广告、无数据上报。",
     alternates: { canonical: "/suivault/privacy" },
+    // Utility page for the SuiVault app listing — keep it out of the index
+    // (and out of sitemap.xml) but let crawlers follow its links.
+    robots: { index: false, follow: true },
     openGraph: {
         url: "/suivault/privacy",
         siteName: "YuliusBox",

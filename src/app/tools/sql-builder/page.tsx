@@ -5,7 +5,7 @@ import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
     title: "AI SQL Query Builder - Natural Language to SQL | YuliusBox",
-    description: "Generate MySQL, PostgreSQL, and SQLite queries instantly using AI. Convert natural language into optimized SQL code.",
+    description: "Generate MySQL, PostgreSQL, and SQLite queries from plain English using AI. Describe the result you want and get clean, ready-to-run SQL code in seconds.",
     keywords: ["sql builder", "natural language to sql", "ai sql generator", "mysql query maker", "postgresql query generator"],
     alternates: {
         canonical: "/tools/sql-builder",
@@ -14,6 +14,14 @@ export const metadata: Metadata = {
         url: "/tools/sql-builder",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-sql-builder.png",
+                width: 1200,
+                height: 630,
+                alt: "AI SQL Query Builder - Natural Language to SQL",
+            },
+        ],
     },
 };
 

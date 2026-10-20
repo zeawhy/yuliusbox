@@ -5,8 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
     title: "Contact | YuliusBox",
-    description:
-        "Contact YuliusBox: feedback, bug reports, and tool requests via support@yuliusbox.com.",
+    description: "Contact YuliusBox for feedback, bug reports, and tool requests. Email support@yuliusbox.com — a small independent project, and real replies from the maker.",
     alternates: { canonical: "/contact" },
     openGraph: {
         url: "/contact",

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "PDF Redact & Sign — Black Out Sensitive Text & Add Signature Online Free | YuliusBox",
-    description:
-        "Black out sensitive text in PDFs with true rasterized redaction and add handwritten or image signatures. Free, private, 100% in-browser.",
+    title: "PDF Redact & Sign — Black Out & Sign Free | YuliusBox",
+    description: "Black out sensitive text in PDFs with true rasterized redaction, then add a handwritten or image signature. Free and private — everything runs in-browser.",
     keywords: [
         "pdf redact",
         "pdf redaction tool",

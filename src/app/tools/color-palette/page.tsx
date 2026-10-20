@@ -4,8 +4,8 @@ import ColorPaletteGenerator from './ColorPaletteClient';
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 
 export const metadata: Metadata = {
-    title: "Online Image Color Picker & Palette Generator | Export to CSS/Tailwind",
-    description: "Upload any image to extract the dominant color palette. Get HEX, RGB, and Tailwind CSS codes instantly. Free and private.",
+    title: "Color Palette Generator from Any Image | YuliusBox",
+    description: "Extract the dominant colors from any image and get HEX, RGB, and Tailwind CSS codes instantly. Free, private, and in-browser — your image is never uploaded.",
     keywords: ["image to hex", "color palette generator", "extract colors from image", "online color picker"],
     alternates: {
         canonical: "/tools/color-palette",
@@ -14,6 +14,14 @@ export const metadata: Metadata = {
         url: "/tools/color-palette",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-color-palette.png",
+                width: 1200,
+                height: 630,
+                alt: "Color Palette Generator from Any Image",
+            },
+        ],
     },
 };
 

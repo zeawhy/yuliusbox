@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Image Grid Joiner - Combine Multiple Images into a Seamless Grid | YuliusBox",
+    title: "Image Grid Joiner — Combine Photos in a Grid | YuliusBox",
     description: "Combine multiple images into a single grid picture instantly. 100% free, private browser-based processing. Drag and drop to reorder images seamlessly.",
     keywords: ["image grid maker", "combine pictures into grid", "stitch images online", "photo grid generator", "local image processing"],
     alternates: {
@@ -11,6 +11,14 @@ export const metadata: Metadata = {
         url: "/tools/image-grid-joiner",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-image-grid-joiner.png",
+                width: 1200,
+                height: 630,
+                alt: "Image Grid Joiner — Combine Photos in a Grid",
+            },
+        ],
     },
 };
 
