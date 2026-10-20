@@ -388,7 +388,7 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
             >
                 <Upload className="w-10 h-10 mx-auto text-zinc-500 mb-3" />
                 <p className="text-lg text-white font-medium">{t("Drop photos here", "把照片拖到这里")}</p>
-                <p className="text-sm text-zinc-500 mt-1">
+                <p className="text-sm text-zinc-400 mt-1">
                     {t("JPG, PNG, WebP — see what's hidden inside, then remove it. Runs locally in your browser.", "支持 JPG、PNG、WebP——先看看里面藏了什么，再一键清除。全程在本地浏览器处理。")}
                 </p>
                 <input
@@ -612,7 +612,7 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
             )}
 
             {/* Privacy note */}
-            <p className="text-xs text-zinc-600 flex items-center gap-1.5">
+            <p className="text-xs text-zinc-400 flex items-center gap-1.5">
                 <Trash2 className="w-3.5 h-3.5" />
                 {t("Cleaning strips metadata without touching pixels (JPEG keeps original quality; WebP at 95%, PNG lossless). No server, no upload, no account.", "清理只移除元数据、不碰像素（JPEG 保持原始画质；WebP 95% 质量，PNG 无损）。无服务器、无上传、无需账号。")}
             </p>

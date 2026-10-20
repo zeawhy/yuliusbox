@@ -43,7 +43,7 @@ export function RelatedTools({ slug, limit = 6 }: { slug: string; limit?: number
                                         </span>
                                         <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300 shrink-0" />
                                     </span>
-                                    <span className="block text-sm text-zinc-500 mt-1 leading-relaxed">
+                                    <span className="block text-sm text-zinc-400 mt-1 leading-relaxed">
                                         {tool.description.en}
                                     </span>
                                 </span>

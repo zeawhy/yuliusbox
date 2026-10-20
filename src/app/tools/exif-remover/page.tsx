@@ -47,7 +47,7 @@ export default function ExifRemoverPage() {
     };
 
     return (
-        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+        <main className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: "/tools/exif-remover", label: "EXIF Remover" }]} />
 
@@ -104,6 +104,6 @@ export default function ExifRemoverPage() {
             </div>
 
             <Footer />
-        </div>
+        </main>
     );
 }

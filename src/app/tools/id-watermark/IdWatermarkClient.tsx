@@ -419,7 +419,7 @@ function IDWatermarkContent() {
                         image && "sticky top-0 z-20 lg:static"
                     )}>
                         {!image && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-500 pointer-events-none">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-400 pointer-events-none">
                                 <Upload className="w-12 h-12 mb-4 opacity-50" />
                                 <p className="font-medium text-lg">{language === "en" ? t.upload.title.en : t.upload.title.cn}</p>
                                 <p className="text-sm mt-1">{language === "en" ? t.upload.supported.en : t.upload.supported.cn}</p>
@@ -430,6 +430,7 @@ function IDWatermarkContent() {
                         {!image && (
                             <input
                                 type="file"
+                                aria-label="Upload ID photo"
                                 accept="image/*"
                                 onChange={handleImageUpload}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -465,6 +466,7 @@ function IDWatermarkContent() {
                             <Type className="w-4 h-4" /> {language === "en" ? t.controls.text.en : t.controls.text.cn}
                         </label>
                         <textarea
+                            aria-label={language === "en" ? t.controls.text.en : t.controls.text.cn}
                             value={text}
                             onChange={(e) => setText(e.target.value)}
                             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 min-h-[80px]"
@@ -472,7 +474,7 @@ function IDWatermarkContent() {
 
                         {/* Presets */}
                         <div className="space-y-2">
-                            <span className="text-xs text-zinc-500">{language === "en" ? t.controls.presets.en : t.controls.presets.cn}</span>
+                            <span className="text-xs text-zinc-400">{language === "en" ? t.controls.presets.en : t.controls.presets.cn}</span>
                             <div className="flex flex-wrap gap-2">
                                 {t.presets.map((preset, idx) => (
                                     <button
@@ -491,9 +493,9 @@ function IDWatermarkContent() {
 
                     {/* Appearance Controls */}
                     <div className="space-y-6">
-                        <h3 className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                        <p className="text-sm font-medium text-zinc-300 flex items-center gap-2">
                             <Palette className="w-4 h-4" /> {language === "en" ? t.controls.style.en : t.controls.style.cn}
-                        </h3>
+                        </p>
 
                         {/* Color */}
                         <div className="flex items-center justify-between">
@@ -503,8 +505,10 @@ function IDWatermarkContent() {
                                     <button
                                         key={c}
                                         onClick={() => setColor(c)}
+                                        aria-label={`Watermark color ${c}`}
+                                        aria-pressed={color === c}
                                         className={cn(
-                                            "w-6 h-6 rounded-full border border-zinc-700",
+                                            "w-6 h-6 rounded-full border border-zinc-700 relative after:absolute after:-inset-2.5 after:content-['']",
                                             color === c && "ring-2 ring-emerald-500 ring-offset-2 ring-offset-zinc-900"
                                         )}
                                         style={{ backgroundColor: c }}
@@ -512,6 +516,7 @@ function IDWatermarkContent() {
                                 ))}
                                 <input
                                     type="color"
+                                    aria-label="Custom watermark color"
                                     value={color}
                                     onChange={(e) => setColor(e.target.value)}
                                     className="w-8 h-8 rounded cursor-pointer bg-transparent"
@@ -527,6 +532,8 @@ function IDWatermarkContent() {
                             </div>
                             <input
                                 type="range" min="0.1" max="1" step="0.05"
+                                aria-label={language === "en" ? t.controls.opacity.en : t.controls.opacity.cn}
+                                aria-valuetext={`${Math.round(opacity * 100)}%`}
                                 value={opacity}
                                 onChange={(e) => setOpacity(parseFloat(e.target.value))}
                                 className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -541,6 +548,8 @@ function IDWatermarkContent() {
                             </div>
                             <input
                                 type="range" min="12" max="100"
+                                aria-label={language === "en" ? t.controls.size.en : t.controls.size.cn}
+                                aria-valuetext={`${fontSize}px`}
                                 value={fontSize}
                                 onChange={(e) => setFontSize(parseInt(e.target.value))}
                                 className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -555,6 +564,8 @@ function IDWatermarkContent() {
                             </div>
                             <input
                                 type="range" min="-90" max="90"
+                                aria-label={language === "en" ? t.controls.rotate.en : t.controls.rotate.cn}
+                                aria-valuetext={`${rotate} degrees`}
                                 value={rotate}
                                 onChange={(e) => setRotate(parseInt(e.target.value))}
                                 className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -569,6 +580,8 @@ function IDWatermarkContent() {
                             </div>
                             <input
                                 type="range" min="20" max="300"
+                                aria-label={language === "en" ? t.controls.density.en : t.controls.density.cn}
+                                aria-valuetext={`${gap}px`}
                                 value={gap}
                                 onChange={(e) => setGap(parseInt(e.target.value))}
                                 className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -650,9 +663,9 @@ function IDWatermarkContent() {
                                                 {item.key === "rent" && <Home className="w-4 h-4 text-emerald-400" />}
                                                 {item.key === "card" && <CreditCard className="w-4 h-4 text-emerald-400" />}
                                                 {item.key === "loan" && <Coins className="w-4 h-4 text-emerald-400" />}
-                                                <h3 className="font-semibold text-white text-base">
+                                                <p className="font-semibold text-white text-base">
                                                     {language === "en" ? item.title.en : item.title.cn}
-                                                </h3>
+                                                </p>
                                             </div>
                                             {isApplied && (
                                                 <span className="text-[11px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full">
@@ -718,9 +731,9 @@ function IDWatermarkContent() {
                                 </span>
                                 <span className="text-xs text-zinc-500">Unrestricted</span>
                             </div>
-                            <h3 className="font-semibold text-white text-lg">
+                            <p className="font-semibold text-white text-lg">
                                 {language === "en" ? t.comparison.beforeTitle.en : t.comparison.beforeTitle.cn}
-                            </h3>
+                            </p>
                             <ul className="space-y-3">
                                 {t.comparison.beforePoints.map((pt, idx) => (
                                     <li key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300 leading-relaxed">
@@ -742,9 +755,9 @@ function IDWatermarkContent() {
                                 </span>
                                 <span className="text-xs text-zinc-500">Targeted</span>
                             </div>
-                            <h3 className="font-semibold text-white text-lg">
+                            <p className="font-semibold text-white text-lg">
                                 {language === "en" ? t.comparison.afterTitle.en : t.comparison.afterTitle.cn}
-                            </h3>
+                            </p>
                             <ul className="space-y-3">
                                 {t.comparison.afterPoints.map((pt, idx) => (
                                     <li key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300 leading-relaxed">
@@ -780,9 +793,9 @@ function IDWatermarkContent() {
                             >
                                 <div className="flex items-center gap-2.5">
                                     <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-                                    <h3 className="font-semibold text-white text-sm">
+                                    <p className="font-semibold text-white text-sm">
                                         {language === "en" ? item.title.en : item.title.cn}
-                                    </h3>
+                                    </p>
                                 </div>
                                 <p className="text-xs text-zinc-400 leading-relaxed pl-4.5">
                                     {language === "en" ? item.desc.en : item.desc.cn}
@@ -810,12 +823,12 @@ function IDWatermarkContent() {
                                 key={st.num}
                                 className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 space-y-3 relative overflow-hidden"
                             >
-                                <div className="text-2xl font-black font-mono text-zinc-700">
+                                <div className="text-2xl font-black font-mono text-zinc-500">
                                     {st.num}
                                 </div>
-                                <h3 className="font-semibold text-white text-sm">
+                                <p className="font-semibold text-white text-sm">
                                     {language === "en" ? st.title.en : st.title.cn}
-                                </h3>
+                                </p>
                                 <p className="text-xs text-zinc-400 leading-relaxed">
                                     {language === "en" ? st.desc.en : st.desc.cn}
                                 </p>
@@ -849,9 +862,9 @@ function IDWatermarkContent() {
                                     </span>
                                     <FileText className="w-5 h-5 text-zinc-500" />
                                 </div>
-                                <h3 className="font-semibold text-white text-base">
+                                <p className="font-semibold text-white text-base">
                                     {language === "en" ? t.nextSteps.pdfCard.title.en : t.nextSteps.pdfCard.title.cn}
-                                </h3>
+                                </p>
                                 <p className="text-xs text-zinc-400 leading-relaxed">
                                     {language === "en" ? t.nextSteps.pdfCard.desc.en : t.nextSteps.pdfCard.desc.cn}
                                 </p>
@@ -874,9 +887,9 @@ function IDWatermarkContent() {
                                     </span>
                                     <ShieldAlert className="w-5 h-5 text-zinc-500" />
                                 </div>
-                                <h3 className="font-semibold text-white text-base">
+                                <p className="font-semibold text-white text-base">
                                     {language === "en" ? t.nextSteps.exifCard.title.en : t.nextSteps.exifCard.title.cn}
-                                </h3>
+                                </p>
                                 <p className="text-xs text-zinc-400 leading-relaxed">
                                     {language === "en" ? t.nextSteps.exifCard.desc.en : t.nextSteps.exifCard.desc.cn}
                                 </p>
