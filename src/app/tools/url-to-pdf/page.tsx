@@ -1,211 +1,93 @@
-"use client";
-
-import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, CheckCircle, Loader2, AlertCircle, Globe, Link2 } from "lucide-react";
-import Link from "next/link";
-import { useLanguage } from "@/context/LanguageContext";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
-import { trackToolEvent } from "@/lib/analytics";
+import { ToolSeoBody } from "@/components/tools/ToolSeoBody";
+import { RelatedTools } from "@/components/tools/RelatedTools";
+import UrlToPdfClient from "./UrlToPdfClient";
+
+const SECTIONS = [
+    {
+        heading: "Save a public web page as a PDF, rendered like a real browser",
+        paragraphs: [
+            "Browser \u201CPrint to PDF\u201D works, but it is fiddly: headers and cookie banners creep in, pages split in odd places, and the result depends on your screen size. This tool does the printing on our server instead. You paste a public URL, a headless Chromium browser loads the page — CSS, fonts and JavaScript included — and prints the fully rendered result to a PDF that downloads to your device.",
+            "Because the rendering happens on a server, using this tool means our server visits the URL you submit. That is worth understanding before you use it: do not submit URLs that contain private tokens, signed download links you do not want a third party to fetch, or pages behind a login — the server cannot sign in, and such pages will come back as a login screen or an error.",
+        ],
+    },
+    {
+        heading: "What is sent, what is fetched, and what is stored",
+        paragraphs: [
+            "You submit only a URL — no file is uploaded from your device. Our endpoint first checks the address to block requests to internal or private network locations, then passes the URL to a Chromium-based rendering service (Gotenberg), which fetches the page from the public internet and returns the printed PDF. The PDF is streamed back to you; the service does not keep a copy of it, and we do not store the URLs submitted beyond the request itself. Requests are rate-limited to 5 per minute per IP address.",
+            "One practical consequence: the page is fetched from our server's network, not from yours. Content that is personalised to your account, your region or your cookies will not appear — the PDF shows the page as a fresh, signed-out visitor would see it.",
+        ],
+    },
+];
+
+const HOW_TO = [
+    "Copy the address of the public web page you want to save.",
+    "Paste it into the URL field (https:// is added automatically if you leave it off) and press \u201CConvert to PDF\u201D.",
+    "Wait while the server loads and renders the page; image-heavy or slow pages can take a little longer.",
+    "The PDF downloads automatically. Open it to confirm the page rendered completely before relying on it.",
+    "Use \u201CConvert Another URL\u201D to save more pages, one at a time.",
+];
+
+const USE_CASES = [
+    "Archiving an article, documentation page or announcement before it is edited or taken down.",
+    "Saving an online receipt, booking confirmation or itinerary as a durable PDF record.",
+    "Sharing a web page with someone who prefers a printable, offline copy.",
+    "Capturing a public portfolio, listing or product page exactly as it appeared on a given day.",
+    "Collecting reference pages for research into a single folder of PDFs.",
+];
+
+const FAQS = [
+    {
+        question: "Do I upload a file to use this tool?",
+        answer: "No file is uploaded. You submit a URL, and our server fetches and renders that public page itself using a Chromium-based service (Gotenberg), then returns the printed PDF to you.",
+    },
+    {
+        question: "Is anything stored after the conversion?",
+        answer: "No. The PDF is generated for your request and streamed back; neither the PDF nor a rendered copy of the page is kept on the server afterwards. The URL is processed for the request and is not stored as a document.",
+    },
+    {
+        question: "Why did my page come back as a login screen or look different?",
+        answer: "The server visits the page as a signed-out visitor with no cookies. Pages behind a login, paywalls, region restrictions or bot checks will render as that visitor sees them — often a login wall or a simplified version. Such pages are better saved with your own browser's Print to PDF.",
+    },
+    {
+        question: "Can I convert a page on my local network or a private link?",
+        answer: "No. For security, URLs pointing at internal, loopback or private network addresses are rejected, and the page must be reachable from the public internet.",
+    },
+    {
+        question: "How are long or JavaScript-heavy pages handled?",
+        answer: "The renderer runs the page's JavaScript like a real browser before printing, with a 45-second limit. Extremely long pages produce long, multi-page PDFs, and content that only loads on scroll may appear partially.",
+    },
+    {
+        question: "Is the tool free?",
+        answer: "Yes, free and without an account. Conversions are rate-limited to 5 per minute per IP address so the rendering service stays available for everyone.",
+    },
+];
 
 export default function UrlToPdfPage() {
-    const { language } = useLanguage();
-
-    const [url, setUrl] = useState("");
-    const [status, setStatus] = useState<"idle" | "converting" | "success" | "error">("idle");
-    const [errorMessage, setErrorMessage] = useState("");
-
-    const hasTrackedView = useRef(false);
-    useEffect(() => {
-        if (!hasTrackedView.current) {
-            hasTrackedView.current = true;
-            trackToolEvent("tool_view", { tool: "url-to-pdf" });
-        }
-    }, []);
-
-    const t = {
-        back: { en: "Back to Tools", cn: "返回工具列表" },
-        title: { en: "Website to PDF Converter", cn: "网页转 PDF 工具" },
-        desc: { en: "Convert any public URL or website into a high-quality PDF document securely.", cn: "将任何公开的网页链接快速转换并保存为高质量的 PDF 文档。" },
-        secure: { en: "Secure Cloud Processing", cn: "云端安全处理" },
-        inputPlaceholder: { en: "https://example.com", cn: "https://example.com" },
-        converting: { en: "Converting to PDF...", cn: "正在转换为 PDF..." },
-        success: { en: "Conversion Successful! Download starting...", cn: "转换成功！即将开始下载..." },
-        btnConvert: { en: "Convert to PDF", cn: "转换为 PDF" },
-        btnNew: { en: "Convert Another URL", cn: "转换新网页" }
-    };
-
-    const convertUrl = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        let validUrl = url.trim();
-        if (!validUrl) return;
-
-        // Auto prepend https if missing
-        if (!/^https?:\/\//i.test(validUrl)) {
-            validUrl = `https://${validUrl}`;
-            setUrl(validUrl);
-        }
-
-        setStatus("converting");
-        setErrorMessage("");
-        trackToolEvent("process_started", { tool: "url-to-pdf" });
-
-        const formData = new FormData();
-        formData.append("url", validUrl);
-
-        try {
-            const response = await fetch("/api/tools/url-to-pdf", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errData = await response.json().catch(() => ({}));
-
-                if (response.status === 429) {
-                    throw new Error(language === "en"
-                        ? "You have reached the conversion limit (5 per minute). Please wait a moment."
-                        : "转换已达上限 (每分钟 5 次)。请稍后再试。");
-                }
-
-                throw new Error(errData.error || `HTTP error! status: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            const objectUrl = URL.createObjectURL(blob);
-
-            // Extract a safe filename from the URL domain
-            let baseName = "website";
-            try {
-                const parsedUrl = new URL(validUrl);
-                baseName = parsedUrl.hostname.replace(/[^a-zA-Z0-9_-]/g, '_');
-            } catch (e) { /* ignore invalid url parse error for filename */ }
-
-            const link = document.createElement("a");
-            link.href = objectUrl;
-            link.download = `${baseName}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(objectUrl);
-
-            setStatus("success");
-            trackToolEvent("process_success", { tool: "url-to-pdf" });
-            trackToolEvent("download_clicked", { tool: "url-to-pdf", detail: "format:pdf" });
-
-        } catch (error: any) {
-            console.error("Conversion failed:", error);
-            setStatus("error");
-            setErrorMessage(error.message || (language === "en" ? "Conversion failed. Please verify the URL." : "转换失败，请检查链接是否正确公开。"));
-            trackToolEvent("process_error", { tool: "url-to-pdf", errorCode: "conversion_failed" });
-        }
-    };
-
     return (
-        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                </Link>
-                <PrivacyBadge mode="api" />
-            </div>
-
+        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <Header />
+            <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: "/tools/url-to-pdf", label: "URL to PDF" }]} />
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">Website URL to PDF Converter</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        {language === "en" ? t.desc.en : t.desc.cn}
+                        Turn any public web page into a PDF, rendered server-side with a real Chromium browser. You submit a URL — no file upload.
                     </p>
                 </div>
-
-                {/* Mobile Secure Badge */}
-                <div className="sm:hidden flex items-center justify-center mb-4 text-green-500/80 text-xs gap-1">
-                    <Globe className="w-3.5 h-3.5" />
-                    {language === "en" ? t.secure.en : t.secure.cn}
+                <div className="w-full flex justify-center sm:justify-end">
+                    <PrivacyBadge mode="api" />
                 </div>
-
-                {/* Input Area */}
-                <div className="w-full max-w-2xl mx-auto animate-in zoom-in-95 duration-300">
-                    {status === "success" ? (
-                        <div className="flex flex-col items-center gap-6">
-                            <div className="w-full p-6 text-center bg-green-500/10 border border-green-500/20 rounded-2xl flex flex-col items-center gap-3">
-                                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-green-400">
-                                    <CheckCircle className="w-6 h-6" />
-                                </div>
-                                <p className="text-green-400 font-medium truncate max-w-sm">
-                                    {language === "en" ? t.success.en : t.success.cn}
-                                </p>
-                            </div>
-                            <button
-                                onClick={() => { setUrl(""); setStatus("idle"); }}
-                                className="px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors font-medium"
-                            >
-                                {language === "en" ? t.btnNew.en : t.btnNew.cn}
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 sm:p-8">
-                            <form onSubmit={convertUrl} className="flex flex-col gap-6">
-                                <div className="space-y-4">
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                            <Link2 className="h-5 w-5 text-zinc-500" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            value={url}
-                                            onChange={(e) => setUrl(e.target.value)}
-                                            placeholder={language === "en" ? t.inputPlaceholder.en : t.inputPlaceholder.cn}
-                                            className="block w-full pl-11 pr-4 py-4 bg-zinc-950 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 text-zinc-100 placeholder-zinc-600 outline-none transition-all"
-                                            disabled={status === "converting"}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {status === "error" && (
-                                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-3">
-                                        <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-                                        <div className="text-sm">{errorMessage}</div>
-                                    </div>
-                                )}
-
-                                <div>
-                                    {status === "converting" ? (
-                                        <div className="w-full py-4 bg-indigo-500/20 text-indigo-400 font-semibold rounded-xl flex items-center justify-center gap-3">
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                            {language === "en" ? t.converting.en : t.converting.cn}
-                                        </div>
-                                    ) : (
-                                        <button
-                                            type="submit"
-                                            disabled={!url.trim()}
-                                            className="w-full py-4 bg-white text-zinc-950 hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white font-semibold rounded-xl transition-colors flex items-center justify-center"
-                                        >
-                                            {language === "en" ? t.btnConvert.en : t.btnConvert.cn}
-                                        </button>
-                                    )}
-                                </div>
-                            </form>
-                        </div>
-                    )}
-                </div>
+                <UrlToPdfClient />
             </div>
-
-            {/* SEO Content Section */}
-            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
-                <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "How it works" : "工作原理"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "This tool is powered by a secure, containerized Chromium engine (Gotenberg). When you submit a URL, our cloud worker fetches the webpage, renders all CSS and JavaScript just like a real browser, prints the fully loaded page to a PDF, and delivers it to you."
-                            : "本工具底层的转换引擎基于安全的容器化 Chromium (Gotenberg)。当您提交链接时，我们的云节点会像真实的浏览器一样抓取网页、渲染所有 CSS 和 JavaScript，然后将完整加载的页面导出为 PDF 并传送给您。"}
-                    </p>
-                </div>
-            </section>
+            <ToolSeoBody sections={SECTIONS} howTo={HOW_TO} useCases={USE_CASES} faqs={FAQS} />
+            <div className="w-full mt-12 sm:mt-16">
+                <RelatedTools slug="url-to-pdf" />
+            </div>
+            <Footer />
         </div>
     );
 }

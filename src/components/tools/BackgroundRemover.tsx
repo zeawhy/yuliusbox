@@ -32,8 +32,6 @@ export default function BackgroundRemover() {
         }
     }, []);
 
-    if (!isMounted) return null;
-
     const t = {
         back: { en: "Back to Tools", cn: "返回工具列表" },
         title: { en: "AI Background Remover", cn: "AI 智能抠图" },
