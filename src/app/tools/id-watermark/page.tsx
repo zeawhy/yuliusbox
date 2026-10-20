@@ -79,15 +79,15 @@ function IDWatermarkContent() {
             opacity: { en: "Opacity", cn: "透明度" },
             size: { en: "Size", cn: "大小" },
             rotate: { en: "Rotation", cn: "旋转" },
-            density: { en: "Density (Uncheck to manual)", cn: "密度" } // Simplified label
+            density: { en: "Density", cn: "密度" }
         },
         presets: [
             {
-                label: { en: "Rent", cn: "租房" },
+                label: { en: "Rental", cn: "租房" },
                 value: { en: "For rental application only - 2026", cn: "仅供 2026年办理租房业务使用 他用无效" }
             },
             {
-                label: { en: "Sim Card", cn: "办卡" },
+                label: { en: "SIM Card", cn: "办卡" },
                 value: { en: "For SIM card application only - 2026", cn: "仅供 2026年办理手机卡业务使用 他用无效" }
             },
             {
@@ -389,7 +389,7 @@ function IDWatermarkContent() {
     };
 
     return (
-        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-6xl mx-auto">
+        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
             {/* Header */}
             <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
@@ -398,15 +398,18 @@ function IDWatermarkContent() {
                 <PrivacyBadge mode="local" />
             </div>
 
-            <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column: Canvas / Preview */}
-                <div className="lg:col-span-2 space-y-4">
+            <div className="w-full grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] items-start">
+                {/* Left Column: Canvas / Preview (sticky so it stays visible while adjusting controls) */}
+                <div className="lg:sticky lg:top-6 space-y-4 min-w-0">
                     <div className="text-left space-y-2 mb-6">
                         <h1 className="text-3xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
                         <p className="text-zinc-400">{language === "en" ? t.desc.en : t.desc.cn}</p>
                     </div>
 
-                    <div className="relative w-full min-h-[400px] bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col items-center justify-center overflow-hidden group">
+                    <div className={cn(
+                        "relative w-full min-h-[400px] bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col items-center justify-center overflow-hidden group",
+                        image && "sticky top-0 z-20 lg:static"
+                    )}>
                         {!image && (
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-500 pointer-events-none">
                                 <Upload className="w-12 h-12 mb-4 opacity-50" />
@@ -430,7 +433,7 @@ function IDWatermarkContent() {
                                 {/* Ensure we show max-width of container but allow scroll if needed or just fit */}
                                 <canvas
                                     ref={canvasRef}
-                                    className="max-w-full max-h-[70vh] shadow-2xl rounded-lg"
+                                    className="max-w-full max-h-[45vh] lg:max-h-[70vh] object-contain shadow-2xl rounded-lg"
                                 />
                                 <button
                                     onClick={() => { setImage(null); setFile(null); }}
@@ -441,9 +444,9 @@ function IDWatermarkContent() {
                             </div>
                         )}
                     </div>
-                </div>
 
-                <LocalTrustNote />
+                    <LocalTrustNote />
+                </div>
 
                 {/* Right Column: Controls */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 h-fit space-y-8 animate-in fade-in slide-in-from-right-4">

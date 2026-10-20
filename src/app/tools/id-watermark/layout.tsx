@@ -20,7 +20,7 @@ const jsonLd = {
     "@type": "SoftwareApplication",
     "name": "ID Card Watermark Tool",
     "url": "https://www.yuliusbox.com/tools/id-watermark",
-    "description": "Safely add watermarks to ID cards, passports, and driver licenses locally to prevent unauthorized use.",
+    "description": "Safely add watermarks to ID cards, passports, and driver licenses locally to deter unauthorized use.",
     "applicationCategory": "Utility",
     "operatingSystem": "Web",
     "offers": {
