@@ -386,7 +386,7 @@ export function ScreenshotChecklistScenario() {
                             key={st.num}
                             className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 space-y-3 relative overflow-hidden"
                         >
-                            <div className="text-2xl font-black font-mono text-zinc-700">
+                            <div className="text-2xl font-black font-mono text-zinc-500">
                                 {st.num}
                             </div>
                             <h3 className="font-semibold text-white text-sm">

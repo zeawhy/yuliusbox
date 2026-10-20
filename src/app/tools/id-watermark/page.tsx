@@ -7,7 +7,7 @@ import IdWatermarkClient from "./IdWatermarkClient";
 
 export default function IdWatermarkPage() {
     return (
-        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+        <main className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: "/tools/id-watermark", label: "ID Watermark" }]} />
             <div className="w-full flex justify-center sm:justify-end mb-6">
@@ -18,6 +18,6 @@ export default function IdWatermarkPage() {
                 <RelatedTools slug="id-watermark" />
             </div>
             <Footer />
-        </div>
+        </main>
     );
 }

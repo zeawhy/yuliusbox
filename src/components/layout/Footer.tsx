@@ -82,7 +82,7 @@ export function Footer() {
                             href="https://ko-fi.com/yuliuslux"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-[#FF5E5B] text-white rounded-full text-sm font-bold hover:bg-[#FF5E5B]/90 transition-all"
+                            className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-[#D63A37] text-white rounded-full text-sm font-bold hover:bg-[#C93330] transition-all"
                         >
                             <Coffee className="w-4 h-4" />
                             <span>Buy me a Coffee</span>
