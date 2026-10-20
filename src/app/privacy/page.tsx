@@ -4,8 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
     title: "Privacy Policy | YuliusBox",
-    description:
-        "How YuliusBox handles your data: tools run locally in your browser, files are never uploaded, and how cookies and advertising work.",
+    description: "How YuliusBox handles your data: tools run locally in your browser, files are never uploaded, and how cookies, analytics, and advertising work on this site.",
     alternates: { canonical: "/privacy" },
     openGraph: {
         url: "/privacy",

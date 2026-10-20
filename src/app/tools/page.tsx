@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "All Free Online Tools — YuliusBox",
     description:
         "Browse all free YuliusBox tools. Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
-    alternates: { canonical: "https://www.yuliusbox.com/tools" },
+    alternates: { canonical: "/tools" },
     openGraph: {
         url: "/tools",
         siteName: "YuliusBox",

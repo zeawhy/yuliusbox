@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
     title: "Terms of Service | YuliusBox",
-    description: "The terms of service for using YuliusBox's free online tools.",
+    description: "The terms of service for YuliusBox's free online tools: what the tools do, acceptable use, availability, and liability for files you process in your browser.",
     alternates: { canonical: "/terms" },
     openGraph: {
         url: "/terms",

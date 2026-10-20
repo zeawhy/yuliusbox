@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Codec Toolbox — Base64 Encoder/Decoder, Hash & Timestamp Converter Online Free | YuliusBox",
-    description:
-        "All-in-one developer utility for Base64 text and file encoding/decoding, MD5/SHA-256/SHA-512 cryptographic hashing, and Unix timestamp epoch conversion. 100% in-browser, free, unlimited, 0 bytes uploaded.",
+    title: "Codec Toolbox — Base64, Hash & Time Tools | YuliusBox",
+    description: "Base64 encode and decode text or files, generate MD5 and SHA hashes, and convert Unix timestamps. One free developer toolbox, 100% in-browser, no uploads.",
     keywords: [
         "base64 encode",
         "base64 decode",

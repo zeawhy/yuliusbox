@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Remove EXIF Data from Photos — Free Online Metadata Cleaner | YuliusBox",
+    title: "Remove EXIF Data from Photos — Free | YuliusBox",
     description:
         "See hidden EXIF metadata in your photos (camera, GPS, timestamps) and wipe it clean with one click. Free, unlimited, 100% in-browser — nothing uploaded.",
     keywords: [

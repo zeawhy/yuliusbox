@@ -2,7 +2,7 @@
 
 import { Tool } from "@/lib/tools-data";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -49,7 +49,12 @@ export function ToolCard({ tool }: { tool: Tool }) {
 
             {!isComingSoon && (
                 <div className="mt-4 flex items-center text-sm font-medium text-zinc-400 group-hover:text-indigo-400 transition-colors">
-                    {language === "en" ? "Open Tool" : "打开工具"} <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    {language === "en" ? "Open Tool" : "打开工具"}{" "}
+                    {tool.href.startsWith("http") ? (
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                    ) : (
+                        <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    )}
                 </div>
             )}
         </>
@@ -74,6 +79,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
         <Link
             href={tool.href}
             target={tool.href.startsWith("http") ? "_blank" : undefined}
+            rel={tool.href.startsWith("http") ? "noopener nofollow" : undefined}
             className={containerClasses}
         >
             {content}

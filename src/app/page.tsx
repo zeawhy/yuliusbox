@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, UserX, BadgeCheck, Image, FileText, Film, Table, Mic, type LucideIcon } from "lucide-react";
+import { ArrowRight, ExternalLink, ShieldCheck, UserX, BadgeCheck, Image, FileText, Film, Table, Mic, type LucideIcon } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { HUB_ORDER, hubContent, slugifyHeading } from "@/lib/hub-content";
-import { toolsData } from "@/lib/tools-data";
 
 export const metadata: Metadata = {
     title: "Free Online Tools That Run in Your Browser | YuliusBox",
-    description:
-        "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
+    description: "Free online tools that run in your browser — compress images, merge PDFs, convert video to GIF, generate Excel formulas, and transcribe audio. No uploads.",
     keywords: [
         "free online tools",
         "compress image online",
@@ -37,51 +34,80 @@ export const metadata: Metadata = {
     },
 };
 
-const FAMILY_ICONS: Record<string, LucideIcon> = {
-    "image-compressor": Image,
-    "pdf-kit": FileText,
-    "video-to-gif": Film,
-    "excel-formula-bot": Table,
-    "audio-to-text": Mic,
-};
-
-const FAMILY_TAGLINES: Record<string, string> = {
-    "image-compressor": "Shrink JPG, PNG & WebP photos with no visible quality loss.",
-    "pdf-kit": "Merge multiple PDFs into one, or shrink oversized files.",
-    "video-to-gif": "Turn MP4 and MOV clips into GIFs — no watermark.",
-    "excel-formula-bot": "Describe the calculation in plain English; AI writes the formula.",
-    "audio-to-text": "Whisper AI transcription that runs 100% on your device.",
-};
-
 /**
- * Card sub-links: descriptive anchors to hub sections and long-tail pages.
- * Fragments are derived from the actual section headings, so they cannot drift.
+ * Homepage tool families — lightweight local data (name, tagline, link, icon,
+ * sub-links) instead of importing the full hub-content / tools-data modules.
+ * That keeps the homepage's data surface tiny; the full tool catalogue lives
+ * on /tools (and in the footer link columns rendered on every page).
+ * Sub-link fragments are the slugified hub section headings (see
+ * src/lib/hub-content.ts) — update them if those headings ever change.
  */
-const frag = (hubId: keyof typeof hubContent, sectionIndex: number) =>
-    `${hubContent[hubId].href}#${slugifyHeading(hubContent[hubId].sections[sectionIndex].heading)}`;
+interface ToolFamily {
+    id: string;
+    href: string;
+    name: string;
+    tagline: string;
+    icon: LucideIcon;
+    sublinks: { href: string; label: string }[];
+}
 
-const FAMILY_SUBLINKS: Record<string, { href: string; label: string }[]> = {
-    "image-compressor": [
-        { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
-        { href: frag("image-compressor", 2), label: "JPG vs PNG vs WebP guide" },
-    ],
-    "pdf-kit": [
-        { href: frag("pdf-kit", 0), label: "Merge PDF files online" },
-        { href: frag("pdf-kit", 1), label: "Why PDFs get so big" },
-    ],
-    "video-to-gif": [
-        { href: "/tools/video-to-gif", label: "MP4 to GIF converter" },
-        { href: frag("video-to-gif", 1), label: "Frame rate & size guide" },
-    ],
-    "excel-formula-bot": [
-        { href: frag("excel-formula-bot", 1), label: "Formulas it handles well" },
-        { href: frag("excel-formula-bot", 2), label: "Excel vs Google Sheets" },
-    ],
-    "audio-to-text": [
-        { href: frag("audio-to-text", 1), label: "Choosing a Whisper model tier" },
-        { href: frag("audio-to-text", 2), label: "Recording tips for accuracy" },
-    ],
-};
+const FAMILIES: ToolFamily[] = [
+    {
+        id: "image-compressor",
+        href: "/tools/image-compressor",
+        name: "Image Compressor",
+        tagline: "Shrink JPG, PNG & WebP photos with no visible quality loss.",
+        icon: Image,
+        sublinks: [
+            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
+            { href: "/tools/image-compressor#jpg-vs-png-vs-webp-which-format-to-pick", label: "JPG vs PNG vs WebP guide" },
+        ],
+    },
+    {
+        id: "pdf-kit",
+        href: "/tools/pdf-kit",
+        name: "PDF Tools",
+        tagline: "Merge multiple PDFs into one, or shrink oversized files.",
+        icon: FileText,
+        sublinks: [
+            { href: "/tools/pdf-kit#everyday-situations-that-call-for-pdf-merging", label: "Merge PDF files online" },
+            { href: "/tools/pdf-kit#why-pdf-files-get-so-big-and-how-compression-helps", label: "Why PDFs get so big" },
+        ],
+    },
+    {
+        id: "video-to-gif",
+        href: "/tools/video-to-gif",
+        name: "Video to GIF",
+        tagline: "Turn MP4 and MOV clips into GIFs — no watermark.",
+        icon: Film,
+        sublinks: [
+            { href: "/tools/video-to-gif", label: "MP4 to GIF converter" },
+            { href: "/tools/video-to-gif#dialing-in-frame-rate-size-and-length", label: "Frame rate & size guide" },
+        ],
+    },
+    {
+        id: "excel-formula-bot",
+        href: "/tools/excel-formula-bot",
+        name: "Excel Formula Bot",
+        tagline: "Describe the calculation in plain English; AI writes the formula.",
+        icon: Table,
+        sublinks: [
+            { href: "/tools/excel-formula-bot#what-it-handles-well-and-what-to-double-check", label: "Formulas it handles well" },
+            { href: "/tools/excel-formula-bot#excel-vs-google-sheets-why-the-platform-toggle-matters", label: "Excel vs Google Sheets" },
+        ],
+    },
+    {
+        id: "audio-to-text",
+        href: "/tools/audio-to-text",
+        name: "Audio to Text",
+        tagline: "Whisper AI transcription that runs 100% on your device.",
+        icon: Mic,
+        sublinks: [
+            { href: "/tools/audio-to-text#choosing-a-model-tier-tiny-base-or-small", label: "Choosing a Whisper model tier" },
+            { href: "/tools/audio-to-text#getting-accurate-transcripts-recording-matters-more-than-settings", label: "Recording tips for accuracy" },
+        ],
+    },
+];
 
 const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
     { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
@@ -138,29 +164,28 @@ export default function Home() {
                 {/* Tool family cards */}
                 <section aria-label="Tool families">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {HUB_ORDER.map((id) => {
-                            const hub = hubContent[id];
-                            const Icon = FAMILY_ICONS[id];
+                        {FAMILIES.map((family) => {
+                            const Icon = family.icon;
                             return (
                                 <article
-                                    key={id}
+                                    key={family.id}
                                     className="group rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6 hover:border-zinc-600 hover:bg-zinc-900 transition-all flex flex-col"
                                 >
-                                    <Link href={hub.href} className="flex items-start gap-4 mb-3">
+                                    <Link href={family.href} className="flex items-start gap-4 mb-3">
                                         <span className="p-2.5 rounded-xl bg-zinc-800 border border-zinc-700 shrink-0">
                                             <Icon className="w-5 h-5 text-zinc-200" />
                                         </span>
                                         <span>
                                             <h2 className="text-lg font-semibold text-white group-hover:underline underline-offset-4">
-                                                {hub.crumb}
+                                                {family.name}
                                             </h2>
                                             <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
-                                                {FAMILY_TAGLINES[id]}
+                                                {family.tagline}
                                             </p>
                                         </span>
                                     </Link>
                                     <ul className="mt-auto pt-3 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-zinc-800/70">
-                                        {FAMILY_SUBLINKS[id].map((sub) => (
+                                        {family.sublinks.map((sub) => (
                                             <li key={sub.label}>
                                                 <Link
                                                     href={sub.href}
@@ -187,11 +212,11 @@ export default function Home() {
                                     <a
                                         href={link.href}
                                         target="_blank"
-                                        rel="noopener noreferrer"
+                                        rel="noopener nofollow"
                                         className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
                                     >
                                         {link.label}
-                                        <ArrowRight className="w-3.5 h-3.5" />
+                                        <ExternalLink className="w-3.5 h-3.5" />
                                     </a>
                                 </li>
                             ) : (
@@ -216,56 +241,25 @@ export default function Home() {
                     </p>
                 </section>
 
-                {/* All tools by category — compact navigation grid for crawlers and users */}
-                {(() => {
-                    const CATEGORY_ORDER: { key: "media" | "productivity" | "developer"; label: string }[] = [
-                        { key: "media", label: "Media" },
-                        { key: "productivity", label: "Productivity" },
-                        { key: "developer", label: "Developer" },
-                    ];
-                    const activeTools = toolsData.filter((t) => !t.comingSoon);
-                    return (
-                        <section aria-label="All tools">
-                            <h2 className="text-2xl font-bold text-white mb-6">All tools</h2>
-                            <div className="flex flex-col gap-6">
-                                {CATEGORY_ORDER.map(({ key, label }) => {
-                                    const tools = activeTools.filter((t) => t.category === key);
-                                    if (tools.length === 0) return null;
-                                    return (
-                                        <div key={key}>
-                                            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
-                                            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                                                {tools.map((tool) => (
-                                                    <li key={tool.id}>
-                                                        {tool.href.startsWith("http") ? (
-                                                            <a
-                                                                href={tool.href}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 hover:bg-zinc-900 transition-all min-h-[44px]"
-                                                            >
-                                                                <tool.icon className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
-                                                                <span className="truncate">{tool.name.en}</span>
-                                                            </a>
-                                                        ) : (
-                                                            <Link
-                                                                href={tool.href}
-                                                                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 hover:bg-zinc-900 transition-all min-h-[44px]"
-                                                            >
-                                                                <tool.icon className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
-                                                                <span className="truncate">{tool.name.en}</span>
-                                                            </Link>
-                                                        )}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </section>
-                    );
-                })()}
+                {/* All tools — the full categorized grid lives on /tools (and in
+                    the footer below) instead of being rendered twice on the
+                    homepage; that duplication was the main driver of the
+                    homepage's ~153KB HTML (grid markup + its RSC flight copy). */}
+                <section aria-label="All tools">
+                    <h2 className="text-2xl font-bold text-white mb-4">All tools</h2>
+                    <p className="text-zinc-400 leading-relaxed max-w-2xl mb-6">
+                        Looking for something specific? The full directory lists every
+                        YuliusBox tool grouped by category — media, productivity, and
+                        developer tools.
+                    </p>
+                    <Link
+                        href="/tools"
+                        className="group inline-flex items-center gap-2 px-5 py-3 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm font-medium text-zinc-200 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
+                    >
+                        Browse all tools
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </section>
 
                 {/* How it works */}
                 <section aria-label="How it works" className="max-w-3xl">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Log Sanitizer — Redact Secrets from HAR Files & Logs Online Free | YuliusBox",
+    title: "Log Sanitizer — Redact Secrets from Logs | YuliusBox",
     description:
         "Redact Bearer tokens, cookies, phone numbers, resident IDs, emails, and query secrets from HAR files and logs instantly. Free, unlimited, 100% in-browser.",
     keywords: [

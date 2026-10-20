@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.yuliusbox.com"),
   title: "YuliusBox - Privacy-First Web Tools",
-  description: "A collection of free, client-side, and secure utilities for productivity.",
+  description: "Free online tools that run in your browser: compress images, merge PDFs, convert video to GIF, and transcribe audio. No uploads, no accounts, no tracking.",
   alternates: {
     // NOTE: this canonical only applies to "/". Every route that wants to be
     // indexed must define its own `alternates.canonical`, otherwise it will

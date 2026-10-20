@@ -17,9 +17,9 @@ export const removeImageMetadata: LongTailContent = {
     h1: "Remove Image Metadata Before You Post — Free",
     subtitle:
         "Every photo carries hidden data: camera, timestamps, sometimes your GPS location. Strip it all before the image goes public — free, in your browser.",
-    metaTitle: "Remove Image Metadata Online Free — Before You Post | YuliusBox",
+    metaTitle: "Remove Image Metadata Online — Free | YuliusBox",
     metaDescription:
-        "Strip hidden EXIF, IPTC & XMP metadata from photos before posting or selling online. Free, unlimited, 100% in-browser — nothing uploaded.",
+        "Strip hidden EXIF, IPTC, and XMP metadata from photos before posting or selling them online. Free, unlimited, 100% in-browser — nothing is ever uploaded.",
     keywords: [
         "remove image metadata",
         "remove metadata from image",

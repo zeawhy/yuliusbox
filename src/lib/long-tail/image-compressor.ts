@@ -216,7 +216,7 @@ export const convertImageToWebp: LongTailContent = {
         "Convert JPG and PNG images to genuine WebP files in your browser. Smaller files, same look — perfect for faster websites. Free, unlimited, no upload.",
     metaTitle: "Convert Image to WebP Online Free — Real .webp Output",
     metaDescription:
-        "Turn JPG and PNG images into real WebP files right in your browser — typically 25–35% smaller at the same quality. Free, private, no signup.",
+        "Turn JPG and PNG images into real WebP files right in your browser — typically 25–35% smaller at the same quality. Free, private, no sign-up, no uploads.",
     keywords: [
         "convert image to webp",
         "jpg to webp converter",
@@ -316,7 +316,7 @@ export const compressPhotosForEmail: LongTailContent = {
         "Shrink a whole photo shoot to email-friendly sizes in your browser. Beat Gmail and Outlook attachment limits without zipping, linking, or signing up.",
     metaTitle: "Compress Photos for Email — Beat Attachment Limits Free",
     metaDescription:
-        "Batch-compress photos to ~1MB each for email and stay under Gmail's 25MB and Outlook's attachment limits. Free, unlimited, private.",
+        "Batch-compress photos to about 1MB each for email and stay under Gmail's 25MB and Outlook's attachment limits. Free, unlimited, and private in your browser.",
     keywords: [
         "compress photos for email",
         "reduce photo size for email",
@@ -416,7 +416,7 @@ export const compressImagesForWebsites: LongTailContent = {
         "Slim down hero images, blog graphics, and product shots for faster pages. Hit sensible size targets that keep Google's Core Web Vitals happy.",
     metaTitle: "Compress Images for Websites — Faster Pages, Better SEO",
     metaDescription:
-        "Shrink website images to ~0.5MB for faster load times and better Core Web Vitals. Free in-browser compression — no upload, no signup, unlimited use.",
+        "Shrink website images to about 0.5MB for faster load times and better Core Web Vitals. Free in-browser compression — no upload, no sign-up, unlimited use.",
     keywords: [
         "compress images for website",
         "optimize images for web",
@@ -515,7 +515,7 @@ export const compressPngOnline: LongTailContent = {
         "Shrink PNG screenshots, graphics, and logos without wrecking them. Free in-browser compression with full manual control — no upload, no signup.",
     metaTitle: "Compress PNG Online Free — Shrink Screenshots & Graphics",
     metaDescription:
-        "Reduce PNG file sizes in your browser — screenshots, UI graphics, and logos with transparency intact. Free, unlimited, private: no uploads ever.",
+        "Reduce PNG file sizes in your browser — screenshots, UI graphics, and logos with transparency kept intact. Free, unlimited, private: no uploads, ever.",
     keywords: [
         "compress png online",
         "reduce png file size",
@@ -607,9 +607,9 @@ export const compressImageTo1mb: LongTailContent = {
     h1: "Compress Image to 1MB — Free Online",
     subtitle:
         "Job portals, government forms, and forums cap uploads at 1MB. Shrink any photo under the limit with no visible quality loss — free, private, in your browser.",
-    metaTitle: "Compress Image to 1MB Online Free — No Quality Loss | YuliusBox",
+    metaTitle: "Compress Image to 1MB Online Free | YuliusBox",
     metaDescription:
-        "Upload form rejecting your photo? Compress any JPG, PNG, or WebP under 1MB with no visible quality loss. Free, unlimited, 100% in-browser.",
+        "Upload form rejecting your photo? Compress any JPG, PNG, or WebP image to under 1MB with no visible quality loss. Free, unlimited, 100% in your browser.",
     keywords: [
         "compress image to 1mb",
         "reduce image size to 1mb",

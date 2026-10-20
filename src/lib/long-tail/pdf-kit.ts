@@ -25,7 +25,7 @@ export const mergePdfOnline: LongTailContent = {
         "Combine multiple PDFs into one file, in whatever order you choose. Perfect for application bundles, reports, and scanned pages — free and private.",
     metaTitle: "Merge PDF Online Free — Combine PDFs in Order | YuliusBox",
     metaDescription:
-        "Combine multiple PDFs into one file in your custom order — application bundles, reports, scanned pages. Free, unlimited, 100% private.",
+        "Combine multiple PDFs into one file in your custom order — application bundles, reports, scanned pages. Free, unlimited, 100% private, nothing uploaded.",
     keywords: [
         "merge pdf online",
         "combine pdf files",
@@ -124,7 +124,7 @@ export const jpgToPdfConverter: LongTailContent = {
         "Turn phone photos of documents into a single clean PDF — one image per full page. Receipts, contracts, whiteboards: free, private, no signup.",
     metaTitle: "JPG to PDF Converter Free — Photos to One PDF | YuliusBox",
     metaDescription:
-        "Convert multiple JPGs into one PDF — one image per full-size page. Phone scans, receipts, contracts. Free, unlimited, private: in your browser.",
+        "Convert multiple JPGs into one PDF — one image per full-size page. Phone scans, receipts, and contracts. Free, unlimited, and private: runs in your browser.",
     keywords: [
         "jpg to pdf converter",
         "convert jpg to pdf",
@@ -224,7 +224,7 @@ export const splitPdfOnline: LongTailContent = {
         "Break a PDF into separate one-page files, bundled as a single ZIP download. Free, unlimited, and private — split right in your browser.",
     metaTitle: "Split PDF Online Free — Every Page as Its Own File",
     metaDescription:
-        "Split a PDF so every page becomes its own file, bundled in one ZIP. Free, unlimited, private — your document never leaves your browser.",
+        "Split a PDF so every page becomes its own file, bundled in one ZIP download. Free, unlimited, and private — your document never leaves your browser at all.",
     keywords: [
         "split pdf online",
         "split pdf into separate pages",
@@ -323,7 +323,7 @@ export const extractPagesFromPdf: LongTailContent = {
         "Pull exactly the pages you need from a large PDF — a chapter, a clause, a form — into one new file. Type a range, download, done.",
     metaTitle: "Extract Pages from PDF Free — Pull Any Range | YuliusBox",
     metaDescription:
-        "Extract pages from a PDF into one new file — type ranges like “1-3, 5, 8-10”. Free, unlimited, private: runs entirely in your browser.",
+        "Extract pages from a PDF into one new file — type ranges like 1-3, 5, 8-10. Free, unlimited, and private: the whole job runs entirely in your browser.",
     keywords: [
         "extract pages from pdf",
         "pull pages out of pdf",
@@ -418,7 +418,7 @@ export const compressPdfOnline: LongTailContent = {
         "Slim down PDFs with an honest metadata cleanup — no recompression, no quality loss. Free, private, and clear about what it does.",
     metaTitle: "Compress PDF Online Free — Honest Metadata Cleanup",
     metaDescription:
-        "Shrink PDFs by stripping excess metadata — title, author, and hidden bloat. Honest tool: content untouched, quality unchanged. Free and private.",
+        "Shrink PDFs by stripping excess metadata — title, author, and hidden bloat. An honest tool: content untouched, quality unchanged. Free and fully private.",
     keywords: [
         "compress pdf online",
         "reduce pdf file size",
@@ -515,9 +515,9 @@ export const compressPdfForEmail: LongTailContent = {
     h1: "Compress PDF for Email — Beat the 25MB Attachment Limit",
     subtitle:
         "Gmail rejects attachments over 25MB — and a 20MB file can bounce anyway. Trim your PDF's hidden bloat, free and private, right in your browser.",
-    metaTitle: "Compress PDF for Email — Fix the 25MB Attachment Limit | YuliusBox",
+    metaTitle: "Compress PDF for Email — Beat the 25MB Limit | YuliusBox",
     metaDescription:
-        "Attachment bouncing at 25MB? Shrink your PDF with an honest metadata cleanup before sending. Free, unlimited, 100% in-browser — nothing uploaded.",
+        "Attachment bouncing at 25MB? Shrink your PDF with an honest metadata cleanup before sending it. Free, unlimited, 100% in-browser — nothing gets uploaded.",
     keywords: [
         "compress pdf for email",
         "reduce pdf size for email attachment",

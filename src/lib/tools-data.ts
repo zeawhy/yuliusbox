@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, FileVideo, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare, Binary, ScanEye } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare, Binary, ScanEye } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -408,22 +408,6 @@ export const toolsData: Tool[] = [
         href: "/tools/speed-test",
         popular: true,
         keywords: ["speed test", "internet speed", "ping", "download speed", "upload speed", "bandwidth", "latency"],
-    },
-    {
-        id: "video-downloader",
-        category: "media",
-        name: {
-            en: "Social Media Video Downloader",
-            cn: "无水印视频解析下载"
-        },
-        description: {
-            en: "Extract and download videos from YouTube, TikTok, Instagram, Twitter, etc. without watermarks.",
-            cn: "免费解析下载 YouTube, TikTok, Instagram, Twitter 等社交媒体的高清无水印视频。"
-        },
-        icon: FileVideo,
-        href: "/tools/video-downloader",
-        popular: true,
-        keywords: ["download", "video downloader", "youtube download", "tiktok download", "instagram", "twitter", "no watermark"],
     },
     {
         id: "word-to-pdf",

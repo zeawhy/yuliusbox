@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "SVG Optimizer — Compress & Minify SVG Online Free | YuliusBox",
+    title: "SVG Optimizer — Compress & Minify SVG Free | YuliusBox",
     description:
         "Shrink SVG files instantly in your browser. Remove editor bloat, comments, and hidden layers, round decimal precision, and preview before/after. 100% private.",
     keywords: [

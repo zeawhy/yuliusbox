@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "JWT Decoder — Decode & Inspect JSON Web Tokens Online Free | YuliusBox",
-    description:
-        "Paste a JWT to decode its header, claims, and expiry times instantly. Free, unlimited, 100% in-browser — your token is never uploaded to any server.",
+    title: "JWT Decoder — Decode & Inspect Tokens Free | YuliusBox",
+    description: "Paste a JWT to decode its header, claims, and expiry times instantly. Free, unlimited, 100% in-browser — your token never leaves your device or gets logged.",
     keywords: [
         "jwt decoder",
         "jwt decode online",

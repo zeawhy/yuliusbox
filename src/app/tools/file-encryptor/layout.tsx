@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "File Encryptor — AES-256 File Encryption Online Free | YuliusBox",
-    description:
-        "Encrypt any file with AES-256-GCM in your browser. PBKDF2 key derivation, password-protected .enc files — 100% local, nothing uploaded.",
+    title: "File Encryptor — AES-256, No Upload | YuliusBox",
+    description: "Encrypt any file with AES-256-GCM encryption in your browser. PBKDF2 key derivation and password-protected .enc files — 100% local, nothing ever uploaded.",
     keywords: [
         "file encryptor",
         "encrypt file online",

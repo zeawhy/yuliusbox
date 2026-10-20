@@ -2,8 +2,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Bulk Image Compressor - Compress JPG/PNG to 80% Smaller | YuliusBox",
-    description: "Free unlimited bulk image compression. Reduce file size locally in your browser without losing quality. No upload limits.",
+    title: "Image Compressor — Compress JPG & PNG Free | YuliusBox",
+    description: "Compress unlimited JPG, PNG, and WebP images in bulk, right in your browser. Shrink file size with no visible quality loss, no upload limits, and no fees.",
     keywords: ["compress image", "reduce jpg size", "image optimizer online", "privacy first compressor"],
     alternates: {
         canonical: "/tools/image-compressor",
