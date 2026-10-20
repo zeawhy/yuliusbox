@@ -36,7 +36,7 @@ export const removeImageMetadata: LongTailContent = {
             heading: "“Metadata” is bigger than EXIF",
             paragraphs: [
                 "EXIF is the famous one — camera model, shutter speed, timestamps — but a modern photo carries three more metadata systems most people never hear about: IPTC (captions, keywords, copyright), XMP (editing history, sometimes entire Lightroom adjustment stacks), and embedded thumbnails that can survive even after you crop the visible image.",
-                "This page's cleaner removes all of them from the downloaded copy, not just EXIF. JPEG EXIF segments are stripped directly from the file; other formats are re-encoded from pixel data, so the output carries no EXIF, IPTC or XMP fields. You can check the result yourself: run the cleaned file through the viewer again and you'll see what fields remain.",
+                "This page's cleaner removes all of them from the downloaded copy, not just EXIF. JPEG metadata segments (EXIF, XMP, IPTC) are stripped directly from the file; other formats are re-encoded from pixel data, so the output carries no EXIF, IPTC or XMP fields. You can check the result yourself: run the cleaned file through the viewer again and you'll see what fields remain.",
             ],
         },
         {

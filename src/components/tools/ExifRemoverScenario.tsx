@@ -79,7 +79,7 @@ export function ExifRemoverScenario() {
             ],
             afterTag: { en: "Cleaned Pixel Copy • After", cn: "清理后：纯净像素版本" },
             afterPoints: [
-                { en: "Removes EXIF, GPS, IPTC and XMP metadata from the downloaded copy — JPEG EXIF segments are stripped directly, other formats are re-encoded from pixel data.", cn: "从下载副本中移除 EXIF、GPS、IPTC 与 XMP 元数据——JPEG 直接剥离 EXIF 段，其他格式由像素重新编码。" },
+                { en: "Removes EXIF, GPS, IPTC and XMP metadata from the downloaded copy — JPEG metadata segments (EXIF, XMP, IPTC) are stripped directly, other formats are re-encoded from pixel data.", cn: "从下载副本中移除 EXIF、GPS、IPTC 与 XMP 元数据——JPEG 直接剥离元数据段（EXIF、XMP、IPTC），其他格式由像素重新编码。" },
                 { en: "No device model, serial number or timestamp fields in the downloaded copy.", cn: "下载副本中不含设备型号、序列号或时间戳字段。" },
                 { en: "Same visible image: JPEG keeps its original compression on the lossless path; PNG copies are re-encoded losslessly.", cn: "画面内容不变：JPEG 在无损路径下保持原始压缩；PNG 副本无损重新编码。" }
             ]

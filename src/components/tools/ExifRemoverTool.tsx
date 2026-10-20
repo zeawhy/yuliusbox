@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect, Suspense } from "react";
 import exifr from "exifr";
 import JSZip from "jszip";
+import { stripJpegMetadata } from "@/lib/jpeg-metadata";
 import { useChainFile } from "@/lib/use-chain-file";
 import {
     Upload, Download, Trash2, ShieldCheck, ShieldAlert, MapPin,
@@ -112,76 +113,24 @@ async function readMetadata(file: File): Promise<MetaSummary> {
 }
 
 /**
- * Strip EXIF/APP1 segments from a JPEG binary without re-encoding.
- * This preserves the original compression, so the output is never larger
- * than the input (it only gets smaller by the removed segment sizes).
- * Returns null if the data is not a valid JPEG or has no APP1 segments.
+ * Strip metadata segments (EXIF APP1, XMP APP1, and Photoshop APP13 containing IPTC)
+ * from a JPEG binary without re-encoding pixels.
+ * Preserves the original compression and image data after SOS 100% byte-for-byte.
+ * Returns null if the data is not a valid JPEG or has no metadata segments to strip.
  */
-function stripJpegApp1(buffer: ArrayBuffer): ArrayBuffer | null {
-    const data = new Uint8Array(buffer);
-    // Must start with SOI (FFD8)
-    if (data.length < 4 || data[0] !== 0xff || data[1] !== 0xd8) return null;
-
-    const out: number[] = [0xff, 0xd8];
-    let pos = 2;
-    let removedAny = false;
-
-    while (pos + 4 <= data.length) {
-        if (data[pos] !== 0xff) break; // Not a marker, stop parsing
-        const marker = data[pos + 1];
-        // Standalone markers (no length): RST0-7, SOI, EOI, TEM
-        if (marker === 0xd9) {
-            // EOI: copy rest and finish
-            for (let i = pos; i < data.length; i++) out.push(data[i]);
-            break;
-        }
-        if (marker === 0xda) {
-            // SOS: copy everything from here to end (compressed data)
-            for (let i = pos; i < data.length; i++) out.push(data[i]);
-            break;
-        }
-        if ((marker >= 0xd0 && marker <= 0xd7) || marker === 0x01) {
-            out.push(0xff, marker);
-            pos += 2;
-            continue;
-        }
-        // Markers with length
-        if (pos + 4 > data.length) break;
-        const len = (data[pos + 2] << 8) | data[pos + 3];
-        if (len < 2 || pos + 2 + len > data.length) break;
-
-        const isApp1 = marker === 0xe1;
-        let isExif = false;
-        if (isApp1 && len >= 8) {
-            // Check for "Exif\0\0" header
-            isExif =
-                data[pos + 4] === 0x45 && // E
-                data[pos + 5] === 0x78 && // x
-                data[pos + 6] === 0x69 && // i
-                data[pos + 7] === 0x66;   // f
-        }
-
-        if (isExif) {
-            // Skip this APP1/EXIF segment
-            removedAny = true;
-        } else {
-            // Copy segment as-is
-            for (let i = pos; i < pos + 2 + len; i++) out.push(data[i]);
-        }
-        pos += 2 + len;
-    }
-
-    if (!removedAny) return null;
-    return new Uint8Array(out).buffer;
+function stripJpegSegments(buffer: ArrayBuffer): ArrayBuffer | null {
+    const result = stripJpegMetadata(buffer);
+    if (!result || !result.removedAny) return null;
+    return result.buffer;
 }
 
-/** Strip all metadata by re-encoding through canvas (pixel data only). */
+/** Strip all metadata by lossless JPEG segment stripping or re-encoding through canvas (pixel data only). */
 async function stripImage(file: File): Promise<Blob> {
-    // For JPEG: try binary APP1 stripping first (lossless, never inflates size)
+    // For JPEG: try binary metadata stripping first (lossless, never inflates size)
     if (file.type === "image/jpeg" || /\.jpe?g$/i.test(file.name)) {
         try {
             const buffer = await file.arrayBuffer();
-            const stripped = stripJpegApp1(buffer);
+            const stripped = stripJpegSegments(buffer);
             if (stripped) {
                 return new Blob([stripped], { type: "image/jpeg" });
             }

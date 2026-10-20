@@ -16,7 +16,7 @@ const FAQS = [
     },
     {
         q: "Does removing EXIF reduce image quality?",
-        a: "For JPEGs, the tool removes the EXIF segment directly without re-encoding, so the original compression and quality are kept. Other formats are re-encoded from pixel data (JPEG/WebP at 95% quality, PNG losslessly). The pixels stay the same; the hidden metadata is removed from the downloaded copy. Always keep your original file archived.",
+        a: "For JPEGs, the tool removes metadata segments (EXIF, XMP, IPTC) directly without re-encoding, so the original compression and quality are kept. Other formats are re-encoded from pixel data (JPEG/WebP at 95% quality, PNG losslessly). The pixels stay the same; the hidden metadata is removed from the downloaded copy. Always keep your original file archived.",
     },
     {
         q: "Can you detect AI-generated images?",
@@ -86,7 +86,7 @@ export default function ExifRemoverPage() {
                     <p>
                         The tool first reads the file with a metadata parser and shows you a plain-language
                         summary: device, dates, software, and a red flag if GPS coordinates are present. When
-                        you hit clean, JPEG EXIF segments are removed directly from the file without
+                        you hit clean, JPEG metadata segments (EXIF, XMP, IPTC) are removed directly from the file without
                         re-encoding; other formats are redrawn from pixel data onto a canvas and re-encoded,
                         so the downloaded copy carries no EXIF, GPS, IPTC or XMP metadata. Removing metadata
                         can&apos;t hide landmarks, faces or text visible in the photo itself.
