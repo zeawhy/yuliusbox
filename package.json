@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "node --no-warnings --test tests/**/*.test.mjs",
     "indexnow": "node scripts/indexnow.mjs",
-    "prebuild": "node scripts/sitemap-lastmod.mjs"
+    "prebuild": "node scripts/sitemap-lastmod.mjs",
+    "seo-check": "node --no-warnings --experimental-strip-types scripts/seo-check.ts"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",

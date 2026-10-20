@@ -8,7 +8,7 @@ import { ToolSeoBody } from "@/components/tools/ToolSeoBody";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 
 export const metadata: Metadata = {
-    title: "Free YouTube Title Generator & SEO Optimizer (AI Powered) | YuliusBox",
+    title: "YouTube Title Generator & SEO Optimizer | YuliusBox",
     description: "Generate video title ideas and SEO tags for YouTube using AI. Get several title angles for one topic and a ready-to-paste tag list. Free, no sign-up.",
     keywords: ["youtube title generator", "video tag finder", "clickbait title maker", "youtube seo tool"],
     alternates: {
@@ -18,6 +18,14 @@ export const metadata: Metadata = {
         url: "/tools/youtube-optimizer",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-youtube-optimizer.png",
+                width: 1200,
+                height: 630,
+                alt: "YouTube Title Generator & SEO Optimizer",
+            },
+        ],
     },
 };
 

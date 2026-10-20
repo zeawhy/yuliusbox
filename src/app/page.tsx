@@ -212,7 +212,7 @@ export default function Home() {
                                     <a
                                         href={link.href}
                                         target="_blank"
-                                        rel="noopener nofollow"
+                                        rel="noopener noreferrer"
                                         className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
                                     >
                                         {link.label}

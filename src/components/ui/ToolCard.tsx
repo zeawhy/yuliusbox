@@ -79,7 +79,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
         <Link
             href={tool.href}
             target={tool.href.startsWith("http") ? "_blank" : undefined}
-            rel={tool.href.startsWith("http") ? "noopener nofollow" : undefined}
+            rel={tool.href.startsWith("http") ? "noopener noreferrer" : undefined}
             className={containerClasses}
         >
             {content}
