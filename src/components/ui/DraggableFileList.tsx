@@ -63,8 +63,9 @@ export function DraggableFileList({ files, onReorder, onRemove, labels }: Dragga
                                     >
                                         <div
                                             {...provided.dragHandleProps}
-                                            className="p-2 text-zinc-600 hover:text-zinc-300 cursor-grab active:cursor-grabbing rounded-lg hover:bg-zinc-800/50 transition-colors"
+                                            className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-600 hover:text-zinc-300 cursor-grab active:cursor-grabbing rounded-lg hover:bg-zinc-800/50 transition-colors"
                                             title={labels.dragHandle}
+                                            aria-label={labels.dragHandle}
                                         >
                                             <GripVertical className="w-5 h-5" />
                                         </div>
@@ -80,8 +81,9 @@ export function DraggableFileList({ files, onReorder, onRemove, labels }: Dragga
 
                                         <button
                                             onClick={() => onRemove(fileObj.id)}
-                                            className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                            className="p-2 min-w-[44px] min-h-[44px] inline-flex items-center justify-center text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                             title={labels.remove}
+                                            aria-label={labels.remove}
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>

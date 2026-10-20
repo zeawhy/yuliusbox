@@ -19,7 +19,7 @@ export function Footer() {
     const activeTools = toolsData.filter((t) => !t.comingSoon);
 
     return (
-        <footer className="w-full py-12 mt-24 border-t border-zinc-900 text-zinc-500">
+        <footer className="w-full py-12 mt-24 border-t border-zinc-900 text-zinc-400">
             {/* Tool link columns by category */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
                 {FOOTER_CATEGORIES.map(({ key, label }) => {
@@ -81,7 +81,7 @@ export function Footer() {
                             href="https://ko-fi.com/yuliuslux"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-[#FF5E5B] text-white rounded-full text-sm font-bold hover:bg-[#FF5E5B]/90 transition-all"
+                            className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-[#FF5E5B] text-white rounded-full text-sm font-bold hover:bg-[#FF5E5B]/90 transition-all"
                         >
                             <Coffee className="w-4 h-4" />
                             <span>Buy me a Coffee</span>
@@ -90,7 +90,7 @@ export function Footer() {
                             href="https://paypal.me/yuliuslux"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-[#0070BA] text-white rounded-full text-sm font-bold hover:bg-[#0070BA]/90 transition-all"
+                            className="flex items-center gap-2 px-4 py-2 min-h-[44px] bg-[#0070BA] text-white rounded-full text-sm font-bold hover:bg-[#0070BA]/90 transition-all"
                         >
                             <span>PayPal</span>
                         </a>
@@ -106,14 +106,14 @@ export function Footer() {
                         href="https://x.com/yuliuslux"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-white transition-colors"
+                        className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] -m-3 hover:text-white transition-colors"
                         aria-label="X (Twitter)"
                     >
                         <Twitter className="w-5 h-5" />
                     </a>
                     <a
                         href="mailto:support@yuliusbox.com"
-                        className="hover:text-white transition-colors"
+                        className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] -m-3 hover:text-white transition-colors"
                         aria-label="Email support@yuliusbox.com"
                     >
                         <Mail className="w-5 h-5" />

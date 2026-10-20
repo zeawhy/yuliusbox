@@ -30,8 +30,9 @@ export function CategoryTabs({ activeCategory, onCategoryChange }: CategoryTabsP
                     <button
                         key={cat.id}
                         onClick={() => onCategoryChange(cat.id as any)}
+                        aria-pressed={isActive}
                         className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300",
+                            "flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-xl text-sm font-bold transition-all duration-300",
                             isActive
                                 ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] scale-105"
                                 : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"

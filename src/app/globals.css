@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* Shared a11y: many shared components (icon buttons, footer links, tabs)
+   only define hover styles. Give keyboard users a visible focus indicator
+   everywhere without changing mouse appearance. */
+:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
