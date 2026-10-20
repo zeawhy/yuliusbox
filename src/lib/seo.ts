@@ -24,25 +24,18 @@
 // To re-index a tool later: remove its path from the list below and redeploy.
 
 export const NOINDEX_TOOL_PATHS: string[] = [
-    "/tools/background-remover",
     "/tools/color-palette",
     "/tools/cron-generator",
     "/tools/email-paraphraser",
-    "/tools/excel-to-pdf",
-    "/tools/image-editor",
     "/tools/image-grid-joiner",
-    "/tools/image-grid-splitter",
     "/tools/json-to-code",
-    "/tools/ppt-to-pdf",
-    "/tools/privacy-generator",
     "/tools/regex-generator",
     "/tools/safe-zone-overlay",
+    // speed-test keeps noindex for now: it received the SSR shell fix but
+    // not the full content upgrade in the 2026-10-20 page-upgrade batch.
     "/tools/speed-test",
     "/tools/sql-builder",
-    "/tools/url-to-pdf",
     "/tools/video-downloader",
-    "/tools/word-to-pdf",
-    "/tools/youtube-optimizer",
 ];
 
 // The 6 tools that REMAIN indexable (English-first focus, per the merged

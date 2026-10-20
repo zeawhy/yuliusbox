@@ -1,78 +1,93 @@
-"use client";
-
-import { ArrowLeft, ShieldCheck } from "lucide-react";
-import Link from "next/link";
-import { useLanguage } from "@/context/LanguageContext";
-import { FileUploadZone } from "@/components/FileUploadZone";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import { ToolSeoBody } from "@/components/tools/ToolSeoBody";
+import { RelatedTools } from "@/components/tools/RelatedTools";
+import PptToPdfClient from "./PptToPdfClient";
+
+const SECTIONS = [
+    {
+        heading: "Turn a slide deck into a PDF anyone can open",
+        paragraphs: [
+            "PowerPoint files are only convenient if the other person has PowerPoint. Teachers, conference organisers, clients and printers routinely ask for a PDF instead, because every slide becomes a fixed page that cannot shift fonts, reorder animations or break on a different version of Office. This converter takes a .ppt or .pptx deck and produces a PDF with one page per slide, keeping your layouts, images and charts where you put them.",
+            "Rendering a presentation faithfully takes a real office engine, which is more than a browser tab can do by itself. So this tool converts on our server rather than on your device, and it is labelled that way above the upload box. What that means for your file is explained in the next section and repeated in the FAQ — the short version is: uploaded, converted in memory, returned, not stored.",
+        ],
+    },
+    {
+        heading: "How your presentation is handled during conversion",
+        paragraphs: [
+            "Your deck is sent over HTTPS to our conversion endpoint, which forwards it in memory to a LibreOffice-based conversion service (Gotenberg). The route never writes the file to disk or to a database; it exists only while the conversion runs, the finished PDF is streamed back to your browser, and no copy of the presentation or the PDF is retained afterwards. The server accepts presentations up to 50 MB and limits conversions to 5 requests per minute per IP address.",
+            "Because the file does leave your device, do not use this tool for decks you are not allowed to upload anywhere — unreleased product plans under NDA are the classic example. For coursework, talks, sales decks and handouts, the handling described above applies exactly as written.",
+        ],
+    },
+];
+
+const HOW_TO = [
+    "Click the upload area or drag your .ppt or .pptx presentation onto it. Files up to 50 MB are accepted.",
+    "Confirm the file name and size match the deck you want to convert.",
+    "Start the conversion. The presentation is uploaded to the conversion server, rendered slide by slide, and the PDF download begins automatically.",
+    "Open the PDF and flip through a few slides — especially dense ones with charts or small text — to check everything rendered as expected.",
+    "Share or print the PDF, or convert another deck with the same steps.",
+];
+
+const USE_CASES = [
+    "Emailing slides to attendees after a talk, in a format that opens on any device without PowerPoint.",
+    "Submitting coursework or a thesis defence deck through a portal that only accepts PDF.",
+    "Sending a sales or pitch deck to a client whose Office version might otherwise reflow your layouts.",
+    "Printing handouts: one slide per page, exactly as designed.",
+    "Archiving a finished presentation alongside its PDF so it stays readable even without Office.",
+];
+
+const FAQS = [
+    {
+        question: "Is my presentation uploaded to a server?",
+        answer: "Yes. Converting PowerPoint files faithfully requires an office rendering engine, so your deck is uploaded over HTTPS and forwarded in memory to a LibreOffice-based conversion service (Gotenberg). The file is not written to disk or stored in a database, and nothing is kept after the PDF has been returned to you.",
+    },
+    {
+        question: "How long are uploaded files kept?",
+        answer: "They are not kept. The presentation exists in server memory only for the duration of the conversion request. Once the PDF response has been sent, there is no stored copy of your deck or of the PDF.",
+    },
+    {
+        question: "What is the maximum presentation size?",
+        answer: "The server accepts .ppt and .pptx files up to 50 MB. Decks with embedded video are usually much larger and are not a good fit — remove or link the video first if your file exceeds the limit.",
+    },
+    {
+        question: "What happens to animations and speaker notes?",
+        answer: "The PDF contains one static page per slide, so animations, transitions and videos do not play in the output — the final state of each slide is what gets rendered. If a build animation reveals content step by step, consider duplicating the slide per step before converting.",
+    },
+    {
+        question: "Will my fonts and layouts survive the conversion?",
+        answer: "The LibreOffice engine reproduces standard layouts, images and charts well. Decks built with uncommon fonts may substitute a similar font, which can shift text slightly. A quick flip through the PDF before sharing it is always worthwhile.",
+    },
+    {
+        question: "Is there a cost or an account requirement?",
+        answer: "No. The converter is free and works without sign-up. Conversions are rate-limited to 5 per minute per IP address so the shared service stays available.",
+    },
+];
 
 export default function PptToPdfPage() {
-    const { language } = useLanguage();
-
-    const t = {
-        back: { en: "Back to Tools", cn: "返回工具列表" },
-        title: { en: "PowerPoint to PDF Converter", cn: "PPT 转 PDF 工具" },
-        desc: { en: "Fast, precise, and secure conversion of PowerPoint presentations (.pptx, .ppt) to PDF format.", cn: "快速、精准、安全地将幻灯片 (.pptx, .ppt) 转换为 PDF 格式。" },
-        secure: { en: "Secure Cloud Processing. Files are never stored.", cn: "云端安全处理。文件阅后即焚，绝不永久存储。" },
-    };
-
     return (
-        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="w-full flex items-center justify-between mb-8 sm:mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> {language === "en" ? t.back.en : t.back.cn}
-                </Link>
-                <PrivacyBadge mode="api" />
-            </div>
-
+        <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <Header />
+            <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: "/tools/ppt-to-pdf", label: "PPT to PDF" }]} />
             <div className="w-full flex flex-col gap-8">
                 <div className="text-center space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">PowerPoint to PDF Converter</h1>
                     <p className="text-zinc-400 max-w-xl mx-auto">
-                        {language === "en" ? t.desc.en : t.desc.cn}
+                        Convert .ppt and .pptx presentations to PDF, one page per slide. Files are converted on our server and are not stored.
                     </p>
                 </div>
-
-                {/* Mobile Secure Badge (visible only on small screens) */}
-                <div className="sm:hidden flex items-center justify-center mb-4 text-green-500/80 text-xs gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    {language === "en" ? t.secure.en : t.secure.cn}
+                <div className="w-full flex justify-center sm:justify-end">
+                    <PrivacyBadge mode="api" />
                 </div>
-
-                <FileUploadZone
-                    toolId="ppt-to-pdf"
-                    acceptedFileTypes=".pptx,.ppt,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                    apiEndpoint="/api/tools/ppt-to-pdf"
-                    maxSizeMB={50}
-                    titleEn="PowerPoint Presentation"
-                    titleCn="PPT 演示文稿"
-                />
+                <PptToPdfClient />
             </div>
-
-            {/* SEO Content Section */}
-            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
-                <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "How it works" : "工作原理"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "This tool is powered by a secure, containerized LibreOffice engine (Gotenberg). When you upload a PowerPoint presentation, it is securely transmitted to our isolated cloud worker. The worker performs a high-fidelity conversion preserving all slides, fonts, and layouts, returns the PDF, and immediately destroys the original file from memory."
-                            : "本工具底层的转换引擎基于安全的容器化 LibreOffice (Gotenberg)。您上传 PPT 幻灯片后，会通过加密传输发送至我们独立的云节点。云节点将进行高保真转换（完美保留页面、排版和字体），并将 PDF 返回给您，随后立即从内存中销毁原始文件。"}
-                    </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Data Privacy First" : "数据隐私至上"}
-                    </h2>
-                    <ul className="text-zinc-400 mb-6 list-disc pl-5">
-                        <li>
-                            <strong>{language === "en" ? "No Storage: " : "不存储文件："}</strong>
-                            {language === "en" ? "We do not store your documents. All data is processed in ephemeral memory and discarded upon completion." : "我们绝对不会存储您的任何文档。所有处理均在内存中进行，完成后即刻销毁数据。"}
-                        </li>
-                    </ul>
-                </div>
-            </section>
+            <ToolSeoBody sections={SECTIONS} howTo={HOW_TO} useCases={USE_CASES} faqs={FAQS} />
+            <div className="w-full mt-12 sm:mt-16">
+                <RelatedTools slug="ppt-to-pdf" />
+            </div>
+            <Footer />
         </div>
     );
 }

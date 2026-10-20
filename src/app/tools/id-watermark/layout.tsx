@@ -2,8 +2,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Watermark ID Card to Protect It From Misuse — Free, No Upload | YuliusBox",
-    description: "Add a custom watermark to your ID card photo to protect it from unauthorized use. Free, runs 100% in your browser — your photo never leaves your device.",
+    title: "Watermark Your ID Copy Before Sending | YuliusBox",
+    description: "Add a purpose-only watermark to a photo of your ID before you send it for rentals, SIM cards or verification. It runs in your browser — no upload at all.",
     keywords: ["id card watermark", "protect id photo", "add watermark online", "身份证加水印"],
     alternates: {
         canonical: "/tools/id-watermark",
@@ -12,6 +12,14 @@ export const metadata: Metadata = {
         url: "/tools/id-watermark",
         siteName: "YuliusBox",
         type: "website",
+        images: [
+            {
+                url: "/og/tools-id-watermark.png",
+                width: 1200,
+                height: 630,
+                alt: "Watermark Your ID Copy Before Sending",
+            },
+        ],
     },
 };
 

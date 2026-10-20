@@ -16,6 +16,8 @@ type FileFormat = "image/jpeg" | "image/png" | "image/webp";
 
 export default function ImageEditor() {
     const { language } = useLanguage();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
     const [imgSrc, setImgSrc] = useState("");
     const imgRef = useRef<HTMLImageElement>(null);
     const [crop, setCrop] = useState<Crop>();
@@ -217,9 +219,11 @@ function ImageEditorChainSync({ onFileLoaded }: { onFileLoaded: (dataUrl: string
 
     return (
         <div className="w-full max-w-7xl mx-auto">
-            <Suspense fallback={null}>
-                <ImageEditorChainSync onFileLoaded={handleChainLoaded} />
-            </Suspense>
+            {mounted && (
+                <Suspense fallback={null}>
+                    <ImageEditorChainSync onFileLoaded={handleChainLoaded} />
+                </Suspense>
+            )}
             {/* Header */}
             <div className="w-full mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
                 <Link href="/" className="flex items-center text-zinc-400 hover:text-white transition-colors w-fit mb-8">
