@@ -68,8 +68,8 @@ export function ExifRemoverScenario() {
         comparison: {
             title: { en: "Before vs After EXIF Wiping", cn: "清除前后文件状态对比" },
             subtitle: {
-                en: "How browser canvas re-encoding provides complete privacy guarantee.",
-                cn: "基于 Canvas 纯像素重构机制，物理切断一切元数据传递可能。"
+                en: "What changes when metadata is removed from the downloaded copy.",
+                cn: "清除后，下载副本中不再包含这些元数据字段。"
             },
             beforeTag: { en: "Raw Photo File • Before", cn: "清理前：手机直出原图" },
             beforePoints: [
@@ -79,9 +79,9 @@ export function ExifRemoverScenario() {
             ],
             afterTag: { en: "Cleaned Pixel Copy • After", cn: "清理后：纯净像素版本" },
             afterPoints: [
-                { en: "100% metadata-free: canvas re-encoding copies pure RGB pixel data only, leaving zero file headers.", cn: "0 元数据残留：纯像素重新编码，物理丢弃所有文件头部元数据与隐藏字典。" },
-                { en: "Completely anonymous digital identity: zero device fingerprints or timestamps survive.", cn: "完全匿名的数字身份：没有任何设备型号、拍摄时间戳或序列号留存。" },
-                { en: "Visually identical quality: JPEG at 95% fidelity, PNG mathematically lossless.", cn: "画面画质完全无损：JPEG 保持 95% 高保真，PNG 格式绝对无损导出。" }
+                { en: "Removes EXIF, GPS, IPTC and XMP metadata from the downloaded copy — JPEG EXIF segments are stripped directly, other formats are re-encoded from pixel data.", cn: "从下载副本中移除 EXIF、GPS、IPTC 与 XMP 元数据——JPEG 直接剥离 EXIF 段，其他格式由像素重新编码。" },
+                { en: "No device model, serial number or timestamp fields in the downloaded copy.", cn: "下载副本中不含设备型号、序列号或时间戳字段。" },
+                { en: "Same visible image: JPEG keeps its original compression on the lossless path; PNG copies are re-encoded losslessly.", cn: "画面内容不变：JPEG 在无损路径下保持原始压缩；PNG 副本无损重新编码。" }
             ]
         },
         limitations: {
@@ -94,7 +94,7 @@ export function ExifRemoverScenario() {
                 {
                     title: { en: "Cannot remove visual text stamped on image pixels", cn: "无法去除画面本身已经印制的水印文字" },
                     desc: {
-                        en: "EXIF cleaner wipes hidden header data. If your camera stamped visible date numbers, license plates, or names directly onto the pixels, use Screenshot Blur to redact them visually.",
+                        en: "EXIF cleaner removes hidden header data. It can't hide landmarks, faces or text visible in the photo. If your camera stamped visible date numbers, license plates, or names directly onto the pixels, use Screenshot Blur to redact them visually.",
                         cn: "EXIF 清除的是文件头部的不可见元数据。若照片画面本身已被相机印上了时间水印、或者画面中拍到了人脸、车牌，需配合使用“截图打码”进行视觉遮挡。"
                     }
                 },
@@ -106,9 +106,9 @@ export function ExifRemoverScenario() {
                     }
                 },
                 {
-                    title: { en: "Zero server storage guarantee", cn: "纯本地离线处理承诺" },
+                    title: { en: "Runs locally — no server storage", cn: "纯本地处理——无服务器存储" },
                     desc: {
-                        en: "All EXIF reading and pixel re-encoding occur purely in your web browser. You can even disconnect your internet after loading the page and the tool works 100%.",
+                        en: "All EXIF reading and cleaning occur in your web browser. You can even disconnect your internet after loading the page and the tool still works.",
                         cn: "所有读取与清理均在您设备本地浏览器内存完成，照片从未上传到任何云端服务器，断开网络仍可顺畅运行。"
                     }
                 },
@@ -132,7 +132,7 @@ export function ExifRemoverScenario() {
                 {
                     num: "02",
                     title: { en: "One-Click Wipe", cn: "一键清除元数据" },
-                    desc: { en: "Click 'Remove metadata' to redraw pure pixels onto an isolated canvas, physically stripping all tags.", cn: "点击“清除元数据”，在浏览器 Canvas 中仅提取像素重新编码，彻底丢弃元数据。" }
+                    desc: { en: "Click 'Remove metadata' — JPEG EXIF segments are stripped directly; other formats are re-encoded from pixels alone.", cn: "点击“清除元数据”——JPEG 直接剥离 EXIF 段，其他格式仅由像素重新编码。" }
                 },
                 {
                     num: "03",

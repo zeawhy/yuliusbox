@@ -25,8 +25,9 @@ export default function ImageCompressorPage() {
                     </p>
                 </div>
 
-                <div className="relative w-full pt-12">
-                    <PrivacyBadge mode="local" className="absolute top-3 right-3 z-10" />
+                <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-wrap justify-end"><PrivacyBadge mode="local" /></div>
+                    
                     <ImageCompressorTool />
                 </div>
             </div>

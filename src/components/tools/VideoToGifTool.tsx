@@ -5,6 +5,7 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { Film, Play, Settings2, Download, Loader2, AlertCircle } from "lucide-react";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
+import { formatBytes } from "@/lib/utils";
 import { setToolComputeStatus } from "@/lib/tool-compute-status";
 import { trackToolEvent } from "@/lib/analytics";
 
@@ -16,14 +17,6 @@ interface VideoToGifToolProps {
     /** Advisory size target (MB). Renders a sharing advisory line; no re-encoding is performed. */
     maxSizeMB?: number;
 }
-
-const formatBytes = (bytes: number) => {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
 
 export function VideoToGifTool({ defaultFps, defaultWidth, maxSizeMB }: VideoToGifToolProps) {
     const [loaded, setLoaded] = useState(false);

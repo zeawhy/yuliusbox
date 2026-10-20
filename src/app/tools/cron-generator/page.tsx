@@ -34,8 +34,8 @@ const jsonLd = {
 
 export default function Page() {
     return (
-        <div className="relative w-full pt-12">
-            <PrivacyBadge mode="api" className="absolute top-4 right-4 sm:top-8 sm:right-8 z-20" />
+        <div className="w-full flex flex-col gap-3">
+            <div className="flex flex-wrap justify-end px-4 pt-4 sm:px-8 sm:pt-8"><PrivacyBadge mode="api" /></div>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

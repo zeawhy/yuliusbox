@@ -23,7 +23,9 @@ export interface PrivacyBadgeProps {
      */
     toolId?: string;
     /**
-     * Additional CSS classes, typically for positioning (e.g. absolute top-3 right-3)
+     * Additional CSS classes for spacing/layout tweaks. The badge is an
+     * inline element meant to sit in normal document flow (e.g. in a flex
+     * row above the tool) — do not position it absolutely over tool UI.
      */
     className?: string;
 }

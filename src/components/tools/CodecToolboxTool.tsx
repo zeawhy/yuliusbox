@@ -15,7 +15,7 @@ import {
     ShieldCheck,
     ArrowRightLeft,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
@@ -477,7 +477,7 @@ function Base64Tab() {
                             <span className="text-zinc-200 font-medium truncate max-w-xs">
                                 {fileInfo.name}
                             </span>
-                            <span>({(fileInfo.size / 1024).toFixed(1)} KB)</span>
+                            <span>({formatBytes(fileInfo.size)})</span>
                             <button
                                 onClick={clearFile}
                                 className="text-zinc-500 hover:text-zinc-300 ml-1"
@@ -710,7 +710,7 @@ function HashTab() {
                                     <span className="text-zinc-200 font-medium truncate max-w-xs">
                                         {fileMeta.name}
                                     </span>
-                                    <span>({(fileMeta.size / 1024).toFixed(1)} KB)</span>
+                                    <span>({formatBytes(fileMeta.size)})</span>
                                     <button
                                         onClick={clearFile}
                                         className="text-zinc-500 hover:text-zinc-300 ml-1"

@@ -17,7 +17,7 @@ import {
     Loader2,
     X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
@@ -131,15 +131,6 @@ function evaluatePasswordStrength(password: string): PasswordStrength {
             textColor: "text-emerald-400",
         };
     }
-}
-
-function formatBytes(bytes: number): string {
-    if (bytes <= 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    const val = bytes / Math.pow(k, i);
-    return `${val < 10 ? val.toFixed(2) : val < 100 ? val.toFixed(1) : val.toFixed(0)} ${sizes[i]}`;
 }
 
 function triggerBlobDownload(data: Uint8Array, filename: string) {

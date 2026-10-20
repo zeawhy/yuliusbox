@@ -16,10 +16,10 @@ export const removeImageMetadata: LongTailContent = {
     crumb: "Remove Image Metadata",
     h1: "Remove Image Metadata Before You Post — Free",
     subtitle:
-        "Every photo carries hidden data: camera, timestamps, sometimes your GPS location. Strip it all before the image goes public — free, in your browser.",
-    metaTitle: "Remove Image Metadata Online Free — Before You Post | YuliusBox",
+        "Every photo carries hidden data: camera, timestamps, sometimes your GPS location. Remove it from the copy before the image goes public — free, in your browser.",
+    metaTitle: "Remove Image Metadata Online Free | YuliusBox",
     metaDescription:
-        "Strip hidden EXIF, IPTC & XMP metadata from photos before posting or selling online. Free, unlimited, 100% in-browser — nothing uploaded.",
+        "Removes EXIF, GPS, IPTC and XMP metadata from the downloaded copy before you post or sell photos online. Runs in your browser — nothing gets uploaded.",
     keywords: [
         "remove image metadata",
         "remove metadata from image",
@@ -29,14 +29,14 @@ export const removeImageMetadata: LongTailContent = {
     howTo: [
         "Drop the photos you're about to publish into the cleaner above.",
         "Review what it finds — the tool shows you the hidden data first.",
-        "Clean with one click and post the metadata-free copy instead of the original.",
+        "Clean with one click and post the cleaned copy instead of the original.",
     ],
     sections: [
         {
             heading: "“Metadata” is bigger than EXIF",
             paragraphs: [
                 "EXIF is the famous one — camera model, shutter speed, timestamps — but a modern photo carries three more metadata systems most people never hear about: IPTC (captions, keywords, copyright), XMP (editing history, sometimes entire Lightroom adjustment stacks), and embedded thumbnails that can survive even after you crop the visible image.",
-                "This page's cleaner wipes all of them, not just EXIF. It re-encodes the image from raw pixel data, which physically cannot carry any metadata format over — the output is built from pixels alone. What's gone is gone, verifiably: run the cleaned file through the viewer again and you'll see zero fields.",
+                "This page's cleaner removes all of them from the downloaded copy, not just EXIF. JPEG EXIF segments are stripped directly from the file; other formats are re-encoded from pixel data, so the output carries no EXIF, IPTC or XMP fields. You can check the result yourself: run the cleaned file through the viewer again and you'll see what fields remain.",
             ],
         },
         {
@@ -64,7 +64,7 @@ export const removeImageMetadata: LongTailContent = {
     faqs: [
         {
             question: "Is EXIF the same thing as image metadata?",
-            answer: "EXIF is one kind of image metadata — the camera-generated kind. Photos can also carry IPTC (captions, copyright), XMP (editing history), and embedded thumbnails. This cleaner removes all of them by re-encoding from raw pixels.",
+            answer: "EXIF is one kind of image metadata — the camera-generated kind. Photos can also carry IPTC (captions, copyright), XMP (editing history), and embedded thumbnails. This cleaner removes them from the downloaded copy — by stripping metadata segments directly or re-encoding from pixel data.",
         },
         {
             question: "Will removing metadata change how my photo looks?",

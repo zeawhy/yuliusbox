@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
 import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { ContinueWith } from "@/components/tools/ContinueWith";
@@ -262,16 +262,6 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
         setIsDragging(false);
     }, []);
 
-    const formatSize = (bytes: number) => {
-        if (bytes === 0) return "0 B";
-        // Use decimal (1000) to match the target label (e.g. 100,000 bytes = "100 KB").
-        // Upload portal limits are decimal, so display must be consistent.
-        const k = 1000;
-        const sizes = ["B", "KB", "MB", "GB"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-    };
-
     const outputName = (originalName: string) =>
         outputFormat === "webp"
             ? `compressed-${originalName.replace(/\.[^.]+$/, "")}.webp`
@@ -418,11 +408,11 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
                                             </p>
                                         ) : (
                                             <p className="text-xs text-zinc-500 flex items-center gap-2">
-                                                {formatSize(file.originalSize)}
+                                                {formatBytes(file.originalSize)}
                                                 {file.status === "done" && (
                                                     <>
                                                         <span className="text-zinc-600">→</span>
-                                                        <span className="text-green-400 font-bold">{formatSize(file.compressedSize)}</span>
+                                                        <span className="text-green-400 font-bold">{formatBytes(file.compressedSize)}</span>
                                                         <span className="px-1.5 py-0.5 rounded bg-green-500/10 text-green-500 text-[10px] border border-green-500/20">
                                                             {file.compressionRatio.toFixed(0)}%
                                                         </span>
