@@ -177,7 +177,7 @@ export const toolsData: Tool[] = [
             cn: "证件安全水印"
         },
         description: {
-            en: "Add security watermarks to ID cards locally. Prevent unauthorized use.",
+            en: "Add security watermarks to ID cards locally to deter unauthorized use.",
             cn: "纯本地为身份证/照片添加安全水印，防止被滥用。"
         },
         icon: FileText,
