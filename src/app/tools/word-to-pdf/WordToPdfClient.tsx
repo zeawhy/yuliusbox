@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Upload, FileText, CheckCircle, Loader2, ShieldCheck, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
 
@@ -187,7 +187,7 @@ export default function WordToPdfClient() {
                             <div className="min-w-0 flex-1">
                                 <h3 className="text-zinc-200 font-medium truncate text-lg">{file.name}</h3>
                                 <p className="text-zinc-500 text-sm mt-1">
-                                    {(file.size / (1024 * 1024)).toFixed(2)} MB
+                                    {formatBytes(file.size)}
                                 </p>
                             </div>
                         </div>
