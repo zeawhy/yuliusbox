@@ -16,7 +16,7 @@ import {
     Sliders,
     CheckCircle2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
@@ -257,12 +257,6 @@ function collapseWhitespace(xml: string): string {
     return preserved.trim();
 }
 
-function formatByteSize(bytes: number): string {
-    if (bytes === 0) return "0 B";
-    if (bytes < 1024) return `${bytes} B`;
-    const kb = bytes / 1024;
-    return `${kb.toFixed(kb < 10 ? 2 : 1)} KB`;
-}
 
 function optimizeSvg(rawSvg: string, options: OptimizerOptions): { result?: OptimizationResult; error?: string } {
     const trimmed = rawSvg.trim();
@@ -889,7 +883,7 @@ export function SvgOptimizerTool() {
                                 {t("Original Size", "原始大小")}
                             </p>
                             <p className="text-2xl font-bold text-white mt-1 font-mono">
-                                {formatByteSize(result.originalBytes)}
+                                {formatBytes(result.originalBytes)}
                             </p>
                             <p className="text-xs text-zinc-500 mt-1">{result.originalBytes.toLocaleString()} bytes</p>
                         </div>
@@ -899,7 +893,7 @@ export function SvgOptimizerTool() {
                                 {t("Optimized Size", "优化后大小")}
                             </p>
                             <p className="text-2xl font-bold text-emerald-400 mt-1 font-mono">
-                                {formatByteSize(result.optimizedBytes)}
+                                {formatBytes(result.optimizedBytes)}
                             </p>
                             <p className="text-xs text-zinc-500 mt-1">{result.optimizedBytes.toLocaleString()} bytes</p>
                         </div>
@@ -912,7 +906,7 @@ export function SvgOptimizerTool() {
                                 -{result.savedPercent.toFixed(1)}%
                             </p>
                             <p className="text-xs text-emerald-500/90 mt-1">
-                                {t("Saved", "节省了")} {formatByteSize(result.savedBytes)}
+                                {t("Saved", "节省了")} {formatBytes(result.savedBytes)}
                             </p>
                         </div>
                     </div>
@@ -984,7 +978,7 @@ export function SvgOptimizerTool() {
                             <div className="rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden flex flex-col">
                                 <div className="px-4 py-2.5 border-b border-zinc-800 flex items-center justify-between text-xs">
                                     <span className="text-zinc-400 font-medium">{t("Original Graphic", "原始图像")}</span>
-                                    <span className="font-mono text-zinc-500">{formatByteSize(result.originalBytes)}</span>
+                                    <span className="font-mono text-zinc-500">{formatBytes(result.originalBytes)}</span>
                                 </div>
                                 <div className="p-6 flex-1 flex items-center justify-center min-h-[240px] bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] bg-zinc-950">
                                     {originalPreviewUrl ? (
@@ -1008,7 +1002,7 @@ export function SvgOptimizerTool() {
                                         {t("Optimized Graphic", "优化后图像")}
                                     </span>
                                     <span className="font-mono text-emerald-400 font-semibold">
-                                        {formatByteSize(result.optimizedBytes)} (-{result.savedPercent.toFixed(1)}%)
+                                        {formatBytes(result.optimizedBytes)} (-{result.savedPercent.toFixed(1)}%)
                                     </span>
                                 </div>
                                 <div className="p-6 flex-1 flex items-center justify-center min-h-[240px] bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] bg-zinc-950">

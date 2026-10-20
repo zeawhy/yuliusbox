@@ -8,7 +8,7 @@ import {
     Upload, Download, Trash2, ShieldCheck, ShieldAlert, MapPin,
     Camera, Calendar, FileImage, Loader2, CheckCircle, X, Eye, EyeOff, Package,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
@@ -389,7 +389,7 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                 <Upload className="w-10 h-10 mx-auto text-zinc-500 mb-3" />
                 <p className="text-lg text-white font-medium">{t("Drop photos here", "把照片拖到这里")}</p>
                 <p className="text-sm text-zinc-500 mt-1">
-                    {t("JPG, PNG, WebP — see what's hidden inside, then wipe it clean. 100% local.", "支持 JPG、PNG、WebP——先看看里面藏了什么，再一键清除。100% 本地处理。")}
+                    {t("JPG, PNG, WebP — see what's hidden inside, then remove it. Runs locally in your browser.", "支持 JPG、PNG、WebP——先看看里面藏了什么，再一键清除。全程在本地浏览器处理。")}
                 </p>
                 <input
                     ref={inputRef}
@@ -457,9 +457,9 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                                 <div className="min-w-0">
                                     <p className="text-white font-medium truncate">{item.file.name}</p>
                                     <p className="text-xs text-zinc-500">
-                                        {(item.file.size / 1024).toFixed(0)} KB
+                                        {formatBytes(item.file.size)}
                                         {item.cleanedBlob && (
-                                            <span className="text-zinc-600"> → {(item.cleanedBlob.size / 1024).toFixed(0)} KB</span>
+                                            <span className="text-zinc-600"> → {formatBytes(item.cleanedBlob.size)}</span>
                                         )}
                                     </p>
                                 </div>
@@ -493,23 +493,17 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                                             </span>
                                         </p>
                                     )}
-                                    {item.meta.gps && item.status === "done" && (
-                                        <p className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                                            <MapPin className="w-4 h-4" />
-                                            {t("GPS location removed", "GPS 定位已清除")}
-                                        </p>
-                                    )}
-                                    {item.meta.camera && (
+                                    {item.status === "ready" && item.meta.camera && (
                                         <p className="flex items-center gap-1.5 text-zinc-400">
                                             <Camera className="w-4 h-4 text-zinc-600" />{item.meta.camera}
                                         </p>
                                     )}
-                                    {item.meta.dateTaken && (
+                                    {item.status === "ready" && item.meta.dateTaken && (
                                         <p className="flex items-center gap-1.5 text-zinc-400">
                                             <Calendar className="w-4 h-4 text-zinc-600" />{item.meta.dateTaken}
                                         </p>
                                     )}
-                                    {item.meta.aiMarker && (
+                                    {item.status === "ready" && item.meta.aiMarker && (
                                         <p className="flex items-center gap-1.5 text-violet-400">
                                             <ShieldAlert className="w-4 h-4" />
                                             {t(`AI-generation marker detected ("${item.meta.aiMarker}")`, `检测到 AI 生成标记（"${item.meta.aiMarker}"）`)}
@@ -537,10 +531,31 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                             )}
 
                             {item.status === "done" && (
-                                <p className="mt-2 flex items-center gap-1.5 text-sm text-emerald-400">
-                                    <CheckCircle className="w-4 h-4" />
-                                    {t(`Cleaned — ${item.meta?.totalFields ?? 0} fields removed`, `已清理——移除了 ${item.meta?.totalFields ?? 0} 个字段`)}
-                                </p>
+                                <div className="mt-2 flex flex-col gap-1">
+                                    <p className="flex items-center gap-1.5 text-sm font-medium text-emerald-400">
+                                        <CheckCircle className="w-4 h-4" />
+                                        {t("Cleaned — 0 metadata fields in the downloaded copy", "已清理——下载副本中不含元数据字段")}
+                                    </p>
+                                    {item.meta && (item.meta.gps || item.meta.camera || item.meta.dateTaken || item.meta.software || item.meta.aiMarker) && (
+                                        <p className="text-xs text-zinc-500">
+                                            {t("Original file had: ", "原文件包含：")}
+                                            {[
+                                                item.meta.gps ? t("GPS", "GPS") : null,
+                                                item.meta.camera ? t("device", "设备信息") : null,
+                                                item.meta.dateTaken ? t("timestamp", "拍摄时间") : null,
+                                                item.meta.software ? t("software", "软件信息") : null,
+                                                item.meta.aiMarker ? t("AI marker", "AI 标记") : null,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(", ")}
+                                        </p>
+                                    )}
+                                    {item.cleanedBlob && item.cleanedBlob.size > item.file.size && (
+                                        <p className="text-xs text-zinc-500">
+                                            {t("File size may change because the image is re-encoded.", "文件大小可能因图片被重新编码而变化。")}
+                                        </p>
+                                    )}
+                                </div>
                             )}
 
                             <div className="mt-3 flex flex-wrap gap-2">
@@ -591,7 +606,7 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                     <div className="text-sm text-zinc-400 space-y-1.5">
                         <p className="text-white font-medium">{t("Why this matters", "为什么这很重要")}</p>
                         <p>{t("Every photo from your phone carries hidden EXIF data: camera model, shooting time, and sometimes precise GPS coordinates. Posting the original online publishes all of it.", "手机拍的每张照片都藏着 EXIF 数据：相机型号、拍摄时间，有时还有精确的 GPS 坐标。直接发原图等于把这些信息一起公开。")}</p>
-                        <p>{t("This tool shows you exactly what's inside — then produces a pixel-identical copy with every metadata field wiped. Nothing ever leaves your browser.", "这个工具先让你看清里面藏了什么，再生成一张像素完全相同、但元数据被清空的版本。全程不离开你的浏览器。")}</p>
+                        <p>{t("This tool shows you what's inside — then produces a copy with the metadata removed. It can't hide landmarks, faces or text visible in the photo itself. Nothing ever leaves your browser.", "这个工具先让你看清里面藏了什么，再生成一张移除了元数据的副本。它无法遮挡照片画面中可见的地标、人脸或文字。全程不离开你的浏览器。")}</p>
                     </div>
                 </div>
             )}

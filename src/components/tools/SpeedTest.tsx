@@ -5,14 +5,23 @@ import { ArrowLeft, Zap, Download, Upload, Activity, RefreshCw } from "lucide-re
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
-import dynamic from "next/dynamic";
 import { trackToolEvent } from "@/lib/analytics";
 
-// Dynamic import for GaugeChart to avoid SSR issues
-const GaugeChart = dynamic(() => import("react-gauge-chart"), { ssr: false });
+// GaugeChart touches browser APIs, so it is imported after mount on the
+// client only. Using next/dynamic with ssr:false here previously bailed the
+// whole page out of server rendering (BAILOUT_TO_CLIENT_SIDE_RENDERING).
+type GaugeChartComponent = React.ComponentType<Record<string, unknown>>;
 
 export default function SpeedTest() {
     const { language } = useLanguage();
+    const [GaugeChart, setGaugeChart] = useState<GaugeChartComponent | null>(null);
+    useEffect(() => {
+        let active = true;
+        import("react-gauge-chart").then((m) => {
+            if (active) setGaugeChart(() => m.default as unknown as GaugeChartComponent);
+        });
+        return () => { active = false; };
+    }, []);
     const [status, setStatus] = useState<"idle" | "pinging" | "downloading" | "uploading" | "complete">("idle");
     const [ping, setPing] = useState<number | null>(null);
     const [downloadSpeed, setDownloadSpeed] = useState<number>(0);
@@ -156,7 +165,7 @@ export default function SpeedTest() {
                     <Download className="w-8 h-8 text-emerald-500" />
                     <span className="text-zinc-500 text-sm font-bold uppercase tracking-widest">{language === "en" ? t.download.en : t.download.cn}</span>
                     <div className="w-full max-w-[240px]">
-                        <GaugeChart
+                        {GaugeChart && (<GaugeChart
                             id="download-gauge"
                             nrOfLevels={20}
                             colors={["#065f46", "#10b981"]}
@@ -164,7 +173,7 @@ export default function SpeedTest() {
                             percent={downloadSpeed / 100}
                             formatTextValue={() => ""}
                             hideText={true}
-                        />
+                        />)}
                     </div>
                     <div className="flex items-baseline gap-2 mt-[-40px]">
                         <span className="text-5xl font-black text-white">{downloadSpeed || "--"}</span>
@@ -177,7 +186,7 @@ export default function SpeedTest() {
                     <Upload className="w-8 h-8 text-blue-400" />
                     <span className="text-zinc-500 text-sm font-bold uppercase tracking-widest">{language === "en" ? t.upload.en : t.upload.cn}</span>
                     <div className="w-full max-w-[240px]">
-                        <GaugeChart
+                        {GaugeChart && (<GaugeChart
                             id="upload-gauge"
                             nrOfLevels={20}
                             colors={["#1e3a8a", "#3b82f6"]}
@@ -185,7 +194,7 @@ export default function SpeedTest() {
                             percent={uploadSpeed / 50}
                             formatTextValue={() => ""}
                             hideText={true}
-                        />
+                        />)}
                     </div>
                     <div className="flex items-baseline gap-2 mt-[-40px]">
                         <span className="text-5xl font-black text-white">{uploadSpeed || "--"}</span>

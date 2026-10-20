@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Remove EXIF Data from Photos — Free | YuliusBox",
+    title: "Remove EXIF Data from Photos — Free Online | YuliusBox",
     description:
-        "See hidden EXIF metadata in your photos (camera, GPS, timestamps) and wipe it clean with one click. Free, unlimited, 100% in-browser — nothing uploaded.",
+        "Removes EXIF, GPS, IPTC and XMP metadata from the downloaded copy. View hidden photo metadata first, then clean it in your browser — nothing is uploaded.",
     keywords: [
         "remove exif data",
         "exif remover online",
@@ -36,7 +36,7 @@ const jsonLd = {
     name: "EXIF Remover — Photo Metadata Cleaner",
     url: "https://www.yuliusbox.com/tools/exif-remover",
     description:
-        "View hidden EXIF/IPTC/XMP metadata in photos and remove it with one click. Free, unlimited, processed entirely in the browser.",
+        "View hidden EXIF, IPTC and XMP metadata in photos and remove it from the downloaded copy. Processed entirely in the browser — nothing is uploaded.",
     applicationCategory: "Utility",
     operatingSystem: "Web",
     offers: {

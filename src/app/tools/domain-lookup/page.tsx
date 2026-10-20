@@ -47,8 +47,9 @@ export default function DomainLookupPage() {
                     </p>
                 </div>
 
-                <div className="relative w-full">
-                    <PrivacyBadge mode="api" className="absolute top-3 right-3 z-10" />
+                <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-wrap justify-end"><PrivacyBadge mode="api" /></div>
+                    
                     <DomainLookupTool />
                 </div>
 

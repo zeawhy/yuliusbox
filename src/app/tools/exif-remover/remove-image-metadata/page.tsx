@@ -52,8 +52,10 @@ export default function RemoveImageMetadataPage() {
                     <p className="text-zinc-400 max-w-xl mx-auto">{content.subtitle}</p>
                 </div>
 
-                <div className="relative">
-                    <PrivacyBadge mode="local" />
+                <div className="flex flex-col gap-3">
+                    <div className="flex flex-wrap justify-end">
+                        <PrivacyBadge mode="local" />
+                    </div>
                     <ExifRemoverTool />
                 </div>
             </div>
