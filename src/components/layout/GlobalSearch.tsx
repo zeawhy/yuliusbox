@@ -144,7 +144,7 @@ export function GlobalSearch() {
             {/* Trigger button in nav */}
             <button
                 onClick={openSearch}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-500 hover:text-zinc-300 hover:border-zinc-700 transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 min-h-[44px] rounded-lg border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-500 hover:text-zinc-300 hover:border-zinc-700 transition-all"
                 aria-label="Search tools (Cmd+K)"
             >
                 <Search className="w-3.5 h-3.5" />
@@ -187,7 +187,7 @@ export function GlobalSearch() {
                             />
                             <button
                                 onClick={closeSearch}
-                                className="text-zinc-600 hover:text-zinc-300 transition-colors"
+                                className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] -m-2 text-zinc-600 hover:text-zinc-300 transition-colors"
                                 aria-label="Close search"
                             >
                                 <X className="w-4 h-4" />

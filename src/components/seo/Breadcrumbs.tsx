@@ -29,20 +29,20 @@ export function Breadcrumbs({ trail }: { trail: Crumb[] }) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <nav aria-label="Breadcrumb" className="w-full mb-6 sm:mb-8">
-                <ol className="flex flex-wrap items-center gap-1.5 text-sm text-zinc-500">
+                <ol className="flex flex-wrap items-center gap-1.5 text-sm text-zinc-400">
                     {trail.map((crumb, i) => {
                         const isLast = i === trail.length - 1;
                         return (
                             <li key={crumb.href} className="flex items-center gap-1.5">
                                 {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-zinc-700" />}
                                 {isLast ? (
-                                    <span aria-current="page" className="text-zinc-300 font-medium">
+                                    <span aria-current="page" className="inline-block py-3 -my-3 text-zinc-300 font-medium">
                                         {crumb.label}
                                     </span>
                                 ) : (
                                     <Link
                                         href={crumb.href}
-                                        className="hover:text-white transition-colors"
+                                        className="inline-block py-3 -my-3 hover:text-white transition-colors"
                                     >
                                         {crumb.label}
                                     </Link>

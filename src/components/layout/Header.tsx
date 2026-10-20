@@ -28,8 +28,8 @@ export function Header() {
                 <nav className="hidden lg:flex items-center gap-1 shrink-0" aria-label="Primary">
                     <div className="relative group">
                         <button
-                            className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-                            aria-haspopup="true"
+                            className="flex items-center gap-1 px-3 py-2 min-h-[44px] text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                            aria-haspopup="menu"
                         >
                             Tools <ChevronDown className="w-3.5 h-3.5" />
                         </button>
@@ -59,7 +59,7 @@ export function Header() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="px-3 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+                            className="inline-flex items-center px-3 py-2 min-h-[44px] text-sm font-medium text-zinc-400 hover:text-white transition-colors"
                         >
                             {link.label}
                         </Link>

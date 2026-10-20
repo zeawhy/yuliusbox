@@ -5,6 +5,10 @@ import clsx from "clsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const viewport = {
+  themeColor: "#09090b",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.yuliusbox.com"),
   title: "YuliusBox - Privacy-First Web Tools",

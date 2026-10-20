@@ -16,7 +16,7 @@ import { useLanguage } from "@/context/LanguageContext";
 export function LocalTrustNote() {
     const { t } = useLanguage();
     return (
-        <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-600 text-center">
+        <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-400 text-center">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             {t(
                 "Geek check: open DevTools \u2192 Network tab \u2014 0 bytes of your data uploaded.",

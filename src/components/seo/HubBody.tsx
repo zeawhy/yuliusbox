@@ -91,7 +91,7 @@ export function HubBody({
                         >
                             <summary className="font-medium text-zinc-200 list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
                                 {faq.question}
-                                <span className="transition-transform group-open:rotate-180 text-zinc-500 shrink-0">
+                                <span aria-hidden="true" className="transition-transform group-open:rotate-180 text-zinc-500 shrink-0">
                                     ▼
                                 </span>
                             </summary>
