@@ -409,11 +409,6 @@ function IDWatermarkContent() {
             <div className="w-full grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] items-start">
                 {/* Left Column: Canvas / Preview (sticky so it stays visible while adjusting controls) */}
                 <div className="lg:sticky lg:top-6 space-y-4 min-w-0">
-                    <div className="text-left space-y-2 mb-6">
-                        <h1 className="text-3xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
-                        <p className="text-zinc-400">{language === "en" ? t.desc.en : t.desc.cn}</p>
-                    </div>
-
                     <div className={cn(
                         "relative w-full min-h-[400px] bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col items-center justify-center overflow-hidden group",
                         image && "sticky top-0 z-20 lg:static"
