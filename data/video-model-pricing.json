@@ -1,0 +1,67 @@
+[
+  {
+    "id": "flux-3-max-720p",
+    "name": "FLUX 3 Max (720p)",
+    "provider": "Black Forest Labs (fal.ai)",
+    "resolution": "720p",
+    "price_per_second": 0.17,
+    "promo_price_per_second": 0.0425,
+    "promo_until": "2026-11-07",
+    "source_url": "https://fal.ai/models/blackforestlabs/flux-3-max",
+    "source_type": "official",
+    "checked_at": "2026-10-21",
+    "notes": "Official fal.ai launch promo: 75% off ($0.0425/s) active through 2026-11-07. Standard rate $0.17/s for 720p. 1080p excluded due to unverified official endpoint rate."
+  },
+  {
+    "id": "minimax-h3-768p",
+    "name": "MiniMax H3 (768p)",
+    "provider": "MiniMax (fal.ai)",
+    "resolution": "768p",
+    "price_per_second": 0.08,
+    "promo_price_per_second": null,
+    "promo_until": null,
+    "source_url": "https://fal.ai/models/fal-ai/minimax/video-01",
+    "source_type": "official",
+    "checked_at": "2026-10-21",
+    "notes": "Official fal.ai rate: $0.08/s for 768p video generation."
+  },
+  {
+    "id": "seedance-2-5-720p",
+    "name": "Seedance 2.5 (720p)",
+    "provider": "ByteDance (fal.ai)",
+    "resolution": "720p",
+    "price_per_second": 0.473,
+    "promo_price_per_second": null,
+    "promo_until": null,
+    "source_url": "https://fal.ai/models/bytedance/seedance-2.5/text-to-video",
+    "source_type": "official",
+    "checked_at": "2026-10-21",
+    "notes": "Official fal.ai token pricing ($0.0214 per 1k tokens at 24fps), equivalent to ~$0.4730/s at 720p standard output."
+  },
+  {
+    "id": "veo-3-1-fast-720p",
+    "name": "Google Veo 3.1 Fast (720p)",
+    "provider": "Google DeepMind (fal.ai)",
+    "resolution": "720p",
+    "price_per_second": 0.1,
+    "promo_price_per_second": null,
+    "promo_until": null,
+    "source_url": "https://fal.ai/models/fal-ai/veo3.1/fast",
+    "source_type": "official",
+    "checked_at": "2026-10-21",
+    "notes": "Official fal.ai fast inference endpoint rate at $0.10/s."
+  },
+  {
+    "id": "kling-v3-standard-720p",
+    "name": "Kling Video v3 Standard (720p)",
+    "provider": "Kling AI (fal.ai)",
+    "resolution": "720p",
+    "price_per_second": 0.14,
+    "promo_price_per_second": null,
+    "promo_until": null,
+    "source_url": "https://fal.ai/models/fal-ai/kling-video/v3/standard",
+    "source_type": "official",
+    "checked_at": "2026-10-21",
+    "notes": "Official fal.ai rate: $0.14/s base generation without audio add-on."
+  }
+]
