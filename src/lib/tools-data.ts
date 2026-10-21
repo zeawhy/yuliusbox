@@ -1,4 +1,4 @@
-import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare, Binary, ScanEye } from "lucide-react";
+import { Image, FileText, Blocks, LucideIcon, Mail, Table, Code, Database, Clock, FileJson, Shield, Eraser, Scissors, Zap, Globe, Grid3X3, KeyRound, FileSignature, EyeOff, Lock, Captions, Shapes, GitCompare, Binary, ScanEye, Video } from "lucide-react";
 
 export type ToolCategory = "developer" | "media" | "productivity";
 
@@ -22,6 +22,22 @@ export interface Tool {
 }
 
 export const toolsData: Tool[] = [
+    {
+        id: "ai-video-cost-calculator",
+        category: "media",
+        name: {
+            en: "AI Video Cost Calculator",
+            cn: "AI 视频生成成本计算器",
+        },
+        description: {
+            en: "Calculate and compare generation costs for FLUX 3 Max, Seedance 2.5, MiniMax H3, and Veo. Real-time pricing with promo countdowns.",
+            cn: "计算并对比 FLUX 3 Max、Seedance、MiniMax H3 与 Veo 的生成成本。按秒计费，实时促销倒计时。",
+        },
+        icon: Video,
+        href: "/ai-video-cost-calculator",
+        popular: true,
+        keywords: ["ai video", "video cost", "flux 3 max", "seedance", "minimax", "veo", "video generation pricing", "calculator", "fal ai"],
+    },
     {
         id: "heic-2-jpg",
         category: "media",
