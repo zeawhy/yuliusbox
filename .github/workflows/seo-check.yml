@@ -44,6 +44,17 @@ jobs:
             exit 1
           fi
 
+      - name: Install test tools and libraries
+        run: |
+          sudo apt-get update && sudo apt-get install -y libimage-exiftool-perl poppler-utils
+          pip install --break-system-packages pillow pymupdf pdfplumber
+
+      - name: Run unit & integration tests
+        run: npm test
+
+      - name: Verify PDF redaction irreversibility
+        run: python3 scripts/test-redaction.py
+
       - name: Run SEO validation
         run: npm run seo-check
         env:

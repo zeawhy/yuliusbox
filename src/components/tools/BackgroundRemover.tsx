@@ -8,12 +8,15 @@ import { useLanguage } from "@/context/LanguageContext";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { setToolComputeStatus } from "@/lib/tool-compute-status";
 import { trackToolEvent } from "@/lib/analytics";
+import { HandoffButton } from "@/lib/handoff";
 
 export default function BackgroundRemover() {
     const { language } = useLanguage();
     const [isMounted, setIsMounted] = useState(false);
     const [originalImg, setOriginalImg] = useState<string | null>(null);
     const [resultImg, setResultImg] = useState<string | null>(null);
+    const [resultBlob, setResultBlob] = useState<Blob | null>(null);
+    const [inputFileName, setInputFileName] = useState<string>("image");
     const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
@@ -46,9 +49,11 @@ export default function BackgroundRemover() {
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
+            setInputFileName(file.name.replace(/\.[^.]+$/, ""));
             trackToolEvent("file_selected", { tool: "background-remover", detail: "count:1" });
             setOriginalImg(URL.createObjectURL(file));
             setResultImg(null);
+            setResultBlob(null);
             handleRemoveBackground(file);
         }
     };
@@ -103,6 +108,7 @@ export default function BackgroundRemover() {
             trackToolEvent("process_success", { tool: "background-remover" });
             const url = URL.createObjectURL(blob);
             setResultImg(url);
+            setResultBlob(blob);
         } catch (error) {
             console.error("Background removal failed:", error);
             trackToolEvent("process_error", { tool: "background-remover", errorCode: "bg_removal_failed" });
@@ -267,14 +273,26 @@ export default function BackgroundRemover() {
                             <input type="file" accept="image/*" onChange={onFileChange} className="hidden" />
                         </label>
 
-                        {resultImg && (
-                            <button
-                                onClick={downloadResult}
-                                className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 transition-all shadow-xl flex items-center gap-3 active:scale-95"
-                            >
-                                <Download className="w-5 h-5" />
-                                {language === "en" ? t.download.en : t.download.cn}
-                            </button>
+                        {resultImg && resultBlob && (
+                            <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                    onClick={downloadResult}
+                                    className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 transition-all shadow-xl flex items-center gap-3 active:scale-95 cursor-pointer"
+                                >
+                                    <Download className="w-5 h-5" />
+                                    {language === "en" ? t.download.en : t.download.cn}
+                                </button>
+                                <HandoffButton
+                                    targetUrl="/tools/image-compressor"
+                                    label="Compress"
+                                    className="px-6 py-4 rounded-2xl text-base font-bold"
+                                    getItems={() => [{
+                                        blob: resultBlob,
+                                        name: `${inputFileName}-no-bg.png`,
+                                        type: "image/png"
+                                    }]}
+                                />
+                            </div>
                         )}
                     </div>
                 </div>

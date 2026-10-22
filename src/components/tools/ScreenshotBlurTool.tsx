@@ -22,6 +22,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
 import { ContinueWith } from "@/components/tools/ContinueWith";
+import { HandoffButton } from "@/lib/handoff";
 
 export interface BlurBox {
     id: string;
@@ -962,14 +963,21 @@ export function ScreenshotBlurTool() {
                                     )}
                                 </span>
                             </div>
-                            <ContinueWith
-                                links={[
-                                    { label: t("Strip EXIF Metadata →", "清除 EXIF 元数据 →"), href: "/tools/exif-remover" },
-                                    { label: t("Compress Image →", "压缩图片体积 →"), href: "/tools/image-compressor/compress-image-to-100kb" },
-                                ]}
-                                getFile={() => exportedFile}
-                                toolId="screenshot-blur"
-                            />
+                            <div className="flex flex-wrap items-center gap-3">
+                                <HandoffButton
+                                    targetUrl="/tools/image-compressor"
+                                    label="Compress"
+                                    getItems={() => [{ blob: exportedFile.blob, name: exportedFile.name, type: "image/png" }]}
+                                />
+                                <ContinueWith
+                                    links={[
+                                        { label: t("Strip EXIF Metadata →", "清除 EXIF 元数据 →"), href: "/tools/exif-remover" },
+                                        { label: t("Compress Image →", "压缩图片体积 →"), href: "/tools/image-compressor/compress-image-to-100kb" },
+                                    ]}
+                                    getFile={() => exportedFile}
+                                    toolId="screenshot-blur"
+                                />
+                            </div>
                         </div>
                     )}
 

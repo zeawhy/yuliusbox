@@ -1178,9 +1178,9 @@ function TimestampTab() {
 /* -------------------------------------------------------------------------
  * Main CodecToolboxTool Component
  * ------------------------------------------------------------------------- */
-export function CodecToolboxTool() {
+export function CodecToolboxTool({ defaultTab = "base64" }: { defaultTab?: "base64" | "hash" | "timestamp" } = {}) {
     const { t } = useLanguage();
-    const [activeTab, setActiveTab] = useState<"base64" | "hash" | "timestamp">("base64");
+    const [activeTab, setActiveTab] = useState<"base64" | "hash" | "timestamp">(defaultTab);
     const hasTrackedView = useRef(false);
 
     useEffect(() => {

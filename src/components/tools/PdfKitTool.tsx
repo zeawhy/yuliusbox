@@ -20,6 +20,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useChainFile } from "@/lib/use-chain-file";
 import { type ChainFile } from "@/lib/tool-chain";
 import { trackToolEvent } from "@/lib/analytics";
+import { useHandoffReceiver, HandoffButton } from "@/lib/handoff";
 
 export type PdfKitMode = "merge" | "compress" | "split" | "extract" | "jpg-to-pdf";
 
@@ -33,10 +34,16 @@ function PdfParamsSync({
     onChainFile,
 }: {
     onTabParam: (tab: PdfKitMode) => void;
-    onChainFile: (file: ChainFile) => void;
+    onChainFile: (file: ChainFile | File) => void;
 }) {
     const searchParams = useSearchParams();
     const chainFile = useChainFile();
+
+    useHandoffReceiver((files) => {
+        for (const f of files) {
+            onChainFile(f);
+        }
+    });
 
     useEffect(() => {
         const tab = searchParams.get("tab") as PdfKitMode | null;
@@ -208,24 +215,24 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
     const [lastCompressedFile, setLastCompressedFile] = useState<File | null>(null);
     const [lastConvertedFile, setLastConvertedFile] = useState<File | null>(null);
 
-    const handleChainFile = useCallback((chain: ChainFile) => {
-        const isImage = chain.blob.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(chain.name);
-        const isPdf = chain.blob.type === "application/pdf" || /\.pdf$/i.test(chain.name);
+    const handleChainFile = useCallback((chain: ChainFile | File) => {
+        const file = chain instanceof File ? chain : new File([chain.blob], chain.name, { type: chain.blob.type || "application/octet-stream" });
+        const isImage = file.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(file.name);
+        const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
 
         if (isImage) {
             trackToolEvent("file_selected", { tool: "pdf-kit", detail: "count:1" });
-            const file = new File([chain.blob], chain.name, { type: chain.blob.type || "image/jpeg" });
             setJpgFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file }]);
             setActiveTab("jpg-to-pdf");
         } else if (isPdf) {
             trackToolEvent("file_selected", { tool: "pdf-kit", detail: "count:1" });
-            const file = new File([chain.blob], chain.name, { type: "application/pdf" });
             if (activeTab === "compress") {
                 setCompressFile(file);
             } else if (activeTab === "split") {
                 setSplitFile(file);
             } else {
                 setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file }]);
+                setActiveTab("merge");
             }
         }
     }, [activeTab]);
@@ -694,20 +701,18 @@ export function PdfKitTool({ defaultMode = "merge" }: PdfKitToolProps) {
                         {lastConvertedFile && (
                             <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                                 <span className="text-emerald-400 font-medium">✓ Converted {lastConvertedFile.name}</span>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
                                     <span className="text-zinc-500">Continue with:</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            trackToolEvent("related_tool_clicked", { tool: "pdf-kit", detail: "target:?tab=merge" });
-                                            setMergeFiles((prev) => [...prev, { id: Math.random().toString(36).substring(7), file: lastConvertedFile }]);
-                                            setActiveTab("merge");
-                                            if (typeof window !== "undefined") window.history.replaceState(null, "", "?tab=merge");
-                                        }}
-                                        className="px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
-                                    >
-                                        Merge PDF →
-                                    </button>
+                                    <HandoffButton
+                                        targetUrl="/tools/pdf-kit?tab=merge"
+                                        label="Merge with other PDFs"
+                                        className="py-1 px-3 text-xs"
+                                        getItems={() => [{
+                                            blob: lastConvertedFile,
+                                            name: lastConvertedFile.name,
+                                            type: "application/pdf"
+                                        }]}
+                                    />
                                     <button
                                         type="button"
                                         onClick={() => {

@@ -5,6 +5,11 @@ import { videoToGifPages } from "./long-tail/video-to-gif";
 import { excelFormulaBotPages } from "./long-tail/excel-formula-bot";
 import { audioToTextPages } from "./long-tail/audio-to-text";
 import { exifRemoverPages } from "./long-tail/exif-remover";
+import { subtitleToolsPages } from "./long-tail/subtitle-tools";
+import { codecToolboxPages } from "./long-tail/codec-toolbox";
+import { jsonToCodePages } from "./long-tail/json-to-code";
+import { imageGridSplitterPages } from "./long-tail/image-grid-splitter";
+import { pdfRedactSignPages } from "./long-tail/pdf-redact-sign";
 
 /**
  * Long-tail scenario pages.
@@ -57,6 +62,11 @@ export const longTailPages: LongTailContent[] = [
     ...excelFormulaBotPages,
     ...audioToTextPages,
     ...exifRemoverPages,
+    ...subtitleToolsPages,
+    ...codecToolboxPages,
+    ...jsonToCodePages,
+    ...imageGridSplitterPages,
+    ...pdfRedactSignPages,
 ];
 
 /** Re-exported for the sample page (keeps its existing import working). */

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --no-warnings --test tests/**/*.test.mjs",
+    "test:redaction": "python3 scripts/test-redaction.py",
     "indexnow": "node scripts/indexnow.mjs",
     "prebuild": "node scripts/sitemap-lastmod.mjs",
     "seo-check": "node --no-warnings --experimental-strip-types scripts/seo-check.ts"

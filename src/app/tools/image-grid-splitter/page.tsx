@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 import { ToolSeoBody } from "@/components/tools/ToolSeoBody";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import Link from "next/link";
 import ImageGridSplitterClient from "./ImageGridSplitterClient";
 
 const SECTIONS = [
@@ -83,6 +84,18 @@ export default function ImageGridSplitterPage() {
                 </div>
                 <ImageGridSplitterClient />
             </div>
+
+            <div className="w-full max-w-3xl mx-auto mt-8 p-4 rounded-xl border border-zinc-800 bg-zinc-900/40">
+                <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-1">Popular Preset</p>
+                <Link
+                    href="/tools/image-grid-splitter/instagram-3x3-grid-maker"
+                    className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                >
+                    <span>Instagram 3×3 Grid Maker — Feed Slicer with Reverse Posting Order</span>
+                    <span>→</span>
+                </Link>
+            </div>
+
             <ToolSeoBody sections={SECTIONS} howTo={HOW_TO} useCases={USE_CASES} faqs={FAQS} />
             <div className="w-full mt-12 sm:mt-16">
                 <RelatedTools slug="image-grid-splitter" />

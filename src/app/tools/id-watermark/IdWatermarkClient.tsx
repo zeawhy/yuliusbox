@@ -28,6 +28,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { ContinueWith } from "@/components/tools/ContinueWith";
 import { useChainFile } from "@/lib/use-chain-file";
 import { trackToolEvent } from "@/lib/analytics";
+import { HandoffButton } from "@/lib/handoff";
 
 
 function IDWatermarkChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
@@ -389,14 +390,16 @@ function IDWatermarkContent() {
         });
     };
 
-    const downloadImage = () => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+    const downloadImage = async () => {
+        const item = await getWatermarkedBlob();
+        if (!item) return;
         trackToolEvent("download_clicked", { tool: "id-watermark" });
+        const url = URL.createObjectURL(item.blob);
         const link = document.createElement("a");
-        link.download = `watermarked_${file?.name || "image.png"}`;
-        link.href = canvas.toDataURL("image/png");
+        link.download = item.name;
+        link.href = url;
         link.click();
+        URL.revokeObjectURL(url);
     };
 
     return (
@@ -589,14 +592,28 @@ function IDWatermarkContent() {
                             {language === "en" ? t.reminder.en : t.reminder.cn}
                         </div>
 
-                        <button
-                            onClick={downloadImage}
-                            disabled={!image}
-                            className="w-full py-3.5 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
-                        >
-                            <Download className="w-5 h-5" />
-                            {language === "en" ? t.download.en : t.download.cn}
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                onClick={downloadImage}
+                                disabled={!image}
+                                className="flex-1 py-3.5 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                            >
+                                <Download className="w-5 h-5" />
+                                {language === "en" ? t.download.en : t.download.cn}
+                            </button>
+                            {image && (
+                                <HandoffButton
+                                    targetUrl="/tools/pdf-kit?tab=jpg-to-pdf"
+                                    label="Turn into PDF"
+                                    className="py-3.5 px-6 font-bold"
+                                    getItems={async () => {
+                                        const item = await getWatermarkedBlob();
+                                        if (!item) throw new Error("No image generated");
+                                        return [item];
+                                    }}
+                                />
+                            )}
+                        </div>
 
                         {image && (
                             <ContinueWith

@@ -28,7 +28,6 @@ export const NOINDEX_TOOL_PATHS: string[] = [
     "/tools/cron-generator",
     "/tools/email-paraphraser",
     "/tools/image-grid-joiner",
-    "/tools/json-to-code",
     "/tools/regex-generator",
     "/tools/safe-zone-overlay",
     // speed-test keeps noindex for now: it received the SSR shell fix but
