@@ -14,6 +14,7 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
 import { ContinueWith } from "@/components/tools/ContinueWith";
+import { HandoffButton } from "@/lib/handoff";
 
 // Logic ported from wipefey (MIT, github.com/seizmann/wipefey):
 // canvas re-encode discards EXIF/XMP/IPTC/ICC/PNG text chunks entirely.
@@ -384,14 +385,24 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                         {t(`Clean all (${readyCount})`, `全部清理 (${readyCount})`)}
                     </button>
                     {doneCount > 1 && (
-                        <button
-                            onClick={downloadZip}
-                            disabled={zipping}
-                            className="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-sm transition-colors flex items-center gap-2 disabled:opacity-50"
-                        >
-                            {zipping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Package className="w-4 h-4" />}
-                            {t("Download all as ZIP", "打包下载 ZIP")}
-                        </button>
+                        <>
+                            <button
+                                onClick={downloadZip}
+                                disabled={zipping}
+                                className="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-sm transition-colors flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {zipping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Package className="w-4 h-4" />}
+                                {t("Download all as ZIP", "打包下载 ZIP")}
+                            </button>
+                            <HandoffButton
+                                targetUrl="/tools/image-compressor"
+                                label="Compress all photos"
+                                getItems={() => items.filter((it) => it.cleanedBlob).map((it) => ({
+                                    blob: it.cleanedBlob as Blob,
+                                    name: it.cleanedName,
+                                }))}
+                            />
+                        </>
                     )}
                 </div>
             )}
@@ -523,10 +534,15 @@ function ExifChainSync({ onChainFile }: { onChainFile: (file: File) => void }) {
                                                 trackToolEvent("download_clicked", { tool: "exif-remover", detail: "format:single" });
                                                 downloadBlob(item.cleanedBlob as Blob, item.cleanedName);
                                             }}
-                                            className="px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-medium transition-colors flex items-center gap-1.5"
+                                            className="px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
                                         >
                                             <Download className="w-4 h-4" />{t("Download clean copy", "下载干净版本")}
                                         </button>
+                                        <HandoffButton
+                                            targetUrl="/tools/image-compressor"
+                                            label="Compress this photo"
+                                            getItems={() => [{ blob: item.cleanedBlob as Blob, name: item.cleanedName }]}
+                                        />
                                         <ContinueWith
                                             links={[
                                                 {

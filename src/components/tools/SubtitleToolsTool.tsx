@@ -342,9 +342,9 @@ function computeStats(cues: SubtitleCue[]) {
     };
 }
 
-export function SubtitleToolsTool() {
+export function SubtitleToolsTool({ defaultTab = "converter" }: { defaultTab?: "converter" | "burn" } = {}) {
     const { t } = useLanguage();
-    const [activeTab, setActiveTab] = useState<"converter" | "burn">("converter");
+    const [activeTab, setActiveTab] = useState<"converter" | "burn">(defaultTab);
 
     // ==========================================
     // TAB 1: CONVERTER STATE

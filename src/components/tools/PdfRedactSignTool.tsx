@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, PDFName, rgb } from "pdf-lib";
 import * as pdfjsLib from "pdfjs-dist";
 import {
     Upload,
@@ -497,8 +497,9 @@ export function PdfRedactSignTool() {
                 const pageBoxes = redactionBoxes.filter((b) => b.page === pageNum);
                 const pageSigs = placedSignatures.filter((s) => s.page === pageNum);
 
-                if (pageBoxes.length > 0 && thoroughMode) {
-                    // Thorough Mode: Rasterize page at 2x scale via pdf.js
+                if (pageBoxes.length > 0) {
+                    // True Irreversible Redaction: Rasterize page at 2x scale via pdf.js
+                    // This permanently destroys all underlying text streams, fonts, vectors, and hidden objects
                     const page = await pdfjsDoc.getPage(pageNum);
                     const viewport = page.getViewport({ scale: 2.0 });
 
@@ -563,30 +564,12 @@ export function PdfRedactSignTool() {
                         });
                     }
                 } else {
-                    // Copy untouched page or visual cover mode
+                    // Copy untouched page without redactions
                     const [copiedPage] = await outPdf.copyPages(origPdf, [i]);
                     outPdf.addPage(copiedPage);
 
                     const pW = copiedPage.getWidth();
                     const pH = copiedPage.getHeight();
-
-                    // If visual cover mode: draw black rectangles on top
-                    if (pageBoxes.length > 0 && !thoroughMode) {
-                        for (const box of pageBoxes) {
-                            const bw = box.w * pW;
-                            const bh = box.h * pH;
-                            const bx = box.x * pW;
-                            const by = pH - box.y * pH - bh;
-
-                            copiedPage.drawRectangle({
-                                x: bx,
-                                y: by,
-                                width: bw,
-                                height: bh,
-                                color: rgb(0, 0, 0),
-                            });
-                        }
-                    }
 
                     // Draw signatures onto this page
                     for (const sig of pageSigs) {
@@ -605,6 +588,19 @@ export function PdfRedactSignTool() {
                         });
                     }
                 }
+            }
+
+            // Strip document metadata to ensure complete privacy
+            outPdf.setTitle("");
+            outPdf.setAuthor("");
+            outPdf.setSubject("");
+            outPdf.setKeywords([]);
+            outPdf.setProducer("");
+            outPdf.setCreator("");
+            try {
+                outPdf.catalog.delete(PDFName.of("Metadata"));
+            } catch {
+                // Ignore if not present
             }
 
             setExportProgress(t("Saving and downloading...", "正在打包下载..."));
@@ -803,34 +799,23 @@ export function PdfRedactSignTool() {
                                     </p>
                                 </div>
 
-                                {/* Thorough mode toggle */}
-                                <div className="rounded-xl border border-zinc-800 bg-black/30 p-3 flex items-start gap-3">
-                                    <input
-                                        type="checkbox"
-                                        id="thorough-toggle"
-                                        checked={thoroughMode}
-                                        onChange={(e) => setThoroughMode(e.target.checked)}
-                                        className="mt-1 h-4 w-4 rounded accent-emerald-500 bg-zinc-800 border-zinc-700 cursor-pointer"
-                                    />
-                                    <label htmlFor="thorough-toggle" className="text-xs space-y-1 cursor-pointer">
+                                {/* True Redaction Security Note */}
+                                <div className="rounded-xl border border-emerald-900/60 bg-emerald-950/20 p-3.5 flex items-start gap-3">
+                                    <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                                    <div className="text-xs space-y-1">
                                         <p className="font-medium text-white flex items-center gap-1.5">
-                                            <span>{t("Thorough Mode (Permanent)", "彻底脱敏（推荐）")}</span>
+                                            <span>{t("True Irreversible Redaction", "真删除不可逆脱敏")}</span>
                                             <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-normal">
-                                                {t("Secure", "真删除")}
+                                                {t("Guaranteed", "已启用")}
                                             </span>
                                         </p>
                                         <p className="text-zinc-400 leading-normal">
-                                            {thoroughMode
-                                                ? t(
-                                                      "Rasterizes redacted pages to flat images. Underlying text streams are 100% destroyed.",
-                                                      "将脱敏页光栅化为图片，彻底销毁底层文本，无法被反选或复制。"
-                                                  )
-                                                : t(
-                                                      "Warning: Visual cover only. Underlying text remains selectable/searchable in PDF viewers.",
-                                                      "警告：仅画黑色图层遮盖，底层文字依然可能被搜索或选中复制。"
-                                                  )}
+                                            {t(
+                                                "Redacted pages are flattened to high-resolution images, so the original text is removed, not just covered. Treated pages cannot be text-searched or selected.",
+                                                "被脱敏的页面将光栅化为高清图片，底层文本被真正物理销毁而非简单图层覆盖。被处理页面的文字将无法被再次选中或全文搜索。"
+                                            )}
                                         </p>
-                                    </label>
+                                    </div>
                                 </div>
 
                                 {/* Box counts & actions */}

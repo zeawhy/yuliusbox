@@ -1,46 +1,35 @@
 "use client";
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { PdfRedactSignTool } from "@/components/tools/PdfRedactSignTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import Link from "next/link";
 
 const FAQS = [
     {
-        q: "What is the difference between Thorough Mode and visual cover?",
-        a: "Thorough Mode (enabled by default) rasterizes any page containing redactions into a flattened high-resolution image with the blackout rectangles baked into the raw pixel data, discarding the original text streams and vector objects entirely. In contrast, visual cover mode merely draws black boxes on top of the existing PDF page; the underlying text characters remain intact in the document stream and can still be searched, selected, or copied by anyone opening the file.",
+        q: "How does true redaction work, and are there any side effects?",
+        a: "Redacted pages are flattened to high-resolution images, so the original text is removed, not just covered. All underlying vector text streams, fonts, annotations, and metadata are permanently destroyed. The trade-offs: text on treated pages can no longer be selected or searched, and the output file size for those pages may increase compared to pure vector text.",
     },
     {
-        q: "Is an electronic signature added here legally binding?",
-        a: "Signatures created here are simple electronic signatures (SES) — graphical stamps of your handwritten signature or uploaded image. Under laws such as the US ESIGN Act and EU eIDAS regulation, simple electronic signatures are generally valid for everyday commercial agreements, purchase orders, approval forms, and NDAs. However, they do not provide cryptographic certificate-based non-repudiation (such as Advanced or Qualified Electronic Signatures). Legal enforceability depends on your jurisdiction, governing law, and document requirements.",
+        q: "Why do simple black boxes in standard PDF editors fail?",
+        a: "Drawing a black rectangle in a typical PDF viewer merely adds an annotation or vector shape on top of the text. The underlying characters remain intact in the document stream and can still be searched (Ctrl+F) or copied (Ctrl+C). Our tool completely rasterizes redacted pages to bitmaps, eliminating the text stream at the byte level.",
     },
     {
         q: "Does this tool upload my PDF or signature to your servers?",
         a: "No, never. All document parsing, rendering, redaction, signature stamping, and final PDF generation take place entirely within your browser using WebAssembly and client-side JavaScript (pdf-lib and PDF.js). Zero bytes of your document or signature leave your machine.",
     },
     {
-        q: "Why does rasterization permanently remove underlying text?",
-        a: "Standard PDFs store textual information as coordinates and font character codes in a content stream. When a page is rasterized, the PDF rendering engine flattens all fonts, vectors, and layers into a single grid of pixels (bitmap), and the black redaction rectangles paint over those exact pixels. Because the original PDF content stream is replaced with the flattened image, the text data is physically destroyed and cannot be retrieved.",
+        q: "Is an electronic signature added here legally binding?",
+        a: "Signatures created here are simple electronic signatures (SES) — graphical stamps of your handwritten signature or uploaded image. Under laws such as the US ESIGN Act and EU eIDAS regulation, simple electronic signatures are generally valid for everyday commercial agreements, purchase orders, approval forms, and NDAs. However, they do not provide cryptographic certificate-based non-repudiation (such as Advanced or Qualified Electronic Signatures). Legal enforceability depends on your jurisdiction, governing law, and document requirements.",
     },
     {
         q: "What happens to pages that do not have any redactions?",
-        a: "Pages without any redaction marks are copied directly from the original PDF as lossless vector pages. Their crisp fonts, selectable text, internal links, and compact file size are preserved 100% intact. Only pages containing redactions undergo rasterization when Thorough Mode is active.",
+        a: "Pages without any redaction marks are copied directly from the original PDF as lossless vector pages. Their crisp fonts, selectable text, internal links, and compact file size are preserved 100% intact. Only pages containing redactions undergo image rasterization.",
     },
 ];
-
-const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((f) => ({
-        "@type": "Question",
-        name: f.q,
-        acceptedAnswer: {
-            "@type": "Answer",
-            text: f.a,
-        },
-    })),
-};
 
 export default function PdfRedactSignPage() {
     return (
@@ -107,25 +96,19 @@ export default function PdfRedactSignPage() {
                         PDF stream at crisp native resolution.
                     </p>
 
-                    <h2 className="text-xl font-semibold text-white">Frequently asked questions</h2>
-                    <script
-                        type="application/ld+json"
-                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-                    />
-                    <div className="space-y-3">
-                        {FAQS.map((f) => (
-                            <details
-                                key={f.q}
-                                className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 transition-colors"
-                            >
-                                <summary className="cursor-pointer text-white font-medium hover:text-emerald-400 transition-colors">
-                                    {f.q}
-                                </summary>
-                                <p className="mt-2 text-zinc-400 leading-relaxed">{f.a}</p>
-                            </details>
-                        ))}
+                    <div className="pt-4 border-t border-zinc-800">
+                        <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-2">Dedicated Scenario Tools</p>
+                        <Link
+                            href="/tools/pdf-redact-sign/redact-pdf-online-free"
+                            className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                        >
+                            <span>Redact PDF Online Free — Complete Guide & Redaction Tool</span>
+                            <span>→</span>
+                        </Link>
                     </div>
                 </div>
+
+                <FaqSection items={FAQS} />
             </div>
 
             <Footer />

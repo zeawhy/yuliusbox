@@ -10,15 +10,26 @@ import Image from "next/image";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { trackToolEvent } from "@/lib/analytics";
 
-export default function ImageGridSplitterClient() {
+interface ImageGridSplitterClientProps {
+    initialRows?: number;
+    initialColumns?: number;
+    initialInstagramOrder?: boolean;
+}
+
+export default function ImageGridSplitterClient({
+    initialRows = 3,
+    initialColumns = 3,
+    initialInstagramOrder = false,
+}: ImageGridSplitterClientProps = {}) {
     const { language } = useLanguage();
 
     // Core State
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string>("");
-    const [rows, setRows] = useState(3);
-    const [columns, setColumns] = useState(3);
+    const [rows, setRows] = useState(initialRows);
+    const [columns, setColumns] = useState(initialColumns);
     const [insetPercent, setInsetPercent] = useState(1);
+    const [instagramOrder, setInstagramOrder] = useState(initialInstagramOrder);
     const [status, setStatus] = useState<"idle" | "splitting" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -170,8 +181,18 @@ export default function ImageGridSplitterClient() {
                     const promise = new Promise<void>((resolve, reject) => {
                         sliceCanvas.toBlob((blob) => {
                             if (blob) {
-                                const index = (r * columns) + c + 1;
-                                const filename = `${originalBaseName}_part_${index.toString().padStart(2, '0')}.${outputExt}`;
+                                const totalTiles = rows * columns;
+                                let filename = "";
+                                if (instagramOrder) {
+                                    // Instagram feed orders from bottom-right to top-left.
+                                    // Post #1 is row (rows - 1), col (columns - 1).
+                                    // Post #total is row 0, col 0.
+                                    const postIndex = (rows - 1 - r) * columns + (columns - 1 - c) + 1;
+                                    filename = `post_${postIndex.toString().padStart(2, '0')}_of_${totalTiles.toString().padStart(2, '0')}_${originalBaseName}.${outputExt}`;
+                                } else {
+                                    const index = (r * columns) + c + 1;
+                                    filename = `${originalBaseName}_part_${index.toString().padStart(2, '0')}.${outputExt}`;
+                                }
                                 zip.file(filename, blob);
                                 resolve();
                             } else {
@@ -226,6 +247,49 @@ export default function ImageGridSplitterClient() {
                             </h3>
 
                             <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2 block">
+                                        {language === "en" ? "Popular Grid Presets" : "常用网格预设"}
+                                    </label>
+                                    <div className="grid grid-cols-3 gap-1.5 bg-zinc-950 p-1 rounded-lg border border-zinc-800 text-xs">
+                                        <button
+                                            type="button"
+                                            onClick={() => { setColumns(3); setRows(3); setInstagramOrder(true); }}
+                                            className={cn("py-1.5 rounded font-medium transition-colors", columns === 3 && rows === 3 ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white")}
+                                        >
+                                            3×3
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => { setColumns(3); setRows(2); setInstagramOrder(true); }}
+                                            className={cn("py-1.5 rounded font-medium transition-colors", columns === 3 && rows === 2 ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white")}
+                                        >
+                                            3×2
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => { setColumns(3); setRows(1); setInstagramOrder(true); }}
+                                            className={cn("py-1.5 rounded font-medium transition-colors", columns === 3 && rows === 1 ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white")}
+                                        >
+                                            3×1
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <label className="flex items-start gap-2 text-xs text-zinc-300 cursor-pointer pt-1">
+                                    <input
+                                        type="checkbox"
+                                        checked={instagramOrder}
+                                        onChange={(e) => setInstagramOrder(e.target.checked)}
+                                        className="mt-0.5 rounded accent-emerald-500 bg-zinc-800 border-zinc-700"
+                                    />
+                                    <span>
+                                        {language === "en"
+                                            ? "Number ZIP for Instagram (Post #01 first)"
+                                            : "按 Instagram 发布顺序编号（先发第 01 张）"}
+                                    </span>
+                                </label>
+
                                 <div>
                                     <label className="text-sm text-zinc-400 mb-1.5 block">{language === "en" ? t.columns.en : t.columns.cn}</label>
                                     <input

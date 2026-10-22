@@ -1,10 +1,12 @@
 "use client";
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { SubtitleToolsTool } from "@/components/tools/SubtitleToolsTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import Link from "next/link";
 
 const FAQS = [
     {
@@ -28,19 +30,6 @@ const FAQS = [
         a: "Converting between SRT and WebVTT is purely text transformation and executes in milliseconds. In contrast, burning subtitles requires decoding each video frame, drawing vector glyphs onto the frame at your specified font size and margin, and re-encoding with H.264 video compression. Because your browser's WebAssembly sandbox uses a subset of CPU threads, encoding a 1-minute video typically takes between 30 to 90 seconds depending on your computer's speed.",
     },
 ];
-
-const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((f) => ({
-        "@type": "Question",
-        name: f.q,
-        acceptedAnswer: {
-            "@type": "Answer",
-            text: f.a,
-        },
-    })),
-};
 
 export default function SubtitleToolsPage() {
     return (
@@ -103,23 +92,19 @@ export default function SubtitleToolsPage() {
                         regardless of whether the player supports subtitle tracks.
                     </p>
 
-                    <h2 className="text-xl font-semibold text-white">
-                        Frequently Asked Questions
-                    </h2>
-                    <script
-                        type="application/ld+json"
-                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-                    />
-                    <div className="space-y-3">
-                        {FAQS.map((f) => (
-                            <details key={f.q} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-                                <summary className="cursor-pointer text-white font-medium">{f.q}</summary>
-                                <p className="mt-2 text-zinc-400">{f.a}</p>
-                            </details>
-                        ))}
+                    <div className="pt-4 border-t border-zinc-800">
+                        <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-2">Dedicated Subtitle Converter</p>
+                        <Link
+                            href="/tools/subtitle-tools/srt-to-vtt-converter"
+                            className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                        >
+                            <span>SRT to VTT Converter — HTML5 Subtitle Formatter</span>
+                            <span>→</span>
+                        </Link>
                     </div>
                 </div>
 
+                <FaqSection items={FAQS} />
                 <Footer />
             </div>
         </div>

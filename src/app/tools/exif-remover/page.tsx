@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { ExifRemoverTool } from "@/components/tools/ExifRemoverTool";
 import { ExifRemoverScenario } from "@/components/tools/ExifRemoverScenario";
 import { Header } from "@/components/layout/Header";
@@ -13,6 +14,10 @@ const FAQS = [
     {
         q: "What is EXIF data?",
         a: "EXIF (Exchangeable Image File Format) is metadata your camera or phone embeds in every photo: camera make and model, shooting date and time, exposure settings, and sometimes precise GPS coordinates. It's invisible in normal viewing but trivially readable by anyone who downloads the file.",
+    },
+    {
+        q: "Does removing EXIF hide where a photo was taken?",
+        a: "Removing EXIF strips digital metadata like GPS coordinates, camera model, and timestamp, but it cannot alter visual landmarks, street signs, building numbers, or recognizable faces within the photo pixels themselves. To protect your location privacy completely, inspect the image visually and crop or blur any identifiable background details before sharing.",
     },
     {
         q: "Does removing EXIF reduce image quality?",
@@ -91,16 +96,9 @@ export default function ExifRemoverPage() {
                         so the downloaded copy carries no EXIF, GPS, IPTC or XMP metadata. Removing metadata
                         can&apos;t hide landmarks, faces or text visible in the photo itself.
                     </p>
-                    <h2 className="text-xl font-semibold text-white">Frequently asked questions</h2>
-                    <div className="space-y-3">
-                        {FAQS.map((f) => (
-                            <details key={f.q} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-                                <summary className="cursor-pointer text-white font-medium">{f.q}</summary>
-                                <p className="mt-2">{f.a}</p>
-                            </details>
-                        ))}
-                    </div>
                 </div>
+
+                <FaqSection items={FAQS} />
             </div>
 
             <Footer />

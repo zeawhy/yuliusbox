@@ -10,10 +10,20 @@ import { trackToolEvent } from "@/lib/analytics";
 
 type OutputLanguage = "typescript" | "go" | "dart";
 
-export default function JsonConverterClient() {
+interface JsonConverterClientProps {
+    defaultLanguage?: OutputLanguage;
+    defaultTsKind?: "interface" | "type";
+}
+
+export default function JsonConverterClient({
+    defaultLanguage = "typescript",
+    defaultTsKind = "interface",
+}: JsonConverterClientProps = {}) {
     const { language } = useLanguage();
     const [jsonInput, setJsonInput] = useState("");
-    const [outputLanguage, setOutputLanguage] = useState<OutputLanguage>("typescript");
+    const [outputLanguage, setOutputLanguage] = useState<OutputLanguage>(defaultLanguage);
+    const [tsKind, setTsKind] = useState<"interface" | "type">(defaultTsKind);
+    const [makeOptional, setMakeOptional] = useState<boolean>(false);
     const [result, setResult] = useState("");
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState("");
@@ -48,24 +58,25 @@ export default function JsonConverterClient() {
     };
 
     const convertToTypeScript = (obj: any, rootName = "Root"): string => {
-        let result = `interface ${toPascalCase(rootName)} {\n`;
+        const opt = makeOptional ? "?" : "";
+        let result = tsKind === "interface" ? `interface ${toPascalCase(rootName)} {\n` : `type ${toPascalCase(rootName)} = {\n`;
         for (const key in obj) {
             const val = obj[key];
             const type = getType(val);
             if (type === "object") {
-                result += `  ${key}: {\n`;
+                result += `  ${key}${opt}: {\n`;
                 for (const subKey in val) {
-                    result += `    ${subKey}: ${getType(val[subKey])};\n`;
+                    result += `    ${subKey}${opt}: ${getType(val[subKey])};\n`;
                 }
                 result += `  };\n`;
             } else if (type === "array") {
                 const itemType = val.length > 0 ? getType(val[0]) : "any";
-                result += `  ${key}: ${itemType === "object" ? "any" : itemType}[];\n`;
+                result += `  ${key}${opt}: ${itemType === "object" ? "any" : itemType}[];\n`;
             } else {
-                result += `  ${key}: ${type};\n`;
+                result += `  ${key}${opt}: ${type};\n`;
             }
         }
-        result += `}\n`;
+        result += tsKind === "interface" ? `}\n` : `};\n`;
         return result;
     };
 
@@ -165,7 +176,7 @@ export default function JsonConverterClient() {
 
             {/* Toolbar */}
             <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-4">
                     <span className="text-sm font-medium text-zinc-400 flex items-center gap-2">
                         <Languages className="w-4 h-4" /> {language === "en" ? "Target:" : "目标语言:"}
                     </span>
@@ -183,6 +194,40 @@ export default function JsonConverterClient() {
                             </button>
                         ))}
                     </div>
+
+                    {outputLanguage === "typescript" && (
+                        <div className="flex items-center gap-3 pl-2 border-l border-zinc-800">
+                            <div className="flex p-1 bg-zinc-950 rounded-lg border border-zinc-800 text-xs">
+                                <button
+                                    onClick={() => setTsKind("interface")}
+                                    className={cn(
+                                        "px-2.5 py-1 rounded transition-colors",
+                                        tsKind === "interface" ? "bg-zinc-800 text-white font-semibold" : "text-zinc-400 hover:text-white"
+                                    )}
+                                >
+                                    interface
+                                </button>
+                                <button
+                                    onClick={() => setTsKind("type")}
+                                    className={cn(
+                                        "px-2.5 py-1 rounded transition-colors",
+                                        tsKind === "type" ? "bg-zinc-800 text-white font-semibold" : "text-zinc-400 hover:text-white"
+                                    )}
+                                >
+                                    type alias
+                                </button>
+                            </div>
+                            <label className="flex items-center gap-1.5 text-xs text-zinc-400 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={makeOptional}
+                                    onChange={(e) => setMakeOptional(e.target.checked)}
+                                    className="rounded accent-emerald-500 bg-zinc-800 border-zinc-700"
+                                />
+                                <span>Optional (?)</span>
+                            </label>
+                        </div>
+                    )}
                 </div>
                 <button
                     onClick={handleConvert}

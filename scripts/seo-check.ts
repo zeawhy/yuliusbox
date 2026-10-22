@@ -210,15 +210,50 @@ async function main() {
     process.exit(1);
   }
 
-  const locMatches = [...sitemapXml.matchAll(/<loc>(.*?)<\/loc>/g)];
-  const urls = locMatches.map((m) => m[1].trim()).filter(Boolean);
-
-  if (urls.length === 0) {
-    console.error(`❌ No URLs found in sitemap at ${sitemapUrl}`);
+  const urlBlocks = [...sitemapXml.matchAll(/<url>([\s\S]*?)<\/url>/g)];
+  if (urlBlocks.length === 0) {
+    console.error(`❌ No <url> blocks found in sitemap at ${sitemapUrl}`);
     process.exit(1);
   }
 
-  console.log(`Found ${urls.length} URLs in /sitemap.xml. Beginning validation...\n`);
+  console.log(`Found ${urlBlocks.length} entries in /sitemap.xml. Verifying lastmod tags...`);
+
+  let lastmodErrors = 0;
+  const urls: string[] = [];
+
+  for (const block of urlBlocks) {
+    const content = block[1];
+    const locMatch = content.match(/<loc>(.*?)<\/loc>/);
+    const lastmodMatch = content.match(/<lastmod>(.*?)<\/lastmod>/);
+    const loc = locMatch ? locMatch[1].trim() : "unknown";
+
+    if (!locMatch || !loc) {
+      console.error(`❌ Sitemap block missing <loc>`);
+      lastmodErrors++;
+      continue;
+    }
+    urls.push(loc);
+
+    if (!lastmodMatch || !lastmodMatch[1].trim()) {
+      console.error(`❌ Sitemap URL missing <lastmod>: ${loc}`);
+      lastmodErrors++;
+    } else {
+      const lm = lastmodMatch[1].trim();
+      const parsed = Date.parse(lm);
+      if (isNaN(parsed)) {
+        console.error(`❌ Sitemap URL has invalid <lastmod> date "${lm}": ${loc}`);
+        lastmodErrors++;
+      }
+    }
+  }
+
+  if (lastmodErrors > 0) {
+    console.error(`\n❌ Sitemap validation failed: ${lastmodErrors} URLs missing or having invalid <lastmod>\n`);
+    process.exit(1);
+  }
+  console.log(`✅ All ${urlBlocks.length} sitemap entries have valid <lastmod> dates.\n`);
+
+  console.log(`Beginning page SEO validation for ${urls.length} URLs...\n`);
 
   const issues: PageIssue[] = [];
   let passedCount = 0;

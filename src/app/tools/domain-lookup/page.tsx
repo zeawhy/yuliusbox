@@ -1,6 +1,7 @@
 "use client";
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { DomainLookupTool } from "@/components/tools/DomainLookupTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -26,6 +27,10 @@ const FAQS = [
     {
         q: "Which domain extensions are supported?",
         a: "Any TLD with an RDAP server in IANA's bootstrap registry — that covers .com, .net, .org, .io, .ai, .dev and hundreds more. If a TLD has no RDAP endpoint (some country-code registries still don't), the tool will tell you instead of guessing.",
+    },
+    {
+        q: "How frequently is RDAP registry data updated?",
+        a: "RDAP queries fetch records directly from the registry or registrar's authoritative servers in real time. However, changes made at a registrar (such as DNS nameserver updates or renewal grace periods) may take anywhere from a few minutes to 24–48 hours to propagate across global DNS and registry caches.",
     },
 ];
 
@@ -72,16 +77,9 @@ export default function DomainLookupPage() {
                         some names are registry-reserved or premium even without a public record, so always
                         confirm on a registrar before celebrating.
                     </p>
-                    <h2 className="text-xl font-semibold text-white">Frequently asked questions</h2>
-                    <div className="space-y-3">
-                        {FAQS.map((f) => (
-                            <details key={f.q} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-                                <summary className="cursor-pointer text-white font-medium">{f.q}</summary>
-                                <p className="mt-2">{f.a}</p>
-                            </details>
-                        ))}
-                    </div>
                 </div>
+
+                <FaqSection items={FAQS} />
             </div>
 
             <Footer />

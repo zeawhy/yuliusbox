@@ -690,6 +690,177 @@ export const compressImageTo1mb: LongTailContent = {
     ],
 };
 
+export const compressImageTo20kb: LongTailContent = {
+    id: "compress-image-to-20kb",
+    slug: "compress-image-to-20kb",
+    hubId: "image-compressor",
+    href: "/tools/image-compressor/compress-image-to-20kb",
+    crumb: "Compress Image to 20KB",
+    h1: "Compress Image to 20KB Online — Free & Fast",
+    subtitle:
+        "Shrink photos and signatures to under 20KB for civil service exams, university portals, and government application forms. 100% in your browser.",
+    metaTitle: "Compress Image to 20KB Online Free | YuliusBox",
+    metaDescription:
+        "Compress photos and signatures to under 20KB for exam and government portal uploads. 100% private, runs in your browser.",
+    keywords: [
+        "compress image to 20kb",
+        "20kb photo compressor",
+        "compress signature to 20kb",
+        "reduce image size to 20kb",
+    ],
+    preset: { targetSizeMB: 0.02 },
+    howTo: [
+        "Drop your application portrait or scanned signature into the compression box above.",
+        "The encoder automatically sets the target ceiling to 20KB (0.02MB) and optimizes JPEG quality.",
+        "Check the live preview to verify that dimensions match your portal specifications (e.g., 200×230 px for photos, 140×60 px for signatures).",
+        "Download your compressed JPEG image instantly, completely private and ready to submit.",
+    ],
+    sections: [
+        {
+            heading: "Why 20KB is common on exam and government portals",
+            paragraphs: [
+                "Many public recruitment exams, university admission boards, and government registration websites enforce strict file size limits between 10KB and 20KB. These legacy constraints were originally designed to manage database BLOB storage and bandwidth across millions of simultaneous applicants. Submitting a file even one byte over 20KB triggers immediate rejection.",
+                "Modern smartphone photos measure 3MB to 12MB, making manual resizing difficult without the right tools. This tool automatically dials compression down iteratively until the image lands cleanly beneath 20KB without manual trial and error.",
+            ],
+        },
+        {
+            heading: "Recommended dimensions for 20KB photos and signatures",
+            paragraphs: [
+                "For applicant portraits, typical portals mandate dimensions such as 200×230 pixels (or 3.5×4.5 cm at 150 DPI). At this resolution, a well-lit face with a solid light background easily compresses under 20KB while preserving identifiable features.",
+                "For handwritten signatures, standard portal specifications recommend roughly 140×60 pixels. Signatures written in clear black or dark blue ink on clean unlined paper compress efficiently because white background pixels take up negligible data in JPEG encoding.",
+            ],
+        },
+        {
+            heading: "Local browser processing protects sensitive documents",
+            paragraphs: [
+                "Your applicant photograph and personal signature are sensitive biometric and legal credentials. Many free online compressors upload your files to remote cloud servers where they may be logged or retained. YuliusBox executes all encoding directly on your device via WebAssembly — zero bytes ever leave your browser.",
+            ],
+        },
+    ],
+    faqs: [
+        {
+            question: "Why do recruitment and exam portals strictly enforce a 20KB limit?",
+            answer: "Portals processing hundreds of thousands of candidates simultaneously limit database storage and guarantee rapid server-side batch processing. A 10–20KB limit ensures millions of records load quickly on government servers.",
+        },
+        {
+            question: "Will my handwritten signature remain sharp and legible under 20KB?",
+            answer: "Yes, provided the source image has clean contrast. Write with dark ink on blank white paper in good lighting. When downscaled to typical signature bounds (around 140×60 px), the strokes remain crisp and fully legible under 20KB.",
+        },
+        {
+            question: "What dimensions should I use for 20KB portal photos?",
+            answer: "Most civil service and entrance exam forms request dimensions around 200×230 pixels or 3.5×4.5 cm. Verify the exact pixel or millimeter requirements on your application notice before submitting.",
+        },
+        {
+            question: "Is my photo or signature uploaded to any server during compression?",
+            answer: "Never. The compression algorithm executes locally on your device using client-side WebAssembly and HTML5 Canvas. Your files are never transmitted across the network or stored in any database.",
+        },
+    ],
+    related: [
+        {
+            href: "/tools/image-compressor/compress-passport-photo",
+            label: "Compress passport photo",
+        },
+        {
+            href: "/tools/id-watermark",
+            label: "Watermark ID before submitting",
+        },
+        {
+            href: "/tools/exif-remover",
+            label: "Remove photo metadata & GPS",
+        },
+        {
+            href: "/tools/pdf-kit",
+            label: "Turn images into PDF application packet",
+        },
+    ],
+};
+
+export const compressPassportPhoto: LongTailContent = {
+    id: "compress-passport-photo",
+    slug: "compress-passport-photo",
+    hubId: "image-compressor",
+    href: "/tools/image-compressor/compress-passport-photo",
+    crumb: "Compress Passport Photo",
+    h1: "Compress Passport & Visa Photos Online — Free",
+    subtitle:
+        "Reduce passport and visa photo file sizes to under 240KB while keeping facial details crisp. Processed locally in your browser.",
+    metaTitle: "Compress Passport Photo Online Free | YuliusBox",
+    metaDescription:
+        "Compress passport and visa photos to under 240KB in your browser. 100% private, no server upload. Always check official embassy rules.",
+    keywords: [
+        "compress passport photo",
+        "passport photo size reducer",
+        "visa photo compressor",
+        "passport photo 240kb",
+    ],
+    preset: { targetSizeMB: 0.24 },
+    howTo: [
+        "Select or drag your passport portrait photo onto the upload area above.",
+        "The compressor targets a safe file size below 240KB (the standard maximum for US, UK, and Schengen online portals).",
+        "Inspect the facial preview to ensure lighting, iris sharpness, and neutral background are preserved.",
+        "Download your compressed JPEG photo. Always verify your dimensions against your specific embassy's official checklist.",
+    ],
+    sections: [
+        {
+            heading: "Standard digital requirements for passport and visa photos",
+            paragraphs: [
+                "Most online visa and passport application portals (such as the US Department of State CEAC DS-160, UK HMPO, and Schengen consular portals) enforce strict technical file boundaries. The US portal, for example, specifies a maximum file size of 240KB, minimum dimensions of 600×600 pixels (square 1:1 aspect ratio), and JPEG format.",
+                "Schengen and Commonwealth countries often require a 35×45mm (approx 7:9 ratio) portrait. This tool handles the size reduction while maintaining high pixel resolution so automated face-matching algorithms can process your image without compression noise.",
+            ],
+        },
+        {
+            heading: "Preserving facial clarity under compression",
+            paragraphs: [
+                "Biometric passport verification relies on sharp edge definition around the eyes, nose, lips, and ears. Low-quality compression can introduce blur or blocky macro-artifacts around critical facial landmarks.",
+                "Our encoder preserves maximum chroma information and prioritizes high-frequency facial details, allowing a photo to compress from 5MB down below 240KB cleanly.",
+            ],
+        },
+        {
+            heading: "Official compliance advisory: rules vary by country",
+            paragraphs: [
+                "Please note that file size compression alone does not guarantee official embassy acceptance. Every national authority enforces detailed non-digital rules: plain white or off-white background, neutral facial expression with eyes open, no shadows on the face, and specific head height percentages (50% to 69% of image height for US photos).",
+                "Always check the official website of the embassy, consulate, or passport authority you are applying to before submitting your application.",
+            ],
+        },
+    ],
+    faqs: [
+        {
+            question: "What is the standard maximum file size for passport photo uploads?",
+            answer: "For US passport renewals and DS-160 visa applications, the maximum allowed file size is 240KB. UK, Canadian, and Schengen portals typically cap uploads between 200KB and 500KB. This tool targets <=240KB to satisfy the most common international standard.",
+        },
+        {
+            question: "Does this tool guarantee my photo will be accepted by authorities?",
+            answer: "No tool can guarantee official acceptance. Embassies evaluate physical composition rules (background color, head size, expression, lighting) alongside file size. Always verify your photo against official government guidelines before submitting.",
+        },
+        {
+            question: "How do I maintain sharp eyes and neutral expression during compression?",
+            answer: "Start with a well-lit, high-resolution original taken against a plain light wall in daylight. Our compression algorithm preserves fine facial edges without aggressive blocky artifacts.",
+        },
+        {
+            question: "Are passport photos uploaded to your servers or stored anywhere?",
+            answer: "Never. All photo processing happens entirely within your web browser using HTML5 Canvas and WebAssembly. Your biometric portrait is never uploaded to any cloud server or database.",
+        },
+    ],
+    related: [
+        {
+            href: "/tools/image-compressor/compress-image-to-20kb",
+            label: "Compress photo to 20KB for exams",
+        },
+        {
+            href: "/tools/id-watermark",
+            label: "Watermark copy for identity verification",
+        },
+        {
+            href: "/tools/exif-remover",
+            label: "Strip GPS location metadata",
+        },
+        {
+            href: "/tools/background-remover",
+            label: "Check portrait background",
+        },
+    ],
+};
+
 export const imageCompressorPages: LongTailContent[] = [
     compressImageTo100kb,
     compressJpgTo50kb,
@@ -698,4 +869,6 @@ export const imageCompressorPages: LongTailContent[] = [
     compressImagesForWebsites,
     compressPngOnline,
     compressImageTo1mb,
+    compressImageTo20kb,
+    compressPassportPhoto,
 ];

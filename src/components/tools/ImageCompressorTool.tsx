@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
 import { Upload, Download, FileImage, Trash2, Settings2, CheckCircle, Loader2, AlertCircle } from "lucide-react";
@@ -9,6 +9,12 @@ import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { ContinueWith } from "@/components/tools/ContinueWith";
 import { trackToolEvent } from "@/lib/analytics";
+import { useHandoffReceiver, HandoffButton } from "@/lib/handoff";
+
+function ImageCompressorHandoffSync({ onFiles }: { onFiles: (files: File[]) => void }) {
+    useHandoffReceiver(onFiles);
+    return null;
+}
 
 
 // Constant outside component to avoid dependency issues
@@ -307,6 +313,9 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
     };
     return (
         <div className="w-full flex flex-col gap-8">
+            <Suspense fallback={null}>
+                <ImageCompressorHandoffSync onFiles={handleFiles} />
+            </Suspense>
                 {/* Upload Area */}
                 <div
                     onDrop={handleDrop}
@@ -374,12 +383,23 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
                         </div>
 
                         {fileState.some(f => f.status === "done") && (
-                            <button
-                                onClick={downloadAll}
-                                className="w-full sm:w-auto flex items-center justify-center px-6 py-2.5 bg-white text-zinc-950 rounded-xl font-medium hover:bg-zinc-200 transition-colors"
-                            >
-                                <Download className="w-4 h-4 mr-2" /> {language === "en" ? t.downloadAll.en : t.downloadAll.cn}
-                            </button>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                    onClick={downloadAll}
+                                    className="w-full sm:w-auto flex items-center justify-center px-6 py-2.5 bg-white text-zinc-950 rounded-xl font-medium hover:bg-zinc-200 transition-colors"
+                                >
+                                    <Download className="w-4 h-4 mr-2" /> {language === "en" ? t.downloadAll.en : t.downloadAll.cn}
+                                </button>
+                                <HandoffButton
+                                    targetUrl="/tools/pdf-kit?tab=jpg-to-pdf"
+                                    label="Convert to PDF"
+                                    getItems={() => fileState.filter(f => f.status === "done").map(f => ({
+                                        blob: f.compressedBlob,
+                                        name: outputName(f.originalFile.name),
+                                        type: "image/jpeg"
+                                    }))}
+                                />
+                            </div>
                         )}
                     </div>
                 )}
@@ -437,14 +457,19 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
                                 <div className="flex items-center gap-2">
                                     {file.status === "done" && (
                                         <>
-                                            <ContinueWith
-                                                links={[{ label: "Image Editor", href: "/tools/image-editor" }]}
-                                                getFile={() => ({ blob: file.compressedBlob, name: outputName(file.originalFile.name) })}
-                                                toolId="image-compressor"
+                                            <HandoffButton
+                                                targetUrl="/tools/pdf-kit?tab=jpg-to-pdf"
+                                                label="Convert to PDF"
+                                                className="py-1 px-3 text-xs"
+                                                getItems={() => [{
+                                                    blob: file.compressedBlob,
+                                                    name: outputName(file.originalFile.name),
+                                                    type: "image/jpeg"
+                                                }]}
                                             />
                                             <button
                                                 onClick={() => downloadFile(file)}
-                                                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+                                                className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
                                                 title="Download"
                                             >
                                                 <Download className="w-5 h-5" />

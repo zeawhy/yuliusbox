@@ -1,10 +1,12 @@
 "use client";
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { CodecToolboxTool } from "@/components/tools/CodecToolboxTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
+import Link from "next/link";
 
 const FAQS = [
     {
@@ -28,19 +30,6 @@ const FAQS = [
         a: "By default, timestamp conversions display in your browser's detected local timezone as well as standard UTC and ISO 8601. You can toggle between Local and UTC in the timezone selector above to view dates and generate timestamps formatted specifically in your preferred zone.",
     },
 ];
-
-const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((f) => ({
-        "@type": "Question",
-        name: f.q,
-        acceptedAnswer: {
-            "@type": "Answer",
-            text: f.a,
-        },
-    })),
-};
 
 export default function CodecToolboxPage() {
     return (
@@ -95,26 +84,19 @@ export default function CodecToolboxPage() {
                         </li>
                     </ul>
 
-                    {/* FAQ Section */}
-                    <h2 className="text-xl font-semibold text-white">Frequently asked questions</h2>
-                    <script
-                        type="application/ld+json"
-                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-                    />
-                    <div className="space-y-3">
-                        {FAQS.map((f) => (
-                            <details
-                                key={f.q}
-                                className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4"
-                            >
-                                <summary className="cursor-pointer text-white font-medium">
-                                    {f.q}
-                                </summary>
-                                <p className="mt-2 text-zinc-400 leading-relaxed">{f.a}</p>
-                            </details>
-                        ))}
+                    <div className="pt-4 border-t border-zinc-800">
+                        <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-2">Dedicated Preset Tool</p>
+                        <Link
+                            href="/tools/codec-toolbox/unix-timestamp-converter"
+                            className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                        >
+                            <span>Unix Timestamp Converter — Seconds, Milliseconds & ISO 8601</span>
+                            <span>→</span>
+                        </Link>
                     </div>
                 </div>
+
+                <FaqSection items={FAQS} />
             </div>
 
             <Footer />

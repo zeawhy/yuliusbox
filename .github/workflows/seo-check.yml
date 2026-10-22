@@ -44,6 +44,15 @@ jobs:
             exit 1
           fi
 
+      - name: Run unit & integration tests
+        run: npm test
+
+      - name: Verify PDF redaction irreversibility
+        run: |
+          pip install --break-system-packages pymupdf pdfplumber
+          sudo apt-get update && sudo apt-get install -y poppler-utils
+          python3 scripts/test-redaction.py
+
       - name: Run SEO validation
         run: npm run seo-check
         env:
