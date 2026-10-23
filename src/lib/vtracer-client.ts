@@ -130,6 +130,30 @@ export interface TraceResult {
 }
 
 /**
+ * Ensure an SVG string contains a valid viewBox attribute.
+ * If viewBox is missing, parses width/height from the <svg> tag or uses fallbacks.
+ */
+export function ensureSvgViewBox(svgString: string, defaultWidth?: number, defaultHeight?: number): string {
+    if (!svgString) return svgString;
+    if (/\bviewBox\s*=/i.test(svgString)) return svgString;
+
+    const svgTagMatch = svgString.match(/<svg\b([^>]*)>/i);
+    if (!svgTagMatch) return svgString;
+
+    const attributes = svgTagMatch[1];
+    const widthMatch = attributes.match(/\bwidth=["']?([0-9.]+)(?:px)?["']?/i);
+    const heightMatch = attributes.match(/\bheight=["']?([0-9.]+)(?:px)?["']?/i);
+
+    const w = widthMatch ? widthMatch[1] : (defaultWidth ? String(defaultWidth) : null);
+    const h = heightMatch ? heightMatch[1] : (defaultHeight ? String(defaultHeight) : null);
+
+    if (w && h) {
+        return svgString.replace(/<svg\b/i, `<svg viewBox="0 0 ${w} ${h}"`);
+    }
+    return svgString;
+}
+
+/**
  * Remove full-canvas background rect/path from SVG if requested.
  */
 export function stripSvgBackground(svgString: string): string {
@@ -288,8 +312,9 @@ export class VTracerClient {
             }
         });
 
-        // Background removal post-pass if enabled
-        const finalSvg = customOptions.removeBackground ? stripSvgBackground(rawSvg) : rawSvg;
+        // Ensure viewBox attribute is present and handle background removal
+        const rawWithViewBox = ensureSvgViewBox(rawSvg, scaledWidth, scaledHeight);
+        const finalSvg = customOptions.removeBackground ? stripSvgBackground(rawWithViewBox) : rawWithViewBox;
         const durationMs = Math.round(performance.now() - startTime);
         const pathCount = countSvgPaths(finalSvg);
         const sizeBytes = new Blob([finalSvg], { type: "image/svg+xml" }).size;

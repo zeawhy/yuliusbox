@@ -20,7 +20,6 @@ import {
     Grid,
     RefreshCw,
     AlertCircle,
-    Info,
 } from "lucide-react";
 import { cn, formatBytes } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
@@ -44,7 +43,7 @@ interface UploadedFileInfo {
 }
 
 export function ImageToSvgTool() {
-    const { t, language } = useLanguage();
+    const { language } = useLanguage();
     const isCn = language === "cn";
 
     // VTracer Worker Client instance ref
@@ -73,6 +72,7 @@ export function ImageToSvgTool() {
     const [result, setResult] = useState<TraceResult | null>(null);
 
     // Preview state
+    const [isFit, setIsFit] = useState(true);
     const [zoom, setZoom] = useState(1);
     const [checkerboard, setCheckerboard] = useState(true);
     const [copied, setCopied] = useState(false);
@@ -147,6 +147,7 @@ export function ImageToSvgTool() {
             };
             setImageInfo(uploaded);
             setResult(null);
+            setIsFit(true);
             setZoom(1);
 
             // Automatically start conversion
@@ -303,6 +304,59 @@ export function ImageToSvgTool() {
         runConversion(imageInfo);
     };
 
+    // Base dimensions for responsive layout and zoom calculation
+    const baseWidth = result?.scaledWidth || imageInfo?.width || 512;
+    const baseHeight = result?.scaledHeight || imageInfo?.height || 512;
+
+    // Prepared SVG markup ensuring responsive viewBox and width/height="100%" for clean container scaling
+    const previewSvg = useMemo(() => {
+        if (!result?.svg) return "";
+        let svg = result.svg;
+        if (!/\bviewBox\s*=/i.test(svg)) {
+            svg = svg.replace(/<svg\b/i, `<svg viewBox="0 0 ${baseWidth} ${baseHeight}"`);
+        }
+        if (/\bwidth=["'][^"']*["']/i.test(svg)) {
+            svg = svg.replace(/\bwidth=["'][^"']*["']/i, 'width="100%"');
+        } else {
+            svg = svg.replace(/<svg\b/i, '<svg width="100%"');
+        }
+        if (/\bheight=["'][^"']*["']/i.test(svg)) {
+            svg = svg.replace(/\bheight=["'][^"']*["']/i, 'height="100%"');
+        } else {
+            svg = svg.replace(/<svg\b/i, '<svg height="100%"');
+        }
+        return svg;
+    }, [result?.svg, baseWidth, baseHeight]);
+
+    // Zoom handlers based on SVG actual size (100% = 1:1 pixel size)
+    const handleZoomIn = () => {
+        if (isFit) {
+            setIsFit(false);
+            setZoom(1);
+        } else {
+            setZoom((z) => Math.min(4, Math.round((z + 0.25) * 100) / 100));
+        }
+    };
+
+    const handleZoomOut = () => {
+        if (isFit) {
+            setIsFit(false);
+            setZoom(0.75);
+        } else {
+            setZoom((z) => Math.max(0.25, Math.round((z - 0.25) * 100) / 100));
+        }
+    };
+
+    const handleZoom100 = () => {
+        setIsFit(false);
+        setZoom(1);
+    };
+
+    const handleResetFit = () => {
+        setIsFit(true);
+        setZoom(1);
+    };
+
     return (
         <div className="w-full flex flex-col gap-6">
             {/* Top Reassurance Banner */}
@@ -445,6 +499,8 @@ export function ImageToSvgTool() {
                                     onClick={() => {
                                         setImageInfo(null);
                                         setResult(null);
+                                        setIsFit(true);
+                                        setZoom(1);
                                     }}
                                     className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-medium text-zinc-300 border border-zinc-700 transition-colors"
                                 >
@@ -744,7 +800,7 @@ export function ImageToSvgTool() {
                         {/* 2. SVG Vector Preview */}
                         {(mobileTab === "compare" || mobileTab === "svg") && (
                             <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-3">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
                                     <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
                                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                                         {isCn ? "矢量化结果 (Scalable Vector)" : "Vector Result (SVG)"}
@@ -767,28 +823,63 @@ export function ImageToSvgTool() {
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => setZoom((z) => Math.max(0.5, Math.round((z - 0.25) * 100) / 100))}
+                                            onClick={handleZoomOut}
                                             title={isCn ? "缩小" : "Zoom out"}
-                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs"
+                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs transition-colors"
                                         >
                                             <ZoomOut className="w-3.5 h-3.5" />
                                         </button>
-                                        <span className="text-[11px] font-mono text-zinc-400 w-10 text-center">
-                                            {Math.round(zoom * 100)}%
-                                        </span>
                                         <button
                                             type="button"
-                                            onClick={() => setZoom((z) => Math.min(4, Math.round((z + 0.25) * 100) / 100))}
+                                            onClick={() => {
+                                                if (isFit) {
+                                                    handleZoom100();
+                                                } else if (zoom === 1) {
+                                                    handleResetFit();
+                                                } else {
+                                                    handleZoom100();
+                                                }
+                                            }}
+                                            title={
+                                                isFit
+                                                    ? (isCn ? "当前为适应视图，点击切换至 100% 实际大小" : "Fit view. Click for 100% actual size")
+                                                    : (isCn ? "点击重置为 100% 实际大小" : "Click to reset to 100% actual size")
+                                            }
+                                            className="px-2 py-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-[11px] font-mono text-zinc-300 hover:text-white transition-colors"
+                                        >
+                                            {isFit ? (isCn ? "适应" : "Fit") : `${Math.round(zoom * 100)}%`}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleZoomIn}
                                             title={isCn ? "放大" : "Zoom in"}
-                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs"
+                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs transition-colors"
                                         >
                                             <ZoomIn className="w-3.5 h-3.5" />
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => setZoom(1)}
-                                            title={isCn ? "重置缩放 (100%)" : "Reset zoom (100%)"}
-                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs ml-0.5"
+                                            onClick={handleZoom100}
+                                            title={isCn ? "100% 实际尺寸 (1:1)" : "100% actual size (1:1)"}
+                                            className={cn(
+                                                "px-2 py-1 rounded-lg text-xs font-mono font-medium transition-colors border",
+                                                !isFit && zoom === 1
+                                                    ? "bg-blue-600/20 border-blue-500/60 text-blue-400"
+                                                    : "bg-zinc-800/80 hover:bg-zinc-700 border-zinc-700/80 text-zinc-300 hover:text-white"
+                                            )}
+                                        >
+                                            100%
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleResetFit}
+                                            title={isCn ? "复位 (恢复默认适应视图)" : "Reset to fit (Contain)"}
+                                            className={cn(
+                                                "p-1.5 rounded-lg border text-xs ml-0.5 transition-colors",
+                                                isFit
+                                                    ? "bg-blue-600/20 border-blue-500/60 text-blue-400"
+                                                    : "bg-zinc-800/80 hover:bg-zinc-700 border-zinc-700/80 text-zinc-300 hover:text-white"
+                                            )}
                                         >
                                             <RotateCcw className="w-3.5 h-3.5" />
                                         </button>
@@ -796,7 +887,7 @@ export function ImageToSvgTool() {
                                             type="button"
                                             onClick={() => setModalOpen(true)}
                                             title={isCn ? "全屏大图查看" : "Full window inspection"}
-                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs ml-0.5"
+                                            className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700/80 text-zinc-300 text-xs ml-0.5 transition-colors"
                                         >
                                             <Maximize2 className="w-3.5 h-3.5" />
                                         </button>
@@ -817,15 +908,26 @@ export function ImageToSvgTool() {
                                             <p className="text-xs">{progress?.label || (isCn ? "正在生成矢量路径..." : "Generating vector geometry...")}</p>
                                         </div>
                                     ) : result ? (
-                                        <div
-                                            style={{
-                                                transform: `scale(${zoom})`,
-                                                transformOrigin: "center center",
-                                                transition: "transform 150ms ease-out",
-                                            }}
-                                            className="max-w-full max-h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:h-auto [&>svg]:w-auto"
-                                            dangerouslySetInnerHTML={{ __html: result.svg }}
-                                        />
+                                        isFit ? (
+                                            <div className="w-full h-full flex items-center justify-center select-none">
+                                                <div
+                                                    className="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto"
+                                                    dangerouslySetInnerHTML={{ __html: previewSvg }}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="min-w-full min-h-full flex items-center justify-center m-auto select-none p-3">
+                                                <div
+                                                    style={{
+                                                        width: `${baseWidth * zoom}px`,
+                                                        height: `${baseHeight * zoom}px`,
+                                                        transition: "width 150ms ease-out, height 150ms ease-out",
+                                                    }}
+                                                    className="shrink-0 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-w-none [&>svg]:max-h-none"
+                                                    dangerouslySetInnerHTML={{ __html: previewSvg }}
+                                                />
+                                            </div>
+                                        )
                                     ) : (
                                         <p className="text-xs text-zinc-500">
                                             {isCn ? "等待转换..." : "Waiting for vector rendering..."}
@@ -878,8 +980,8 @@ export function ImageToSvgTool() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div
-                            className="max-w-full max-h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto"
-                            dangerouslySetInnerHTML={{ __html: result.svg }}
+                            className="w-full h-full max-w-full max-h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto"
+                            dangerouslySetInnerHTML={{ __html: previewSvg }}
                         />
                     </div>
                 </div>
