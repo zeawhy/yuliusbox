@@ -486,7 +486,7 @@ export function ImageToSvgTool() {
                                             <span className="font-semibold text-sm">
                                                 {isCn ? preset.label.cn : preset.label.en}
                                             </span>
-                                            <span className="text-[11px] text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
+                                            <span className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
                                                 {isCn ? preset.description.cn : preset.description.en}
                                             </span>
                                         </button>

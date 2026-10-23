@@ -135,7 +135,7 @@ export default function ImageToSvgPage() {
                     {/* Quality Guidance: When Local Tracing Works vs AI Vectorization */}
                     <section
                         aria-labelledby="quality-heading"
-                        className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 sm:p-8 space-y-4"
+                        className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 sm:p-8 space-y-5"
                     >
                         <h2 id="quality-heading" className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                             <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
@@ -160,6 +160,60 @@ export default function ImageToSvgPage() {
                             </a>{" "}
                             (official pricing around $0.10 per image). Generative AI models re-interpret imagery semantically, complementing traditional edge-tracing when photographic realism is needed.
                         </p>
+
+                        {/* YuliusWiki In-Depth Guides */}
+                        <div className="pt-3 border-t border-zinc-800/80 space-y-3">
+                            <h3 className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">
+                                Related AI Vector Guides on YuliusWiki
+                            </h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                <a
+                                    href="https://yuliuswiki.com/en/ideogram-vector-vs-recraft"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-900/80 transition-all group flex flex-col justify-between gap-3"
+                                >
+                                    <div>
+                                        <div className="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
+                                            <span className="text-blue-400 font-medium">Model Comparison</span>
+                                            <ExternalLink className="w-3.5 h-3.5 group-hover:text-blue-400 transition-colors" />
+                                        </div>
+                                        <h4 className="font-semibold text-white group-hover:text-blue-400 text-sm transition-colors">
+                                            Ideogram Vector vs Recraft
+                                        </h4>
+                                        <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                                            Pricing models, free tiers, typography support, and commercial licensing compared for AI-generated editable SVGs.
+                                        </p>
+                                    </div>
+                                    <span className="text-[11px] text-blue-400 font-medium inline-flex items-center gap-1">
+                                        Read on YuliusWiki <ArrowRight className="w-3 h-3" />
+                                    </span>
+                                </a>
+
+                                <a
+                                    href="https://yuliuswiki.com/ideogram-vector-guide"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-900/80 transition-all group flex flex-col justify-between gap-3"
+                                >
+                                    <div>
+                                        <div className="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
+                                            <span className="text-emerald-400 font-medium">深入指南 (Guide)</span>
+                                            <ExternalLink className="w-3.5 h-3.5 group-hover:text-blue-400 transition-colors" />
+                                        </div>
+                                        <h4 className="font-semibold text-white group-hover:text-blue-400 text-sm transition-colors">
+                                            Ideogram Vector 是什么？定价与用法
+                                        </h4>
+                                        <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                                            详解文字生成与图片转 SVG 两种模式、官方与 fal.ai 计费（$0.10/张）、以及与传统矢量描摹的适用边界。
+                                        </p>
+                                    </div>
+                                    <span className="text-[11px] text-blue-400 font-medium inline-flex items-center gap-1">
+                                        在 YuliusWiki 阅读实测指南 <ArrowRight className="w-3 h-3" />
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
                     </section>
 
                     {/* FAQ Section */}
