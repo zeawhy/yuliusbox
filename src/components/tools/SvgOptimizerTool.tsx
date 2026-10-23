@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, Suspense } from "react";
 import {
     Shapes,
     Upload,
@@ -20,6 +20,12 @@ import { cn, formatBytes } from "@/lib/utils";
 import { LocalTrustNote } from "@/components/tools/LocalTrustNote";
 import { useLanguage } from "@/context/LanguageContext";
 import { trackToolEvent } from "@/lib/analytics";
+import { useHandoffReceiver } from "@/lib/handoff";
+
+function SvgOptimizerHandoffSync({ onFiles }: { onFiles: (files: File[]) => void }) {
+    useHandoffReceiver(onFiles);
+    return null;
+}
 
 export interface OptimizerOptions {
     precision: number;
@@ -568,8 +574,43 @@ export function SvgOptimizerTool() {
         URL.revokeObjectURL(url);
     };
 
+    const handleHandoffFiles = (files: File[]) => {
+        if (!files || files.length === 0) return;
+        const file = files[0];
+        setFileName(file.name);
+        trackToolEvent("file_selected", { tool: "svg-optimizer", detail: "count:1,source:handoff" });
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const content = event.target?.result as string;
+            if (content) {
+                setInput(content);
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    // Direct sessionStorage handoff fallback
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            try {
+                const stored = sessionStorage.getItem("yuliusbox_direct_svg_handoff");
+                if (stored) {
+                    sessionStorage.removeItem("yuliusbox_direct_svg_handoff");
+                    const data = JSON.parse(stored);
+                    if (data?.svg) {
+                        setInput(data.svg);
+                        if (data.fileName) setFileName(data.fileName);
+                    }
+                }
+            } catch {}
+        }
+    }, []);
+
     return (
         <div className="w-full flex flex-col gap-6">
+            <Suspense fallback={null}>
+                <SvgOptimizerHandoffSync onFiles={handleHandoffFiles} />
+            </Suspense>
             {/* Input & Upload Card */}
             <div
                 onDragOver={(e) => {

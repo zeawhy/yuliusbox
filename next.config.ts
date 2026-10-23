@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         destination: "https://www.yuliusbox.com/:path*",
         permanent: true,
       },
+      {
+        source: "/image-to-svg",
+        destination: "/tools/image-to-svg",
+        permanent: true,
+      },
     ];
   },
   async headers() {

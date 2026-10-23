@@ -80,7 +80,8 @@ export default function ImageToSvgPage() {
             <Breadcrumbs
                 trail={[
                     { href: "/", label: "Home" },
-                    { href: "/image-to-svg", label: "Image to SVG" },
+                    { href: "/tools", label: "Tools" },
+                    { href: "/tools/image-to-svg", label: "Image to SVG" },
                 ]}
             />
 
@@ -92,7 +93,7 @@ export default function ImageToSvgPage() {
                     </h1>
                     <p className="text-zinc-400 max-w-2xl mx-auto text-sm sm:text-base">
                         Convert JPG, PNG, and WebP into clean, scalable vector graphics (SVG) right in your browser.
-                        100% private, no file uploads, powered by WebAssembly.
+                        Processed in your browser — images are never uploaded.
                     </p>
                 </div>
 
@@ -191,25 +192,25 @@ export default function ImageToSvgPage() {
                                 </a>
 
                                 <a
-                                    href="https://yuliuswiki.com/ideogram-vector-guide"
+                                    href="https://yuliuswiki.com/en/ideogram-vector-guide"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-900/80 transition-all group flex flex-col justify-between gap-3"
                                 >
                                     <div>
                                         <div className="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
-                                            <span className="text-emerald-400 font-medium">深入指南 (Guide)</span>
+                                            <span className="text-emerald-400 font-medium">In-Depth Guide</span>
                                             <ExternalLink className="w-3.5 h-3.5 group-hover:text-blue-400 transition-colors" />
                                         </div>
                                         <h4 className="font-semibold text-white group-hover:text-blue-400 text-sm transition-colors">
-                                            Ideogram Vector 是什么？定价与用法
+                                            What Is Ideogram Vector? Pricing, How to Use &amp; Limitations
                                         </h4>
                                         <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                                            详解文字生成与图片转 SVG 两种模式、官方与 fal.ai 计费（$0.10/张）、以及与传统矢量描摹的适用边界。
+                                            Detailed analysis of text-to-vector vs image-to-vector modes, official &amp; fal.ai pricing ($0.10/image), and how it compares to local geometric tracing.
                                         </p>
                                     </div>
                                     <span className="text-[11px] text-blue-400 font-medium inline-flex items-center gap-1">
-                                        在 YuliusWiki 阅读实测指南 <ArrowRight className="w-3 h-3" />
+                                        Read on YuliusWiki <ArrowRight className="w-3 h-3" />
                                     </span>
                                 </a>
                             </div>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Free Image to SVG Converter | YuliusBox",
+    title: "Image to SVG Converter — PNG & JPG to Vector Free",
     description:
-        "Convert PNG, JPG, and WebP images to clean SVG vector graphics right in your browser. 100% private, free, and no file uploads.",
+        "Convert PNG, JPG, and WebP images to clean SVG vector graphics right in your browser. Processed in your browser — images are never uploaded.",
     keywords: [
         "image to svg",
         "png to svg",
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
         "free image to svg converter online",
     ],
     alternates: {
-        canonical: "/image-to-svg",
+        canonical: "/tools/image-to-svg",
     },
     openGraph: {
-        title: "Free Image to SVG Converter | YuliusBox",
+        title: "Image to SVG Converter — PNG & JPG to Vector Free",
         description:
-            "Convert PNG, JPG, and WebP images to clean SVG vector graphics right in your browser. 100% private, free, and no file uploads.",
-        url: "/image-to-svg",
+            "Convert PNG, JPG, and WebP images to clean SVG vector graphics right in your browser. Processed in your browser — images are never uploaded.",
+        url: "/tools/image-to-svg",
         siteName: "YuliusBox",
         type: "website",
         images: [
@@ -41,9 +41,9 @@ const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Free Image to SVG Converter",
-    url: "https://www.yuliusbox.com/image-to-svg",
+    url: "https://www.yuliusbox.com/tools/image-to-svg",
     description:
-        "Convert PNG, JPG, and WebP images to clean SVG vector graphics in your browser using WebAssembly. 100% private and free.",
+        "Convert PNG, JPG, and WebP images to clean SVG vector graphics in your browser using WebAssembly. Processed in your browser — images are never uploaded.",
     applicationCategory: "DesignApplication",
     operatingSystem: "Web",
     offers: {

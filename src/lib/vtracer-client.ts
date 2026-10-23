@@ -52,8 +52,8 @@ export const TRACER_PRESETS: Record<TracerPresetId, TracerPresetConfig> = {
             cn: "彩色插画",
         },
         description: {
-            en: "Rich color gradients & organic painterly shapes",
-            cn: "色彩丰富、图层细腻、适合复杂手绘与数码插画",
+            en: "Flat-color illustrations & organic painterly shapes",
+            cn: "扁平色插画、图层细腻、适合手绘与数码插画",
         },
         options: {
             preset: "photo",

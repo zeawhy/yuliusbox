@@ -48,7 +48,7 @@ export default function PrivacyPage() {
                     audio, the processing happens on your own device — your files are never
                     uploaded to our servers, because we don&apos;t operate servers that receive
                     them. We don&apos;t ask for accounts, and we don&apos;t sell data, because
-                    there is no data to sell.
+                    there is no data to sell. We only collect anonymous, cookieless website visit statistics (using self-hosted Umami) to see which tools are popular and fix broken pages.
                 </p>
             </Section>
 
