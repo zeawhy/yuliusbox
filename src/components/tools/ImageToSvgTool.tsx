@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
     Upload,
     Download,
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import { cn, formatBytes } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
+import { saveHandoff } from "@/lib/handoff";
 import {
     TRACER_PRESETS,
     TracerPresetId,
@@ -44,6 +46,7 @@ interface UploadedFileInfo {
 
 export function ImageToSvgTool() {
     const { language } = useLanguage();
+    const router = useRouter();
     const isCn = language === "cn";
 
     // VTracer Worker Client instance ref
@@ -65,6 +68,8 @@ export function ImageToSvgTool() {
     const [maxColors, setMaxColors] = useState<number | null>(null);
     const [cornerThreshold, setCornerThreshold] = useState<number>(60);
     const [removeBackground, setRemoveBackground] = useState<boolean>(false);
+    const [includeGeneratorComment, setIncludeGeneratorComment] = useState<boolean>(true);
+    const [isHandoffPending, setIsHandoffPending] = useState<boolean>(false);
 
     // Conversion state
     const [isConverting, setIsConverting] = useState(false);
@@ -264,10 +269,21 @@ export function ImageToSvgTool() {
         }
     };
 
+    // Filter generator attribution comment if option is unchecked
+    const getFinalSvg = useCallback((rawSvg?: string) => {
+        const svg = rawSvg ?? result?.svg ?? "";
+        if (!svg) return "";
+        if (!includeGeneratorComment) {
+            return svg.replace(/<!--\s*Generator:\s*visioncortex\s*VTracer[^>]*-->\r?\n?/gi, "");
+        }
+        return svg;
+    }, [result?.svg, includeGeneratorComment]);
+
     // Download action
     const handleDownload = () => {
         if (!result) return;
-        const blob = new Blob([result.svg], { type: "image/svg+xml;charset=utf-8" });
+        const finalSvg = getFinalSvg(result.svg);
+        const blob = new Blob([finalSvg], { type: "image/svg+xml;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         const baseName = imageInfo?.name ? imageInfo.name.replace(/\.[^.]+$/, "") : "vector";
@@ -282,19 +298,47 @@ export function ImageToSvgTool() {
     // Copy SVG code action
     const handleCopy = async () => {
         if (!result) return;
+        const finalSvg = getFinalSvg(result.svg);
         try {
-            await navigator.clipboard.writeText(result.svg);
+            await navigator.clipboard.writeText(finalSvg);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
             const textarea = document.createElement("textarea");
-            textarea.value = result.svg;
+            textarea.value = finalSvg;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand("copy");
             document.body.removeChild(textarea);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    // Handoff to SVG Optimizer
+    const handleOptimizeWithSvgOptimizer = async () => {
+        if (!result || isHandoffPending) return;
+        setIsHandoffPending(true);
+        const finalSvg = getFinalSvg(result.svg);
+        const baseName = imageInfo?.name ? imageInfo.name.replace(/\.[^.]+$/, "") : "vector";
+        const svgFileName = `${baseName}.svg`;
+
+        // Direct sessionStorage handoff fallback for immediate loading
+        try {
+            sessionStorage.setItem("yuliusbox_direct_svg_handoff", JSON.stringify({
+                svg: finalSvg,
+                fileName: svgFileName,
+            }));
+        } catch {}
+
+        try {
+            const id = await saveHandoff({
+                blob: new Blob([finalSvg], { type: "image/svg+xml" }),
+                name: svgFileName,
+            });
+            router.push(`/tools/svg-optimizer?handoff=${id}`);
+        } catch {
+            router.push("/tools/svg-optimizer");
         }
     };
 
@@ -364,10 +408,10 @@ export function ImageToSvgTool() {
                 <div className="flex items-center gap-2.5">
                     <ShieldCheck className="w-5 h-5 shrink-0 text-emerald-400" />
                     <span>
-                        <strong>{isCn ? "100% 浏览器本地运算：" : "100% Client-Side Private: "}</strong>
+                        <strong>{isCn ? "浏览器本地处理：" : "Client-Side Processing: "}</strong>
                         {isCn
-                            ? "图片绝不离开您的设备，完全在浏览器内通过 WebAssembly 运行，无服务器上传、不调用任何 AI API。"
-                            : "Your images never leave your browser. All vector tracing executes locally via WebAssembly — no uploads, no AI API."}
+                            ? "在浏览器中处理 — 图片绝不上传至任何服务器。"
+                            : "Processed in your browser — images are never uploaded."}
                     </span>
                 </div>
             </div>
@@ -661,6 +705,27 @@ export function ImageToSvgTool() {
                                             {isCn ? "剔除最底层铺底背景色块" : "Strips the base bounding background layer"}
                                         </span>
                                     </div>
+
+                                    {/* 5. Generator Attribution Comment */}
+                                    <div className="flex flex-col justify-center gap-1.5">
+                                        <span className="text-zinc-300">{isCn ? "元数据注释" : "Metadata Comment"}</span>
+                                        <label className="flex items-center gap-2 cursor-pointer mt-1 select-none">
+                                            <input
+                                                type="checkbox"
+                                                checked={includeGeneratorComment}
+                                                onChange={(e) => setIncludeGeneratorComment(e.target.checked)}
+                                                className="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-blue-600 focus:ring-0 focus:ring-offset-0 cursor-pointer accent-blue-600"
+                                            />
+                                            <span className="text-zinc-200 font-medium">
+                                                {isCn ? "保留 VTracer 生成器注释" : "Include VTracer generator comment"}
+                                            </span>
+                                        </label>
+                                        <span className="text-[10px] text-zinc-500">
+                                            {isCn
+                                                ? "在导出的 SVG 头部保留 <!-- Generator: visioncortex VTracer --> 注释"
+                                                : "Preserves <!-- Generator: visioncortex VTracer --> comment line in exported SVG"}
+                                        </span>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -709,10 +774,10 @@ export function ImageToSvgTool() {
                             </div>
 
                             {/* Export buttons */}
-                            <div className="flex items-center gap-2.5">
+                            <div className="flex flex-wrap items-center gap-2.5">
                                 <button
                                     onClick={handleCopy}
-                                    className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 border border-zinc-700/80 flex items-center gap-1.5 transition-colors"
+                                    className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-zinc-200 border border-zinc-700/80 flex items-center gap-1.5 transition-colors cursor-pointer"
                                 >
                                     {copied ? (
                                         <>
@@ -728,8 +793,19 @@ export function ImageToSvgTool() {
                                 </button>
 
                                 <button
+                                    type="button"
+                                    onClick={handleOptimizeWithSvgOptimizer}
+                                    disabled={isHandoffPending}
+                                    className="px-3.5 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+                                    title={isCn ? "将生成的 SVG 直接传给 SVG 优化工具进行体积压缩" : "Pass this SVG directly to SVG Optimizer to compress file size"}
+                                >
+                                    <Sliders className="w-3.5 h-3.5" />
+                                    <span>Optimize with SVG Optimizer</span>
+                                </button>
+
+                                <button
                                     onClick={handleDownload}
-                                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white shadow-sm flex items-center gap-1.5 transition-colors"
+                                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer"
                                 >
                                     <Download className="w-4 h-4" />
                                     <span>{isCn ? "下载 .SVG 文件" : "Download .SVG"}</span>

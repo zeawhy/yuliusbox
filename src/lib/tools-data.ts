@@ -46,11 +46,11 @@ export const toolsData: Tool[] = [
             cn: "图片转 SVG 矢量图",
         },
         description: {
-            en: "Convert PNG, JPG, and WebP into crisp vector SVG in your browser. 100% private, no uploads, powered by WebAssembly.",
+            en: "Convert PNG, JPG, and WebP into crisp vector SVG in your browser. Processed in your browser — images are never uploaded.",
             cn: "纯本地将 PNG、JPG、WebP 转换为高质量 SVG 矢量图。基于 WebAssembly，离线可用，保护隐私。",
         },
         icon: Shapes,
-        href: "/image-to-svg",
+        href: "/tools/image-to-svg",
         popular: true,
         keywords: [
             "image to svg",
