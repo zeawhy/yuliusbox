@@ -15,6 +15,7 @@ export interface ToolRoute {
 
 export const toolRoutes: ToolRoute[] = [
     { href: "/ai-video-cost-calculator" },
+    { href: "/image-to-svg" },
     { href: "/tools/audio-to-text" },
     { href: "/tools/background-remover" },
     { href: "/tools/color-palette" },

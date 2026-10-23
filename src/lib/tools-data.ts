@@ -39,6 +39,34 @@ export const toolsData: Tool[] = [
         keywords: ["ai video", "video cost", "flux 3 max", "seedance", "minimax", "veo", "video generation pricing", "calculator", "fal ai"],
     },
     {
+        id: "image-to-svg",
+        category: "media",
+        name: {
+            en: "Free Image to SVG",
+            cn: "图片转 SVG 矢量图",
+        },
+        description: {
+            en: "Convert PNG, JPG, and WebP into crisp vector SVG in your browser. 100% private, no uploads, powered by WebAssembly.",
+            cn: "纯本地将 PNG、JPG、WebP 转换为高质量 SVG 矢量图。基于 WebAssembly，离线可用，保护隐私。",
+        },
+        icon: Shapes,
+        href: "/image-to-svg",
+        popular: true,
+        keywords: [
+            "image to svg",
+            "png to svg",
+            "jpg to svg",
+            "svg converter",
+            "vectorizer",
+            "raster to vector",
+            "trace image",
+            "vtracer",
+            "svg",
+            "矢量图",
+            "转svg",
+        ],
+    },
+    {
         id: "heic-2-jpg",
         category: "media",
         name: {
