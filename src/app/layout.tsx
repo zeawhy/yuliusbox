@@ -86,6 +86,78 @@ const siteJsonLd = {
 const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL || "https://stats.yuliusbox.com";
 
+// Inject credentialless attribute on AdSense/DoubleClick iframes on COEP pages.
+// DoubleClick does not return COEP response headers; nested iframes on pages with
+// Cross-Origin-Embedder-Policy: credentialless require the 'credentialless' attribute
+// before navigation to avoid CoepFrameResourceNeedsCoepHeader (ERR_BLOCKED_BY_RESPONSE).
+// Scoped strictly to the 3 COEP pages and known ad network domains.
+const adsenseCredentiallessScript = `(function(){
+  if(typeof window==='undefined')return;
+  var COEP_PAGES=['/tools/video-to-gif','/tools/audio-to-text','/tools/background-remover'];
+  var AD_DOMAINS=[
+    'doubleclick.net',
+    'googleads.g.doubleclick.net',
+    'googlesyndication.com',
+    'pagead2.googlesyndication.com',
+    'googleadservices.com',
+    'adtrafficquality.google'
+  ];
+  function shouldApply(url){
+    if(!url||typeof url!=='string')return false;
+    var path=window.location.pathname.replace(/\\/+$/,'')||'/';
+    if(COEP_PAGES.indexOf(path)===-1)return false;
+    for(var i=0;i<AD_DOMAINS.length;i++){
+      if(url.indexOf(AD_DOMAINS[i])!==-1)return true;
+    }
+    return false;
+  }
+  function applyCredentialless(el){
+    try{
+      el.setAttribute('credentialless','');
+      el.credentialless=true;
+    }catch(e){}
+  }
+  try{
+    var desc=Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype,'src');
+    if(desc&&desc.set){
+      var origSet=desc.set;
+      Object.defineProperty(HTMLIFrameElement.prototype,'src',{
+        set:function(val){
+          if(shouldApply(val)){
+            applyCredentialless(this);
+          }
+          return origSet.call(this,val);
+        },
+        get:desc.get,
+        configurable:true,
+        enumerable:true
+      });
+    }
+  }catch(e){}
+  try{
+    var origSetAttr=Element.prototype.setAttribute;
+    Element.prototype.setAttribute=function(name,val){
+      if(this instanceof HTMLIFrameElement&&typeof name==='string'&&name.toLowerCase()==='src'){
+        if(shouldApply(val)){
+          applyCredentialless(this);
+        }
+      }
+      return origSetAttr.call(this,name,val);
+    };
+  }catch(e){}
+  try{
+    var origSetAttrNS=Element.prototype.setAttributeNS;
+    Element.prototype.setAttributeNS=function(ns,name,val){
+      if(this instanceof HTMLIFrameElement&&typeof name==='string'&&name.toLowerCase()==='src'){
+        if(shouldApply(val)){
+          applyCredentialless(this);
+        }
+      }
+      return origSetAttrNS.call(this,ns,name,val);
+    };
+  }catch(e){}
+})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -94,6 +166,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* AdSense iframe credentialless compatibility on COEP pages */}
+        <script
+          dangerouslySetInnerHTML={{ __html: adsenseCredentiallessScript }}
+        />
         {/* Google AdSense 网站验证 - 必须直接写在 head 静态 HTML 中 */}
         <script
           async
