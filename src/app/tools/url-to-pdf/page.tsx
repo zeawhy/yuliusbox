@@ -21,6 +21,43 @@ const SECTIONS = [
             "One practical consequence: the page is fetched from our server's network, not from yours. Content that is personalised to your account, your region or your cookies will not appear — the PDF shows the page as a fresh, signed-out visitor would see it.",
         ],
     },
+    {
+        heading: "Server-side Chromium (Gotenberg) pipeline, SSRF guardrails & DevTools inspection",
+        paragraphs: [
+            "When you click Convert to PDF, UrlToPdfClient.tsx dispatches an HTTPS POST request to /api/url-to-pdf with the JSON payload { url }. Before forwarding the target address to the isolated Gotenberg Chromium container (/forms/chromium/convert/url), the API route validates the URL scheme (http: or https: only), resolves DNS records to reject RFC 1918 / RFC 4193 private IP ranges and loopback addresses (127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.169.254 cloud metadata endpoints), and enforces a 45-second execution ceiling.",
+            "How to inspect the request in Browser DevTools: Open DevTools (F12 -> Network) and run a conversion. You will see a single POST /api/url-to-pdf request sending your target URL string and returning an application/pdf binary stream directly to your browser.",
+        ],
+        table: {
+            caption: "Gotenberg headless Chromium rendering parameters and security boundaries on /api/url-to-pdf.",
+            headers: [
+                "Pipeline Parameter / Boundary",
+                "Configured Value",
+                "Technical Behavior & Reason",
+            ],
+            rows: [
+                [
+                    "Rendering Engine",
+                    "Headless Chromium (Gotenberg /forms/chromium/convert/url)",
+                    "Executes CSS Grid/Flexbox, WebFonts, and client-side JavaScript before printing",
+                ],
+                [
+                    "SSRF & Network Guardrail",
+                    "Public DNS / IPv4 & IPv6 only",
+                    "Blocks localhost, 10/8, 172.16/12, 192.168/16, and link-local 169.254/16 addresses",
+                ],
+                [
+                    "Execution Timeout",
+                    "45 seconds hard limit",
+                    "Aborts hung third-party ad/tracker scripts that stall network-idle events",
+                ],
+                [
+                    "Rate Limit & Retention",
+                    "5 requests / minute / IP; 0-second disk retention",
+                    "Streamed in-memory response; neither the URL nor the generated PDF is stored",
+                ],
+            ],
+        },
+    },
 ];
 
 const HOW_TO = [

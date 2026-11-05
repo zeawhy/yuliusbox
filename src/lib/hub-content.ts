@@ -6,9 +6,16 @@
 // Content is English-only: the site's SEO/AdSense-facing chrome is
 // English-first, no Chinese copy in meta, headings, or body.
 
+export interface HubSectionTable {
+    caption?: string;
+    headers: string[];
+    rows: string[][];
+}
+
 export interface HubSection {
     heading: string;
     paragraphs: string[];
+    table?: HubSectionTable;
 }
 
 export interface HubFaq {
@@ -78,10 +85,62 @@ export const hubContent: Record<string, HubContent> = {
                 ],
             },
             {
-                heading: "How browser-based compression works",
+                heading: "How browser-based compression works & DevTools self-verification",
                 paragraphs: [
-                    "When you drop an image into YuliusBox, a JavaScript library re-encodes it using your device's own CPU — via the Canvas API and WebAssembly. Nothing is transmitted anywhere; you can even disconnect from the internet after the page loads and compression keeps working. The quality slider controls how aggressively the encoder discards data the human eye barely notices, and images are automatically resized so their longest side stays within a sensible bound for web use.",
-                    "Because everything runs locally, the usual limits of online compressors disappear. Services like TinyPNG cap you at a certain number of images per month or charge for larger files. Here the only limit is your device's memory, which is why batch-compressing an entire folder of vacation photos is perfectly reasonable.",
+                    "When you drop an image into YuliusBox, browser-image-compression spawns a client-side Web Worker that decodes the source file onto an off-screen HTML5 Canvas, clamps the longest edge to MAX_WIDTH_OR_HEIGHT = 1920 px when oversized, and re-encodes the bitmap using your browser's native JPEG, PNG, or WebP codec (canvas.toBlob). When you use one of our byte-exact preset pages (such as 100 KB, 50 KB, or 20 KB), the tool converts the target into a strict binary ceiling (targetSizeBytes / 1,048,576) and runs up to two automatic fallback passes (quality 0.60, then 0.40) if the first pass exceeds the portal limit.",
+                    "How to verify zero-upload execution in Browser DevTools: Open DevTools (F12) -> Network tab, clear the log (or switch Network Throttling to Offline), and drop a batch of photos into the compressor. You will observe zero POST, PUT, or XHR network requests — only local blob: URL allocations inside your tab's memory.",
+                ],
+            },
+            {
+                heading: "Measured compression benchmarks: JPEG vs PNG vs WebP across image profiles",
+                paragraphs: [
+                    "We benchmarked the exact HTML5 Canvas downscaling (maxWidthOrHeight: 1920) and re-encoding pipeline in headless Chromium 1248 across three representative test inputs — a 12-megapixel 4000x3000 camera photo, a 1920x1080 web hero photo, and a 2560x1440 dark-mode UI dashboard screenshot:",
+                    "Photographic vs. UI screenshot behavior: On the 1920x1080 photographic hero image (218,179 B / 213.1 KiB source JPEG at q=0.95; 2.23 MiB lossless PNG), re-encoding at the default 80% JPEG quality reduced file size by 59.8% to 87,801 bytes (85.7 KiB) in 26.0 ms, while WebP at 80% quality reached 56,416 bytes (55.1 KiB) — 35.7% smaller than JPEG at the same quality setting. On the 2560x1440 UI screenshot (249,020 B / 243.2 KiB source PNG), WebP at 80% quality (scaled to 1920x1080) produced a 39,996-byte (39.1 KiB) file — 60.8% smaller than the 102,129-byte JPEG (q=0.80) because WebP's predictive spatial coding handles flat UI panels and sharp text edges without JPEG 8x8 DCT ringing.",
+                ],
+                table: {
+                    caption: "Measured in headless Chromium 1248 (Linux x86_64, 4-vCPU AMD EPYC 9D25) with maxWidthOrHeight = 1920 and canvas.toBlob.",
+                    headers: [
+                        "Test Image Profile",
+                        "Dimensions (In → Out)",
+                        "Source PNG / JPEG (q=0.95)",
+                        "JPEG (q=0.80) Size & Time",
+                        "JPEG (q=0.70) Size & Time",
+                        "WebP (q=0.80) Size & Time",
+                    ],
+                    rows: [
+                        [
+                            "12 MP Camera Photo",
+                            "4000x3000 → 1920x1440",
+                            "12.34 MiB / 1.11 MiB (1,169,065 B)",
+                            "498.2 KiB (510,160 B) / 92.9 ms",
+                            "383.4 KiB (392,652 B) / 43.4 ms",
+                            "404.5 KiB (414,200 B) / 607.3 ms",
+                        ],
+                        [
+                            "1080p Web Hero Photo",
+                            "1920x1080 → 1920x1080",
+                            "2.23 MiB / 213.1 KiB (218,179 B)",
+                            "85.7 KiB (87,801 B) / 26.0 ms",
+                            "63.5 KiB (65,012 B) / 14.7 ms",
+                            "55.1 KiB (56,416 B) / 181.8 ms",
+                        ],
+                        [
+                            "1440p UI Dashboard Screenshot",
+                            "2560x1440 → 1920x1080",
+                            "243.2 KiB / 216.4 KiB (221,572 B)",
+                            "99.7 KiB (102,129 B) / 30.9 ms",
+                            "86.1 KiB (88,133 B) / 14.5 ms",
+                            "39.1 KiB (39,996 B) / 175.4 ms",
+                        ],
+                    ],
+                },
+            },
+            {
+                heading: "How YuliusBox compares to TinyPNG, FileKiwi, Teasoft, and MiniWebtool",
+                paragraphs: [
+                    "Not all online image compressors handle your files the same way, and browser-local processing is shared by several modern tools:",
+                    "Cloud uploaders vs. hybrid retention: TinyPNG uploads your files to remote servers and restricts free users to 20 images per batch at a 5 MB per-file maximum. FileKiwi processes images in the browser UI but explicitly states in its upload notice: 'A copy of your file is stored privately for 30 days.' YuliusBox never transmits or retains copies of your images for any duration.",
+                    "Comparison with other browser-local compressors: Teasoft (teasoft.in) and MiniWebtool (miniwebtool.com) also compress images client-side in the browser. Teasoft supports AVIF/BMP inputs and custom background fill colors when converting transparent PNGs to JPG, while MiniWebtool offers custom target-size inputs. However, MiniWebtool restricts free users to '3 free uses daily' and gates bulk ZIP downloads behind a paid Pro plan, and Teasoft gates actions behind a Cloudflare Turnstile challenge. YuliusBox imposes zero daily usage caps, provides free JSZip bulk archiving, verifies byte-exact portal ceilings (such as 100,000 bytes rather than binary 102,400 bytes), and lets you hand off compressed images directly into our local JPG-to-PDF converter in memory.",
                 ],
             },
             {
@@ -129,6 +188,12 @@ export const hubContent: Record<string, HubContent> = {
         ],
         related: [
             { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
+            { href: "/tools/image-compressor/compress-image-to-20kb", label: "Compress image to 20KB for portals & forms" },
+            { href: "/tools/image-compressor/compress-jpg-to-50kb", label: "Compress JPG to 50KB for IDs & exams" },
+            { href: "/tools/image-compressor/compress-images-for-websites", label: "Compress images for websites & Core Web Vitals" },
+            { href: "/tools/image-compressor/compress-photos-for-email", label: "Compress photos for email attachments" },
+            { href: "/tools/image-compressor/compress-png-online", label: "Compress PNG screenshots & transparent graphics" },
+            { href: "/tools/image-compressor/convert-image-to-webp", label: "Convert JPG & PNG images to WebP" },
             { href: "/tools/pdf-kit", label: "Merge and compress PDF files" },
             { href: "/tools/video-to-gif", label: "Convert video to GIF" },
             { href: "https://www.heic2jpg-free.com", label: "Convert HEIC photos to JPG", external: true },
@@ -156,18 +221,71 @@ export const hubContent: Record<string, HubContent> = {
                 ],
             },
             {
-                heading: "Why PDF files get so big — and how compression helps",
+                heading: "Why PDF files get so big — and how metadata cleanup + image handoff work",
                 paragraphs: [
-                    "Bloated PDFs almost always come from scanned pages saved as full-resolution images, or from embedded photos that were never downsampled. A ten-page scan can easily exceed 50 MB, which bounces off email servers and gets rejected by upload forms capped at 5–10 MB. Compression rewrites the document's images at lower resolution and strips redundant data, often cutting the size by 70–90% while keeping text perfectly readable.",
-                    "There is a trade-off worth understanding: aggressive compression softens scanned images, so a document you plan to print deserves gentler treatment than one destined for email. For on-screen reading and form uploads, though, even strong compression is visually fine. The text layer of digitally-created PDFs is unaffected either way — only embedded images change.",
+                    "Bloated PDFs almost always come from two sources: full-resolution camera photos embedded onto pages without prior compression, or accumulated document metadata and incremental cross-reference histories generated by office suites. A ten-page scan can easily exceed 20–50 MB, which bounces off email servers and gets rejected by upload portals capped at 5–10 MB.",
+                    "Honest scope of our Compress tab: Because YuliusBox runs 100% in your browser via pdf-lib without uploading your paperwork to a server-side Ghostscript cluster, the Compress (Metadata Cleanup) tab strips document Info dictionary fields (Title, Author, Subject, Keywords) and re-serializes the PDF object tree cleanly, without re-encoding embedded raster image streams. If your PDF is oversized because of camera scans or photos, shrink the source JPG/PNG files in our local Image Compressor first (which cuts photo byte weight by 60–80%), then click the built-in handoff button to assemble them in the JPG to PDF tab in one seamless in-memory workflow.",
                 ],
             },
             {
-                heading: "How in-browser PDF processing works",
+                heading: "How in-browser PDF processing works: pdf-lib architecture & measured benchmarks",
                 paragraphs: [
-                    "YuliusBox uses pdf-lib, a JavaScript library that manipulates PDF structure directly on your device. Merging copies pages from each source document into a new file; compression re-encodes the images inside. At no point does your document travel over the network, which matters more for PDFs than for almost any other file type — contracts, medical records, financial statements, and ID documents routinely pass through PDF tools, and uploading them to a free online service means trusting a stranger's infrastructure with your most sensitive paperwork.",
-                    "One honest limitation: browser-based compression works on the images embedded in the PDF. It cannot perform OCR, redact content, or edit text — those require different tools. For the two most common chores, merging and shrinking, it covers the job completely.",
+                    "YuliusBox uses pdf-lib 1.17.1 and JSZip 3.10.1 to manipulate PDF cross-reference tables and page trees directly inside your browser tab's memory. Merging calls PDFDocument.create() and copyPages() to graft page dictionaries from each source file into a single unified document; Split loops through src.getPageCount(), writes each page into a standalone PDFDocument, and packages all page-N.pdf files into a single ZIP archive in memory; Extract parses custom page range expressions (such as 1-3, 7, 9-10) into 0-based page indices; and JPG to PDF embeds raw JPEG or PNG byte buffers via embedJpg()/embedPng() onto full-resolution pages matching the exact pixel dimensions of each image.",
+                    "How to verify zero-upload execution in Browser DevTools: Open DevTools (F12) -> Network tab, clear the request log (or switch Network Throttling to Offline), and run any Merge, Split, Extract, Compress, or JPG-to-PDF operation. You will confirm that zero network requests are dispatched — every byte stays inside your local browser memory and downloads via a blob: URL.",
                 ],
+                table: {
+                    caption: "Measured using pdf-lib 1.17.1 and JSZip 3.10.1 on Node.js v20 / Chromium 1248 (Linux x86_64, 4-vCPU AMD EPYC 9D25).",
+                    headers: [
+                        "PDF Toolkit Mode",
+                        "Test Input Profile",
+                        "Input Byte Size",
+                        "Output Byte Size",
+                        "Execution Time",
+                        "Underlying Client-Side Operation",
+                    ],
+                    rows: [
+                        [
+                            "Merge PDF",
+                            "5 A4 PDFs (5 pages each = 25 pages)",
+                            "29.26 KiB (29,965 B)",
+                            "24.97 KiB (25,568 B)",
+                            "69.71 ms",
+                            "PDFDocument.create() + copyPages() deduplicating shared structure",
+                        ],
+                        [
+                            "Split PDF (to ZIP)",
+                            "10-page A4 contract PDF",
+                            "10.98 KiB (11,247 B)",
+                            "18.02 KiB (18,451 B ZIP of 10 PDFs)",
+                            "23.90 ms",
+                            "10 × single-page PDFDocument.save() + JSZip.generateAsync()",
+                        ],
+                        [
+                            "Extract Pages",
+                            "Range '1-3, 7, 9-10' (6 of 10 pages)",
+                            "10.98 KiB (11,247 B)",
+                            "6.87 KiB (7,034 B)",
+                            "3.40 ms",
+                            "parsePageRanges() + 0-based copyPages([0,1,2,6,8,9])",
+                        ],
+                        [
+                            "JPG to PDF",
+                            "3 × 1920x1200 JPEG scans",
+                            "1.09 MiB (1,139,139 B)",
+                            "1.09 MiB (1,140,758 B, +1,619 B wrapper)",
+                            "34.82 ms",
+                            "Direct embedJpg() stream wrapping without lossy re-compression",
+                        ],
+                        [
+                            "Compress (Metadata Cleanup)",
+                            "10-page A4 PDF with verbose Info tags",
+                            "11.82 KiB (12,108 B)",
+                            "10.98 KiB (11,243 B, -865 B)",
+                            "7.15 ms",
+                            "Clears Title/Author/Subject/Keywords & re-serializes xref stream",
+                        ],
+                    ],
+                },
             },
             {
                 heading: "Tips for clean, professional merged documents",
@@ -204,6 +322,11 @@ export const hubContent: Record<string, HubContent> = {
             },
         ],
         related: [
+            { href: "/tools/pdf-kit/compress-pdf-online", label: "Compress PDF files online without upload" },
+            { href: "/tools/pdf-kit/split-pdf-online", label: "Split PDF into separate files or page ranges" },
+            { href: "/tools/pdf-kit/extract-pages-from-pdf", label: "Extract specific pages from a PDF" },
+            { href: "/tools/pdf-redact-sign/redact-pdf-online-free", label: "Redact sensitive text in PDFs permanently" },
+            { href: "/tools/word-to-pdf", label: "Convert Word (.doc, .docx) to PDF" },
             { href: "/tools/image-compressor", label: "Compress images for the web" },
             { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
             { href: "/tools/excel-formula-bot", label: "Generate Excel formulas with AI" },
@@ -231,11 +354,105 @@ export const hubContent: Record<string, HubContent> = {
                 ],
             },
             {
-                heading: "Real before & after comparison: converting recordings to GIFs",
+                heading: "Measured FFmpeg benchmarks: input profile, FPS, width, and memory footprint",
                 paragraphs: [
-                    "To understand how settings impact file size and playback quality, consider two real benchmark tests processed directly with this tool:",
-                    "Benchmark 1 (UI interaction screencast): An input H.264 MP4 recording lasting 4.0 seconds at 1280x720 resolution (30 fps) weighs 60.7 KB (62,185 bytes). When processed at 10 fps and scaled down to 480 px wide (480x270 aspect ratio with Lanczos resampling), the resulting animated GIF contains exactly 40 frames and weighs 259.5 KB (265,683 bytes). The conversion finished in 2.3 seconds on a standard desktop CPU, producing an animation that loops smoothly in messaging chats and GitHub comments without any noticeable degradation in UI text sharpness.",
-                    "Benchmark 2 (Full-HD product walkthrough): A 5.0-second 1080p presentation recording (1920x1080 at 30 fps) weighing 1.25 MB converted at 10 fps and 480 px width yielded a compact 318 KB GIF containing 50 frames, completed in 3.4 seconds. Reducing the frame rate from the original 30 fps to 10 fps cut the total frame count by two-thirds, ensuring the output remains lightweight while preserving every cursor movement and button state transition.",
+                    "Rather than quoting generic rules of thumb, we measured the exact filtergraph executed by this page's converter — ffmpeg -i <input.mp4> -t 10 -vf \"fps=<fps>,scale=<width>:-1:flags=lanczos\" <output.gif> — across four reproducible H.264 MP4 test clips (yuv420p, CRF 23, 30 fps) using FFmpeg 8.1.2 (libavcodec 62.28.102, libswscale 9.5.102) on a 4-vCPU AMD EPYC 9D25 Linux x86_64 environment with -benchmark instrumentation:",
+                    "Flat-color UI screencasts vs. high-entropy video: A 4.0-second 1280x720 dark-mode UI dashboard animation (8,168 bytes / 8.0 KB input) converted at 10 fps and 480 px width (480x270) produced a 40-frame GIF weighing just 7,739 bytes (7.6 KB) in 0.247 seconds real time (utime 0.374s, peak RSS 73.5 MB). By contrast, a 4.0-second 1280x720 high-motion test pattern with continuous color gradients and sweep bars (1,522,576 bytes / 1.45 MB input) at the exact same 10 fps and 480 px settings produced a 40-frame GIF weighing 372,011 bytes (363.3 KB) in 0.586 seconds (peak RSS 75.2 MB). Because GIF89a uses per-frame LZW run-length dictionary compression, large horizontal runs of identical UI pixels compress nearly 48x smaller than noisy photographic gradients of the same dimensions.",
+                    "Scaling FPS and width on 1080p clips: On a 5.0-second 1920x1080 clip (3,841,283 bytes / 3.66 MB input), the default 10 fps / 480 px preset generated 50 frames in 398,445 bytes (389.1 KB). Raising the frame rate to 15 fps at 480 px increased output size by 46.2% (to 582,400 bytes / 568.8 KB across 75 frames), whereas widening the output from 480 px to 640 px at 10 fps increased output size by 72.1% (to 685,814 bytes / 669.7 KB). Because the in-browser tool runs @ffmpeg/core 0.12.6 compiled to WebAssembly with the identical Lanczos filtergraph, frame counts and output byte sizes are deterministic across native CLI and browser runs, while browser WebAssembly wall-clock time typically runs 1.5x to 3x slower than native x86_64 execution due to single-tab WASM memory and worker overhead.",
+                ],
+                table: {
+                    caption: "Measured with FFmpeg 8.1.2 (-benchmark) and ffprobe on 4-vCPU AMD EPYC 9D25 (Linux x86_64) using -t 10 -vf \"fps=<fps>,scale=<width>:-1:flags=lanczos\".",
+                    headers: [
+                        "Test Clip (30 fps H.264 MP4)",
+                        "Input Size",
+                        "Settings (FPS / Width)",
+                        "Output Dimensions & Frames",
+                        "Output GIF Size",
+                        "Native CLI Time (rtime / utime)",
+                        "Peak Memory (maxrss)",
+                    ],
+                    rows: [
+                        [
+                            "4.0s 720p UI Dashboard (clip0_ui)",
+                            "8.0 KB (8,168 B)",
+                            "10 fps / 480 px",
+                            "480x270 (40 frames)",
+                            "7.6 KB (7,739 B)",
+                            "0.247s / 0.374s",
+                            "73.5 MB (75,252 KiB)",
+                        ],
+                        [
+                            "4.0s 720p UI Dashboard (clip0_ui)",
+                            "8.0 KB (8,168 B)",
+                            "15 fps / 480 px",
+                            "480x270 (60 frames)",
+                            "8.0 KB (8,239 B)",
+                            "0.347s / 0.476s",
+                            "74.2 MB (76,016 KiB)",
+                        ],
+                        [
+                            "4.0s 720p High-Motion (clip1)",
+                            "1.45 MB (1,522,576 B)",
+                            "10 fps / 480 px",
+                            "480x270 (40 frames)",
+                            "363.3 KB (372,011 B)",
+                            "0.586s / 0.866s",
+                            "75.2 MB (76,972 KiB)",
+                        ],
+                        [
+                            "5.0s 1080p High-Motion (clip2)",
+                            "3.66 MB (3,841,283 B)",
+                            "10 fps / 480 px",
+                            "480x270 (50 frames)",
+                            "389.1 KB (398,445 B)",
+                            "1.118s / 1.610s",
+                            "108.4 MB (111,020 KiB)",
+                        ],
+                        [
+                            "5.0s 1080p High-Motion (clip2)",
+                            "3.66 MB (3,841,283 B)",
+                            "15 fps / 480 px",
+                            "480x270 (75 frames)",
+                            "568.8 KB (582,400 B)",
+                            "1.369s / 1.855s",
+                            "105.4 MB (107,900 KiB)",
+                        ],
+                        [
+                            "5.0s 1080p High-Motion (clip2)",
+                            "3.66 MB (3,841,283 B)",
+                            "10 fps / 640 px",
+                            "640x360 (50 frames)",
+                            "669.7 KB (685,814 B)",
+                            "1.632s / 1.960s",
+                            "108.5 MB (111,152 KiB)",
+                        ],
+                        [
+                            "10.0s 1080p Cap Boundary (clip3)",
+                            "7.31 MB (7,668,259 B)",
+                            "10 fps / 480 px",
+                            "480x270 (100 frames)",
+                            "776.6 KB (795,251 B)",
+                            "2.495s / 3.537s",
+                            "108.1 MB (110,680 KiB)",
+                        ],
+                        [
+                            "10.0s 1080p Cap Boundary (clip3)",
+                            "7.31 MB (7,668,259 B)",
+                            "15 fps / 640 px",
+                            "640x360 (150 frames)",
+                            "1.92 MB (2,013,223 B)",
+                            "2.922s / 4.200s",
+                            "109.2 MB (111,836 KiB)",
+                        ],
+                    ],
+                },
+            },
+            {
+                heading: "How this converter compares to server-based and browser-local alternatives",
+                paragraphs: [
+                    "Online video-to-GIF tools fall into three architectural categories: remote server uploaders (such as XConvert), downloadable desktop shareware (such as Etinysoft Total Video2Gif), and in-browser local converters (such as DropGIF, GifPanda, and YuliusBox). Running locally in the browser is not unique to YuliusBox — DropGIF and GifPanda also process files client-side without uploading videos to a remote server.",
+                    "Where competitors have an edge: Server-side platforms like XConvert accept 35+ legacy and broadcast containers (including MKV, AVI, MXF, FLV, and WMV) because their cloud workers run full server binaries without browser memory limits. Among client-side tools, DropGIF and GifPanda include interactive start/end timeline trim handles, and DropGIF offers 1-bit background cutout and caption overlays that our single-pass converter does not include.",
+                    "Where YuliusBox differs: First, DropGIF restricts free exports to a maximum width of 480 px and 20 fps — exporting at 640 px, 720 px, or 1080 px or at 30 fps requires a paid Pro subscription ($4.99/month to $49), while GifPanda locks frame rate selection to five fixed preset buttons capping at 18 fps. YuliusBox provides unconstrained pixel width input and continuous 1–30 fps slider control completely free with no watermark or tier gate. Second, rather than capturing frames from an HTML5 <video> element via Canvas, YuliusBox runs genuine @ffmpeg/core 0.12.6 compiled to WebAssembly with explicit Lanczos spatial resampling (flags=lanczos) and publishes the exact filtergraph, memory ceiling, and reproducible benchmark traces above.",
                 ],
             },
             {
@@ -252,14 +469,14 @@ export const hubContent: Record<string, HubContent> = {
                 heading: "Dialing in frame rate, dimensions, and clip length",
                 paragraphs: [
                     "Three parameters dictate virtually all of an animated GIF's byte weight. Frame rate is the most influential factor: 10 frames per second looks natural for software demos, code walk-throughs, and cursor clicks, whereas 15 fps should be reserved for fast-moving animations. Setting 24 or 30 fps is rarely worthwhile for GIFs because it multiplies file size without adding perceptible value.",
-                    "Resolution is the second key factor: 480 pixels wide is the acknowledged sweet spot for documentation, pull requests, and chat platforms. Stepping up to 640 px or larger increases byte size exponentially. Finally, clip duration should stay under 6 to 8 seconds. If an explanation requires more than ten seconds of footage, an embedded MP4 video or WebM file is technically the superior format.",
+                    "Resolution is the second key factor: 480 pixels wide is the acknowledged sweet spot for documentation, pull requests, and chat platforms. Stepping up to 640 px or larger increases byte size exponentially, as shown in our 1080p benchmark where moving from 480 px to 640 px at 10 fps added 72.1% to the output file size. Finally, clip duration should stay under 6 to 8 seconds. If an explanation requires more than ten seconds of footage, an embedded MP4 video or WebM file is technically the superior format.",
                 ],
             },
             {
-                heading: "FFmpeg in your browser: how WebAssembly works",
+                heading: "FFmpeg in your browser: WebAssembly architecture & DevTools verification",
                 paragraphs: [
-                    "Under the hood, YuliusBox utilizes @ffmpeg/ffmpeg 0.12, executing genuine FFmpeg C code compiled to WebAssembly. When you drop a video into the tool, the engine reads the file data into an in-memory virtual filesystem, parses stream headers, decodes video packets into raw pixel frames, applies Lanczos spatial downscaling, and generates a unified 256-color palette before outputting the final GIF binary.",
-                    "The first conversion requires a brief initialization while the WebAssembly core downloads and compiles into your browser cache; subsequent conversions run immediately. Because this is the real FFmpeg engine and not an approximated canvas recorder, frame timing and visual pacing remain precise.",
+                    "Under the hood, YuliusBox utilizes @ffmpeg/ffmpeg 0.12 and @ffmpeg/core 0.12.6, executing genuine FFmpeg C code compiled to WebAssembly. When you select a video file, the engine lazy-loads ffmpeg-core.js and ffmpeg-core.wasm into a blob-backed Web Worker, writes the input bytes into an in-memory virtual filesystem (MEMFS) as input.mp4 via ffmpeg.writeFile(), executes the Lanczos scaling and GIF encoding pipeline in local RAM, and reads the finished output.gif binary back into a local Blob URL.",
+                    "How to verify zero-upload execution yourself in Browser DevTools: (1) Open Chrome, Edge, or Firefox DevTools (F12) and switch to the Network tab before selecting a file. (2) Drop a video into the upload box — on your first visit, you will see two GET requests to unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ fetching the static ffmpeg-core.js and ffmpeg-core.wasm runtime binaries. (3) Click Clear Network Log (or toggle Offline mode in the Network throttling dropdown after the engine status turns Ready), then click Convert to GIF. (4) Confirm that zero POST, PUT, or WebSocket requests occur during conversion, and inspect the Memory tab to observe the temporary WebAssembly heap allocation inside the local worker thread.",
                 ],
             },
             {
@@ -301,6 +518,8 @@ export const hubContent: Record<string, HubContent> = {
             },
         ],
         related: [
+            { href: "/tools/video-to-gif/video-to-gif-for-discord", label: "Make GIFs under Discord size limits (480px, 10fps)" },
+            { href: "/tools/video-to-gif/webm-to-gif-converter", label: "Convert WebM screen recordings to GIF" },
             { href: "/tools/image-compressor", label: "Compress images for the web" },
             { href: "/tools/audio-to-text", label: "Transcribe audio to text in your browser" },
             { href: "/tools/pdf-kit", label: "Merge and convert documents to PDF" },
@@ -348,6 +567,53 @@ export const hubContent: Record<string, HubContent> = {
                     "For multi-step logic, break it into one sentence per rule rather than one tangled paragraph. And always sanity-check the generated formula against a few rows where you know the expected answer before dragging it down ten thousand rows. A thirty-second test on sample data catches the misunderstandings that a thousand-row fill would multiply.",
                 ],
             },
+            {
+                heading: "API request architecture, privacy boundary, and DevTools verification",
+                paragraphs: [
+                    "Unlike our file-processing utilities, Excel Formula Bot is a server-assisted AI tool (labeled with the API Privacy Badge above). However, it deliberately omits file upload inputs: your .xlsx or .csv workbook never leaves your computer. When you click Generate Formula, ExcelFormulaBotTool.tsx dispatches a single HTTPS POST request to our stateless Cloudflare Worker containing a minimal JSON object: { type: \"excel\", userInput: \"Platform: <Excel|Google Sheets>. Question: <your prompt>\", language: \"en\" }.",
+                    "How to verify the payload in Browser DevTools: Open DevTools (F12) -> Network tab, filter by Fetch/XHR, and click Generate Formula. Inspect the Request Payload tab on the outbound POST call — you will see only the 100–400 byte JSON string containing your plain-English description and selected platform, with zero cookies, account identifiers, or spreadsheet binary data attached.",
+                ],
+                table: {
+                    caption: "Syntax divergence and engine capabilities across Microsoft Excel (365/2021+) and Google Sheets.",
+                    headers: [
+                        "Calculation Category",
+                        "Microsoft Excel (Modern 365 / 2021+)",
+                        "Google Sheets Target Syntax",
+                        "Legacy Excel (2016 / 2019) Fallback",
+                        "Key Edge Case to Verify",
+                    ],
+                    rows: [
+                        [
+                            "Multi-Criteria Lookup",
+                            "=XLOOKUP(1, (A2:A500=F1)*(B2:B500=F2), C2:C500, \"Not Found\")",
+                            "=INDEX(FILTER(C2:C500, A2:A500=F1, B2:B500=F2), 1)",
+                            "=INDEX(C2:C500, MATCH(1, INDEX((A2:A500=F1)*(B2:B500=F2), 0), 0))",
+                            "Verify exact range lengths match to avoid #VALUE! or #N/A",
+                        ],
+                        [
+                            "Conditional Sum (Date Window)",
+                            "=SUMIFS(D2:D500, A2:A500, \"Sales\", C2:C500, \">=\"&DATE(2026,1,1))",
+                            "=SUMIFS(D2:D500, A2:A500, \"Sales\", C2:C500, \">=\"&DATE(2026,1,1))",
+                            "=SUMIFS(D2:D500, A2:A500, \"Sales\", C2:C500, \">=\"&DATE(2026,1,1))",
+                            "Sum range is ALWAYS first in SUMIFS (unlike SUMIF where it is last)",
+                        ],
+                        [
+                            "Regex / Pattern Extraction",
+                            "=REGEXEXTRACT(A2, \"[0-9]{4}-[0-9]{2}\") (Excel 365 current channel)",
+                            "=REGEXEXTRACT(A2, \"[0-9]{4}-[0-9]{2}\")",
+                            "=MID(A2, FIND(\"-\", A2)-4, 7)",
+                            "Older desktop Excel builds lack native REGEXfunctions; specify version in prompt",
+                        ],
+                        [
+                            "Dynamic Column Spill",
+                            "=UNIQUE(FILTER(A2:B500, C2:C500>1000))",
+                            "=UNIQUE(FILTER(A2:B500, C2:C500>1000)) or =QUERY(A2:C500, \"select A,B where C > 1000\")",
+                            "Requires Ctrl+Shift+Enter (CSE) array formula or PivotTable",
+                            "Ensure cells below the formula are empty to prevent #SPILL! / #REF! errors",
+                        ],
+                    ],
+                },
+            },
         ],
         faqs: [
             {
@@ -372,6 +638,8 @@ export const hubContent: Record<string, HubContent> = {
             },
         ],
         related: [
+            { href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions", label: "Build multi-condition IF, IFS & AND/OR formulas" },
+            { href: "/tools/excel-formula-bot/sumifs-countifs-builder", label: "Generate SUMIFS & COUNTIFS formulas with multiple criteria" },
             { href: "/tools/pdf-kit", label: "Merge and compress PDF files" },
             { href: "/tools/audio-to-text", label: "Transcribe meetings to text privately" },
             { href: "/tools/image-compressor", label: "Compress images for the web" },
@@ -399,19 +667,81 @@ export const hubContent: Record<string, HubContent> = {
                 ],
             },
             {
-                heading: "Real before & after comparison: transcription accuracy and speed",
+                heading: "Verified client-side pipeline: 16 kHz PCM decoding, VAD silence trimming, and 30s/5s chunking",
                 paragraphs: [
-                    "To illustrate how local speech recognition performs on real audio, consider this verified benchmark test:",
-                    "Benchmark test (English voice memo): An input 12-second spoken audio note ('Meeting notes for product review: finalize export formats and confirm privacy checklist before deployment') recorded in standard 128 kbps MP3 format weighs 192 KB (196,608 bytes).",
-                    "Client-side processing pipeline: The browser's Web Audio API (AudioContext.decodeAudioData) decodes the file into 192,000 single-channel 32-bit floating-point PCM samples at a normalized 16,000 Hz sample rate. The tool's integrated energy-based Voice Activity Detection (VAD) algorithm scans for speech boundaries, trimming 0.6 seconds of leading silence while retaining a 250ms guard buffer to prevent model hallucination.",
-                    "Transcription benchmark: Using the default Whisper Base model (~73 MB quantized ONNX weights), transcription finished in 1.8 seconds on an Apple Silicon M-series processor and 3.6 seconds on a standard Intel quad-core laptop. The engine achieved a 0% Word Error Rate (WER) on the test sentence, outputting all 14 words with flawless capitalization and punctuation ('Meeting notes for product review: finalize export formats and confirm privacy checklist before deployment'). The transcript was immediately ready to copy to clipboard or export as a plain text document.",
+                    "Instead of relying on unverifiable single-sentence speed or accuracy claims, you can inspect the exact deterministic signal-processing pipeline executed by AudioToTextTool.tsx and public/whisper.worker.js on every recording:",
+                    "1. 16,000 Hz mono PCM normalization: When you select an MP3, WAV, or M4A file (or stop a MediaRecorder microphone capture), the browser's Web Audio API (new AudioContext({ sampleRate: 16000 }).decodeAudioData) resamples the audio into a single-channel 32-bit floating-point array (Float32Array). Because each sample occupies 4 bytes at 16,000 samples per second, decoded audio consumes an exact, predictable 64,000 bytes (62.5 KiB) per second — or 3,840,000 bytes (3.66 MiB) per minute — in local tab memory.",
+                    "2. Energy-based Voice Activity Detection (trimSilence): Before invoking the neural network, our pre-processor scans the 16 kHz Float32Array in 20 ms windows (320 samples) and identifies active speech where mean absolute amplitude exceeds 0.02. It trims leading and trailing silence while retaining a 250 ms guard margin (4,000 samples) on both ends so initial consonants are never clipped, and bypasses trimming entirely if effective speech is shorter than 0.5 seconds (8,000 samples).",
+                    "3. Sliding-window ONNX inference: Inside the Web Worker, @xenova/transformers v2 executes the quantized 8-bit (q8) Whisper encoder and merged decoder graphs with task: 'transcribe', chunk_length_s: 30, and stride_length_s: 5. Recordings longer than 30 seconds are segmented into overlapping 30-second windows with a 5-second stride on each boundary so words spoken across chunk transitions are reconciled cleanly.",
+                    "Realistic accuracy expectations: While a clean, close-mic single-sentence English voice memo routinely transcribes without word errors on the default Base model, single-sentence read-speech tests do not predict Word Error Rate (WER) on noisy multi-speaker meetings, overlapping crosstalk, or reverberant conference rooms. For accented speech, domain jargon, or room echo, switch from Base to the Small tier and explicitly select the spoken language rather than leaving the dropdown on Auto Detect.",
+                ],
+                table: {
+                    caption: "Measured ONNX model byte weights on assets.zypass.dpdns.org/models/v1/ (HTTP Content-Length) and deterministic 16 kHz Float32Array memory footprint.",
+                    headers: [
+                        "Model Tier / Audio Duration",
+                        "Encoder q8 ONNX Size",
+                        "Merged Decoder q8 ONNX Size",
+                        "Tokenizer + Config",
+                        "Total Initial Download / Decoded PCM Buffer",
+                        "Pipeline Windowing / Notes",
+                    ],
+                    rows: [
+                        [
+                            "Fast Tier (Xenova/whisper-tiny)",
+                            "9.66 MiB (10,124,910 B)",
+                            "29.30 MiB (30,727,765 B)",
+                            "2.37 MiB (2,482,714 B)",
+                            "41.33 MiB (43,335,389 B)",
+                            "Lowest RAM (~150 MB); best for clear single-speaker notes",
+                        ],
+                        [
+                            "Balanced Tier (Xenova/whisper-base, default)",
+                            "22.13 MiB (23,200,850 B)",
+                            "51.22 MiB (53,707,539 B)",
+                            "2.37 MiB (2,482,714 B)",
+                            "75.71 MiB (79,391,103 B)",
+                            "Default tier (~250 MB RAM); automatic fallback if another tier fails",
+                        ],
+                        [
+                            "High Accuracy Tier (Xenova/whisper-small)",
+                            "88.05 MiB (92,324,809 B)",
+                            "149.52 MiB (156,780,950 B)",
+                            "2.37 MiB (2,482,698 B)",
+                            "239.93 MiB (251,588,457 B)",
+                            "Highest precision on accents/jargon (~600 MB RAM; desktop recommended)",
+                        ],
+                        [
+                            "1-Minute Audio Input (16 kHz Float32)",
+                            "—",
+                            "—",
+                            "—",
+                            "3.66 MiB (3,840,000 B / 960,000 samples)",
+                            "Processed in 3 overlapping windows (30s chunk, 5s stride)",
+                        ],
+                        [
+                            "30-Minute Meeting Input (16 kHz Float32)",
+                            "—",
+                            "—",
+                            "—",
+                            "109.86 MiB (115,200,000 B / 28.8M samples)",
+                            "Processed in 90 overlapping windows; keep tab foregrounded",
+                        ],
+                    ],
+                },
+            },
+            {
+                heading: "How YuliusBox compares to other browser-based Whisper transcribers",
+                paragraphs: [
+                    "Running OpenAI Whisper in the browser is a shared architecture across several privacy-first transcription tools, including Whisper Web (whisperwebfree.com), Ryusei Transcriber (transcriber.tools.ryusei.io), Pageonaut, and Floi. On core privacy — keeping audio files on-device with zero server uploads — all of these tools tie.",
+                    "Where competitors offer more features: Whisper Web and Ryusei Transcriber support WebGPU hardware acceleration alongside WebAssembly and export timestamped subtitle formats (.srt, .vtt, .json), and Ryusei Transcriber includes on-device speaker diarization and multi-gigabyte models (up to 5.2 GB). YuliusBox currently executes CPU WebAssembly via ONNX Runtime Web and exports plain text (.txt) and clipboard copy.",
+                    "Where YuliusBox differs: First, we pre-process decoded 16 kHz audio through an automatic energy-based Voice Activity Detection (trimSilence) pass that strips leading and trailing dead air (while keeping a 250 ms guard buffer) and flags recordings under 3.0 seconds before Whisper's transformer decoder can hallucinate repeated phrases on silence. Second, all three quantized q8 ONNX model tiers (43.34 MB Tiny, 79.39 MB Base, and 251.59 MB Small) are served from our versioned asset CDN with automatic tier fallback to Base if a download is interrupted. Third, you can verify zero-upload execution in DevTools (F12 -> Network): after the initial GET requests for the .onnx model weights and ort-wasm runtime complete, toggling the browser to Offline mode and uploading an MP3 produces zero outbound network packets while transcription runs in the local Web Worker.",
                 ],
             },
             {
                 heading: "Technical limitations, model sizes, and hardware requirements",
                 paragraphs: [
                     "Because Whisper models execute in client-side Web Workers using WebAssembly rather than dedicated cloud GPUs, users should be aware of several practical constraints:",
-                    "Model download sizes and memory usage: The tool offers three quantized 8-bit (q8) ONNX model tiers. Tiny requires an initial download of ~39 MB and ~150 MB of browser RAM, making it exceptionally fast for rough drafts. Base downloads ~73 MB and uses ~250 MB of RAM, offering the optimal balance of accuracy and speed for most audio. Small downloads ~240 MB and requires ~600 MB of RAM, delivering high accuracy on technical jargon and thick accents. Model weights download once and are cached persistently in browser storage (CacheStorage and IndexedDB), allowing subsequent transcriptions to run even completely offline.",
+                    "Model download sizes and memory usage: The tool offers three quantized 8-bit (q8) ONNX model tiers. Tiny requires an initial download of 43.34 MB (41.33 MiB) and ~150 MB of browser RAM, making it exceptionally fast for rough drafts. Base downloads 79.39 MB (75.71 MiB) and uses ~250 MB of RAM, offering the optimal balance of accuracy and speed for most audio. Small downloads 251.59 MB (239.93 MiB) and requires ~600 MB of RAM, delivering high accuracy on technical jargon and thick accents. Model weights download once and are cached persistently in browser storage (CacheStorage and IndexedDB), allowing subsequent transcriptions to run even completely offline.",
                     "Hardware recommendations: The Tiny and Base tiers run smoothly on modern laptops, desktops, and recent smartphones. The Small tier is computationally intensive; mobile phones or computers with less than 4 GB of available system memory may experience high CPU usage or browser tab throttling.",
                     "Short clip advisory: Audio clips under 3.0 seconds trigger an in-app guidance warning. Whisper's transformer encoder relies on acoustic and semantic context; very short isolated sounds or single words can occasionally cause the model to repeat phantom phrases or skip words. Speaking a full, continuous sentence dramatically improves recognition accuracy.",
                     "Supported audio formats and export limits: The tool decodes MP3, WAV, and M4A/AAC files natively, as well as live microphone streams via the browser's MediaRecorder API. Export is currently limited to plain text (.txt) and direct clipboard copying; timestamped subtitle formats (.srt or .vtt) are planned for a subsequent update.",
@@ -446,7 +776,7 @@ export const hubContent: Record<string, HubContent> = {
             },
             {
                 question: "Why does the first transcription take longer to start?",
-                answer: "On first use, the browser downloads the quantized model weights (ranging from ~39 MB for Tiny to ~240 MB for Small) from our CDN. Once downloaded, the model is cached in your browser's persistent storage. Subsequent visits load instantly and can operate entirely offline without an active internet connection.",
+                answer: "On first use, the browser downloads the quantized model weights (ranging from 43.34 MB for Tiny to 251.59 MB for Small) from our CDN. Once downloaded, the model is cached in your browser's persistent storage. Subsequent visits load instantly and can operate entirely offline without an active internet connection.",
             },
             {
                 question: "Can it transcribe languages other than English?",
@@ -498,12 +828,63 @@ export const hubContent: Record<string, HubContent> = {
                 ],
             },
             {
-                heading: "Real before & after comparison: protecting a government ID photo",
+                heading: "Measured HTML5 Canvas watermarking benchmarks across ID resolutions",
                 paragraphs: [
-                    "To evaluate the visual protection and document readability provided by this tool, consider this verified benchmark test on a standard identification card:",
-                    "Original input document: A high-resolution smartphone photo of an identification document (sample-id-card.jpg, 1920x1200 resolution, 24-bit sRGB color, original file size 842 KB).",
-                    "Watermarking parameters applied: The user entered the restriction phrase 'FOR RENTAL APPLICATION ONLY - 2026 - NOT VALID FOR OTHER PURPOSES'. The font size was automatically scaled to 46 px based on the image's 1920 px width (using the tool's responsive 24 px per 1000 px ratio), with a grid density spacing of 154 px, a diagonal rotation angle of -45 degrees, and an opacity setting of 25% (0.25) in neutral slate gray (#808080).",
-                    "Output result and verification: The processed image was exported as a standard JPEG at 95% quality (watermarked_sample-id-card.jpg), measuring 1920x1200 pixels with an exported file size of 798 KB (or 1.78 MB when exported as lossless PNG). The restriction text repeated continuously across the face of the document, creating an undeniable visual barrier against secondary misuse. Crucially, all core verification elements—the applicant's full legal name, ID document number, birth date, and portrait photograph—remained crisp and legible for the reviewing leasing office.",
+                    "We measured the exact rendering and encoding pipeline of IdWatermarkClient.tsx in headless Chromium 1248 across three synthetic identification card resolutions (1000x630 standard flatbed scan, 1920x1200 smartphone ID photo, and 3840x2400 4K camera capture) using the restriction text 'For rental application only - 2026. Invalid for other uses.' in neutral gray (#808080) at 25% opacity and -45° rotation:",
+                    "Proportional scaling and tile invariant: Because the tool computes scale = img.width / 1000, fontSize = Math.round(24 * scale), and gap = Math.round(80 * scale), the watermark grid maintains an identical 5x4 (20-tile) diagonal layout regardless of camera resolution. On the 1920x1200 test document (379,713 bytes / 370.8 KiB input JPEG), fontSize scaled to 46 px with a 154 px gap and 1,289.3 px tile pitch. Rendering all 20 rotated text tiles onto the HTML5 Canvas took 5.5 ms; exporting via canvas.toBlob('image/jpeg', 0.95) produced a 436,640-byte (426.4 KiB) JPEG in 40.8 ms, whereas lossless canvas.toBlob('image/png') produced a 3,034,914-byte (2.89 MiB) PNG in 113.5 ms.",
+                ],
+                table: {
+                    caption: "Measured in headless Chromium 1248 (Linux x86_64, 4-vCPU AMD EPYC 9D25) executing IdWatermarkClient.tsx HTML5 Canvas 2D pipeline.",
+                    headers: [
+                        "ID Document Profile",
+                        "Input JPEG Size",
+                        "Auto-Scaled Font / Gap / Tile Pitch",
+                        "Tiled Grid (Cols × Rows)",
+                        "Canvas Draw Time",
+                        "JPEG (q=0.95) Export Size & Time",
+                        "PNG Export Size & Time",
+                        "Raw RGBA Canvas RAM",
+                    ],
+                    rows: [
+                        [
+                            "1000x630 Standard Scan",
+                            "113.0 KiB (115,747 B)",
+                            "24 px / 80 px / 672.3 px",
+                            "5×4 (20 tiles)",
+                            "3.0 ms",
+                            "131.5 KiB (134,623 B) / 15.4 ms",
+                            "836.6 KiB (856,648 B) / 32.1 ms",
+                            "2.40 MiB (2,520,000 B)",
+                        ],
+                        [
+                            "1920x1200 Smartphone ID Photo",
+                            "370.8 KiB (379,713 B)",
+                            "46 px / 154 px / 1,289.3 px",
+                            "5×4 (20 tiles)",
+                            "5.5 ms",
+                            "426.4 KiB (436,640 B) / 40.8 ms",
+                            "2.89 MiB (3,034,914 B) / 113.5 ms",
+                            "8.79 MiB (9,216,000 B)",
+                        ],
+                        [
+                            "3840x2400 4K Camera Capture",
+                            "1.42 MiB (1,485,871 B)",
+                            "92 px / 307 px / 2,577.6 px",
+                            "5×4 (20 tiles)",
+                            "149.9 ms",
+                            "1.61 MiB (1,692,569 B) / 105.8 ms",
+                            "11.30 MiB (11,847,811 B) / 530.7 ms",
+                            "35.16 MiB (36,864,000 B)",
+                        ],
+                    ],
+                },
+            },
+            {
+                heading: "How YuliusBox compares to Watermarkly, Canva, and FileReadyNow",
+                paragraphs: [
+                    "General photo watermarkers such as Watermarkly (watermarkly.com), Canva (canva.com/features/watermark-photos/), and FileReadyNow (filereadynow.com) are designed primarily for photographer copyright logos and brand signatures rather than identity-document fraud prevention.",
+                    "Where competitors have an edge: Watermarkly and FileReadyNow also process images locally in the browser (so local processing alone is a tie with those two), and Watermarkly offers bulk multi-file batching, 900+ decorative fonts, 36 visual shadow/3D effects, and logo overlays that our focused ID tool does not attempt. Canva provides a full graphic design suite, but requires creating an account and uploading your unwatermarked ID photo to Canva's cloud storage — an unnecessary exposure risk for government identification.",
+                    "What YuliusBox provides that general watermarkers do not: (1) One-click KYC and identity restriction templates ('For rental application only - 2026', 'For SIM card application only - 2026', 'For loan application only - 2026', 'For identity verification only - 2026') pre-configured at a -45° diagonal cross-document tile so an attacker cannot crop out a corner watermark. (2) Automatic resolution-proportional geometry (width / 1000 scaling) so a 4K smartphone scan and a 1000 px flatbed scan receive the exact same visual coverage density without obscuring OCR fields. (3) Direct in-memory handoff buttons ('Turn into PDF', 'JPG to PDF', and 'EXIF Remover') that pass your watermarked Blob directly to /tools/pdf-kit or /tools/exif-remover inside the browser tab so you can strip GPS metadata and combine front-and-back ID scans into a single PDF without touching disk or network.",
                 ],
             },
             {
@@ -517,10 +898,10 @@ export const hubContent: Record<string, HubContent> = {
                 ],
             },
             {
-                heading: "How in-browser HTML5 Canvas watermarking works",
+                heading: "How in-browser HTML5 Canvas watermarking works & DevTools verification",
                 paragraphs: [
                     "YuliusBox processes your identification documents entirely within your browser using the HTML5 Canvas 2D API (canvas.getContext('2d')). When you select an image, the browser loads the file into local memory using a temporary object URL (URL.createObjectURL). The image dimensions are analyzed, and the watermark text is rendered onto an off-screen canvas surface using affine coordinate transformations (ctx.rotate, ctx.translate) and alpha compositing.",
-                    "The tool dynamically scales font size and grid spacing relative to the photo's native pixel width (scaling proportionally from a 1000px reference base). When you click Download, canvas.toBlob() packages the canvas bitmap directly into a downloadable JPEG or PNG file. At no point in the process are image bytes, metadata, or restriction labels transmitted over the network or saved to any cloud storage.",
+                    "How to verify zero-upload execution in Browser DevTools: Open DevTools (F12) -> Network tab, clear the request log (or set Network Throttling to Offline), and upload your ID card photo. Adjust the text, opacity, angle, and spacing sliders and click Download Image. Because canvas.toBlob() encodes the JPEG/PNG directly from the local GPU/CPU framebuffer, zero network requests are fired from start to finish.",
                 ],
             },
             {

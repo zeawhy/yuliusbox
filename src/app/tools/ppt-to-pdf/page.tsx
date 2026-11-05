@@ -21,6 +21,43 @@ const SECTIONS = [
             "Because the file does leave your device, do not use this tool for decks you are not allowed to upload anywhere — unreleased product plans under NDA are the classic example. For coursework, talks, sales decks and handouts, the handling described above applies exactly as written.",
         ],
     },
+    {
+        heading: "LibreOffice Impress (Gotenberg) slide pipeline & DevTools inspection",
+        paragraphs: [
+            "PowerPoint (.pptx / .ppt) files are ZIP-compressed DrawingML XML packages containing master slide layouts, vector shapes, SmartArt diagrams, and embedded media. Because browser-only Canvas scripts cannot accurately rasterize DrawingML master templates, PptToPdfClient.tsx uploads your presentation via HTTPS POST to /api/ppt-to-pdf, which streams the buffer in memory to an isolated Gotenberg LibreOffice Impress container (/forms/libreoffice/convert) and returns a 16:9 or 4:3 vector PDF matching your deck's slide dimensions.",
+            "How to inspect the request in Browser DevTools: Open DevTools (F12 -> Network) and convert a slide deck. You will observe one POST /api/ppt-to-pdf request transmitting the multipart file payload and streaming back the finished application/pdf document without writing any copy to persistent storage.",
+        ],
+        table: {
+            caption: "PowerPoint-to-PDF conversion specifications and slide element handling on /api/ppt-to-pdf.",
+            headers: [
+                "Presentation Aspect / Limit",
+                "Supported Specification",
+                "PDF Output Behavior",
+            ],
+            rows: [
+                [
+                    "Accepted Formats & Size Limit",
+                    ".pptx and .ppt up to 50 MB (52,428,800 B)",
+                    "Validated before upload and on /api/ppt-to-pdf (45-second timeout)",
+                ],
+                [
+                    "Slide Geometry & Vector Text",
+                    "16:9 Widescreen, 4:3 Standard, or Custom",
+                    "Preserves selectable vector text, vector shapes, and embedded charts one slide per page",
+                ],
+                [
+                    "Animations & Build Transitions",
+                    "Flattened to final slide state",
+                    "Split multi-step overlapping build animations onto separate slides prior to converting",
+                ],
+                [
+                    "Rate Limit & Data Retention",
+                    "5 conversions / minute / IP; 0-second retention",
+                    "In-memory stream only; zero database or disk persistence after HTTP response completes",
+                ],
+            ],
+        },
+    },
 ];
 
 const HOW_TO = [

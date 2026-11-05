@@ -988,8 +988,8 @@ function IDWatermarkContent() {
                             </summary>
                             <p className="text-zinc-400 mt-2 text-sm">
                                 {language === "en"
-                                    ? "Be specific. Include the purpose and date. Example: \"Only for House Rental Application 2024. Invalid for other uses.\""
-                                    : "请具体一点。包括用途和日期。例如：“仅供 2024 年租房申请使用。他用无效。”"}
+                                    ? "Be specific. Include the purpose and date. Example: \"Only for House Rental Application 2026. Invalid for other uses.\""
+                                    : "请具体一点。包括用途和日期。例如：“仅供 2026 年租房申请使用。他用无效。”"}
                             </p>
                         </details>
                     </div>

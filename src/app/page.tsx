@@ -59,8 +59,13 @@ const FAMILIES: ToolFamily[] = [
         tagline: "Shrink JPG, PNG & WebP photos with no visible quality loss.",
         icon: Image,
         sublinks: [
-            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
-            { href: "/tools/image-compressor#jpg-vs-png-vs-webp-which-format-to-pick", label: "JPG vs PNG vs WebP guide" },
+            { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress to 100KB" },
+            { href: "/tools/image-compressor/compress-jpg-to-50kb", label: "Compress JPG to 50KB" },
+            { href: "/tools/image-compressor/compress-image-to-20kb", label: "Compress to 20KB" },
+            { href: "/tools/image-compressor/convert-image-to-webp", label: "Convert to WebP" },
+            { href: "/tools/image-compressor/compress-png-online", label: "Compress PNG" },
+            { href: "/tools/image-compressor/compress-images-for-websites", label: "For websites" },
+            { href: "/tools/image-compressor/compress-photos-for-email", label: "For email" },
         ],
     },
     {
@@ -70,8 +75,11 @@ const FAMILIES: ToolFamily[] = [
         tagline: "Merge multiple PDFs into one, or shrink oversized files.",
         icon: FileText,
         sublinks: [
-            { href: "/tools/pdf-kit#everyday-situations-that-call-for-pdf-merging", label: "Merge PDF files online" },
-            { href: "/tools/pdf-kit#why-pdf-files-get-so-big-and-how-compression-helps", label: "Why PDFs get so big" },
+            { href: "/tools/pdf-kit/compress-pdf-online", label: "Compress PDF online" },
+            { href: "/tools/pdf-kit/split-pdf-online", label: "Split PDF pages" },
+            { href: "/tools/pdf-kit/extract-pages-from-pdf", label: "Extract PDF pages" },
+            { href: "/tools/pdf-redact-sign/redact-pdf-online-free", label: "Redact PDF free" },
+            { href: "/tools/word-to-pdf", label: "Word to PDF *" },
         ],
     },
     {
@@ -81,8 +89,9 @@ const FAMILIES: ToolFamily[] = [
         tagline: "Turn MP4 and MOV clips into GIFs — no watermark.",
         icon: Film,
         sublinks: [
-            { href: "/tools/video-to-gif", label: "MP4 to GIF converter" },
-            { href: "/tools/video-to-gif#dialing-in-frame-rate-size-and-length", label: "Frame rate & size guide" },
+            { href: "/tools/video-to-gif/video-to-gif-for-discord", label: "GIFs for Discord (8MB)" },
+            { href: "/tools/video-to-gif/webm-to-gif-converter", label: "WebM to GIF converter" },
+            { href: "/tools/video-to-gif#dialing-in-frame-rate-dimensions-and-clip-length", label: "Frame rate & size guide" },
         ],
     },
     {
@@ -92,7 +101,8 @@ const FAMILIES: ToolFamily[] = [
         tagline: "Describe the calculation in plain English; AI writes the formula.",
         icon: Table,
         sublinks: [
-            { href: "/tools/excel-formula-bot#what-it-handles-well-and-what-to-double-check", label: "Formulas it handles well" },
+            { href: "/tools/excel-formula-bot/excel-if-formula-multiple-conditions", label: "Multi-condition IF builder" },
+            { href: "/tools/excel-formula-bot/sumifs-countifs-builder", label: "SUMIFS & COUNTIFS builder" },
             { href: "/tools/excel-formula-bot#excel-vs-google-sheets-why-the-platform-toggle-matters", label: "Excel vs Google Sheets" },
         ],
     },
@@ -103,7 +113,7 @@ const FAMILIES: ToolFamily[] = [
         tagline: "Whisper AI transcription that runs 100% on your device.",
         icon: Mic,
         sublinks: [
-            { href: "/tools/audio-to-text#choosing-a-model-tier-tiny-base-or-small", label: "Choosing a Whisper model tier" },
+            { href: "/tools/audio-to-text#choosing-a-model-tier-tiny-vs-base-vs-small", label: "Choosing a Whisper model tier" },
             { href: "/tools/audio-to-text#getting-accurate-transcripts-recording-matters-more-than-settings", label: "Recording tips for accuracy" },
         ],
     },
@@ -111,11 +121,14 @@ const FAMILIES: ToolFamily[] = [
 
 const POPULAR_LINKS: { href: string; label: string; external?: boolean }[] = [
     { href: "/tools/image-compressor/compress-image-to-100kb", label: "Compress image to 100KB" },
-    { href: "/tools/pdf-kit", label: "Merge PDF files online" },
-    { href: "/tools/video-to-gif", label: "Convert video to GIF" },
+    { href: "/tools/image-compressor/compress-jpg-to-50kb", label: "Compress JPG to 50KB" },
+    { href: "/tools/pdf-kit/compress-pdf-online", label: "Compress PDF online" },
+    { href: "/tools/pdf-redact-sign/redact-pdf-online-free", label: "Redact PDF online free" },
+    { href: "/tools/word-to-pdf", label: "Word to PDF converter *" },
+    { href: "/tools/video-to-gif/video-to-gif-for-discord", label: "Video to GIF for Discord" },
     { href: "/tools/excel-formula-bot", label: "AI Excel formula generator *" },
     { href: "/tools/id-watermark", label: "ID photo watermark protector" },
-    { href: "/tools/domain-lookup", label: "Domain lookup" },
+    { href: "/tools/domain-lookup", label: "Domain lookup *" },
     { href: "/tools/audio-to-text", label: "Free audio to text transcriber" },
     { href: "https://www.heic2jpg-free.com", label: "Convert HEIC to JPG free", external: true },
 ];
@@ -246,19 +259,45 @@ export default function Home() {
                     homepage; that duplication was the main driver of the
                     homepage's ~153KB HTML (grid markup + its RSC flight copy). */}
                 <section aria-label="All tools">
-                    <h2 className="text-2xl font-bold text-white mb-4">All tools</h2>
-                    <p className="text-zinc-400 leading-relaxed max-w-2xl mb-6">
-                        Looking for something specific? The full directory lists every
-                        YuliusBox tool grouped by category — media, productivity, and
-                        developer tools.
+                    <h2 className="text-2xl font-bold text-white mb-4">All tools &amp; categories</h2>
+                    <p className="text-zinc-400 leading-relaxed max-w-3xl mb-6">
+                        Beyond the flagship hubs above, YuliusBox includes 34 specialized utilities organized into three core areas on our directory page: <strong>Media Tools</strong> (batch image compression, target-kilobyte photo presets, client-side AI background removal, SVG optimization, and FFmpeg video-to-GIF encoding), <strong>Productivity &amp; Document Tools</strong> (in-browser PDF merging, splitting, page extraction, rasterized PDF redaction, ID anti-fraud watermarking, local Whisper audio transcription, AI spreadsheet formula generation, and headless LibreOffice Office-to-PDF conversion), and <strong>Developer Utilities</strong> (JSON formatting and validation, regex pattern testing, JWT token inspection, Cron expression parsing, Base64/URL encoding, UNIX timestamp conversion, UUID generation, and RDAP/WHOIS domain lookup).
                     </p>
                     <Link
                         href="/tools"
                         className="group inline-flex items-center gap-2 px-5 py-3 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm font-medium text-zinc-200 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
                     >
-                        Browse all tools
+                        Browse all 34 tools in the directory
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
+                </section>
+
+                {/* How to choose the right tool & typical workflows */}
+                <section aria-label="Choosing a tool and common workflows" className="max-w-3xl space-y-8">
+                    <div>
+                        <h2 className="text-2xl font-bold text-white mb-4">How to choose between general hubs and preset tools</h2>
+                        <p className="text-zinc-400 leading-relaxed mb-4">
+                            Every flagship tool family on YuliusBox offers both a flexible main workspace and dedicated scenario presets. If you are tuning settings manually — such as comparing JPG versus WebP quality across a folder of blog illustrations, or merging and reordering a custom packet of PDFs — start directly on the main hub page (<Link href="/tools/image-compressor" className="text-zinc-200 underline underline-offset-4 hover:text-white">Image Compressor</Link>, <Link href="/tools/pdf-kit" className="text-zinc-200 underline underline-offset-4 hover:text-white">PDF Kit</Link>, or <Link href="/tools/video-to-gif" className="text-zinc-200 underline underline-offset-4 hover:text-white">Video to GIF</Link>).
+                        </p>
+                        <p className="text-zinc-400 leading-relaxed">
+                            When you are working against a strict upload rule, jump straight to a pre-configured scenario page instead. Portal-specific presets like <Link href="/tools/image-compressor/compress-image-to-20kb" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress Image to 20KB</Link> (for signature and civil-service portals), <Link href="/tools/image-compressor/compress-jpg-to-50kb" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress JPG to 50KB</Link> (for visa and exam ID photos), and <Link href="/tools/video-to-gif/video-to-gif-for-discord" className="text-zinc-200 underline underline-offset-4 hover:text-white">Video to GIF for Discord</Link> (480 px at 10 fps) initialize the encoder with the exact target ceiling, dimensions, or tab already selected.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h2 className="text-2xl font-bold text-white mb-4">Typical multi-tool workflows</h2>
+                        <div className="space-y-4 text-zinc-400 leading-relaxed">
+                            <p>
+                                <strong className="text-zinc-200">Job, visa, and university applications:</strong> Convert your resume or statement of purpose from <code className="text-zinc-300">.docx</code> using <Link href="/tools/word-to-pdf" className="text-zinc-200 underline underline-offset-4 hover:text-white">Word to PDF</Link>, merge it with scanned transcripts in <Link href="/tools/pdf-kit" className="text-zinc-200 underline underline-offset-4 hover:text-white">PDF Kit</Link>, shrink the combined packet under portal limits with <Link href="/tools/pdf-kit/compress-pdf-online" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress PDF Online</Link>, and stamp your passport or national ID scan with <Link href="/tools/id-watermark" className="text-zinc-200 underline underline-offset-4 hover:text-white">ID Watermark Protector</Link> before submitting.
+                            </p>
+                            <p>
+                                <strong className="text-zinc-200">Confidential legal and financial handoffs:</strong> Use <Link href="/tools/pdf-kit/extract-pages-from-pdf" className="text-zinc-200 underline underline-offset-4 hover:text-white">Extract Pages from PDF</Link> to isolate only the relevant exhibits from a larger statement, permanently destroy sensitive account numbers and personal addresses using rasterized redaction in <Link href="/tools/pdf-redact-sign/redact-pdf-online-free" className="text-zinc-200 underline underline-offset-4 hover:text-white">Redact PDF Online Free</Link>, and add your signature locally without exposing the file to cloud storage.
+                            </p>
+                            <p>
+                                <strong className="text-zinc-200">Product documentation and release notes:</strong> Record a short screen capture, convert it into a lightweight looping animation with <Link href="/tools/video-to-gif/webm-to-gif-converter" className="text-zinc-200 underline underline-offset-4 hover:text-white">WebM to GIF Converter</Link>, and optimize accompanying screenshots using <Link href="/tools/image-compressor/convert-image-to-webp" className="text-zinc-200 underline underline-offset-4 hover:text-white">Convert Image to WebP</Link> or <Link href="/tools/image-compressor/compress-png-online" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress PNG Online</Link> for fast page loads.
+                            </p>
+                        </div>
+                    </div>
                 </section>
 
                 {/* How it works */}
