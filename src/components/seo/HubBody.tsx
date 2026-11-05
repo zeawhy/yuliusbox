@@ -51,6 +51,20 @@ export function HubBody({
                     : "Processed 100% locally in your browser — files never leave your device."}
             </p>
 
+            {/* Content sections */}
+            <div className="w-full max-w-3xl mx-auto flex flex-col gap-10">
+                {content.sections.map((section) => (
+                    <section key={section.heading} id={slugifyHeading(section.heading)} aria-label={section.heading} className="scroll-mt-6">
+                        <h2 className="text-2xl font-bold text-white mb-4">{section.heading}</h2>
+                        {section.paragraphs.map((p, i) => (
+                            <p key={i} className="text-zinc-400 leading-relaxed mb-4 last:mb-0">
+                                {p}
+                            </p>
+                        ))}
+                    </section>
+                ))}
+            </div>
+
             {/* How to use */}
             <section aria-label="How to use" className="w-full max-w-3xl mx-auto">
                 <h2 className="text-2xl font-bold text-white mb-6">How to use</h2>
@@ -65,20 +79,6 @@ export function HubBody({
                     ))}
                 </ol>
             </section>
-
-            {/* Content sections */}
-            <div className="w-full max-w-3xl mx-auto flex flex-col gap-10">
-                {content.sections.map((section) => (
-                    <section key={section.heading} id={slugifyHeading(section.heading)} aria-label={section.heading} className="scroll-mt-6">
-                        <h2 className="text-2xl font-bold text-white mb-4">{section.heading}</h2>
-                        {section.paragraphs.map((p, i) => (
-                            <p key={i} className="text-zinc-400 leading-relaxed mb-4 last:mb-0">
-                                {p}
-                            </p>
-                        ))}
-                    </section>
-                ))}
-            </div>
 
             {/* FAQ */}
             <section aria-label="Frequently asked questions" className="w-full max-w-3xl mx-auto">
