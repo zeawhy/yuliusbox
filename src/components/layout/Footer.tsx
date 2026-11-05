@@ -112,13 +112,13 @@ export function Footer() {
                     >
                         <Twitter className="w-5 h-5" />
                     </a>
-                    <a
-                        href="mailto:support@yuliusbox.com"
+                    <Link
+                        href="/contact"
                         className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] -m-3 hover:text-white transition-colors"
-                        aria-label="Email support@yuliusbox.com"
+                        aria-label="Contact YuliusBox"
                     >
                         <Mail className="w-5 h-5" />
-                    </a>
+                    </Link>
                 </div>
             </div>
         </footer>

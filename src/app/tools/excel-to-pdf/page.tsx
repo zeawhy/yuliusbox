@@ -21,6 +21,43 @@ const SECTIONS = [
             "If a workbook contains data you are not permitted to upload anywhere — payroll under a strict policy, for instance — use desktop Excel or LibreOffice instead. For invoices, price lists, reports and shared trackers, the in-memory handling described here is the whole story.",
         ],
     },
+    {
+        heading: "LibreOffice Calc (Gotenberg) rendering architecture & DevTools verification",
+        paragraphs: [
+            "Client-side JavaScript libraries can parse raw spreadsheet numbers, but they cannot faithfully reproduce Excel conditional formatting rules, embedded pivot charts, print-area page breaks, or multi-sheet print scaling. When you start a conversion, ExcelToPdfClient.tsx sends a multipart/form-data POST request to /api/excel-to-pdf, which validates the extension (.xlsx, .xls, .csv) and 30 MB ceiling before streaming the buffer to an isolated Gotenberg LibreOffice Calc instance (/forms/libreoffice/convert).",
+            "How to inspect the transfer in Browser DevTools: Open DevTools (F12 -> Network) and convert a sample workbook. You will see a single POST /api/excel-to-pdf request carrying the multipart file stream and returning the application/pdf binary response directly to your browser with zero persistent storage.",
+        ],
+        table: {
+            caption: "Server-assisted Excel-to-PDF conversion boundaries and workbook pagination behavior.",
+            headers: [
+                "Parameter / Workbook Feature",
+                "Supported Specification",
+                "Rendering & Pagination Behavior",
+            ],
+            rows: [
+                [
+                    "Accepted Formats & Size Ceiling",
+                    ".xlsx, .xls, .csv up to 30 MB (31,457,280 B)",
+                    "Enforced in both client pre-check and /api/excel-to-pdf route",
+                ],
+                [
+                    "Formulas & Calculated Cells",
+                    "Cached formula results + LibreOffice Calc evaluation",
+                    "Renders displayed formatted values (currency, dates, percentages), not raw formula strings",
+                ],
+                [
+                    "Wide Multi-Column Sheets",
+                    "Honors embedded Page Setup (Orientation & Fit-to-Page)",
+                    "Unconfigured wide sheets split across pages; set Landscape + Fit All Columns on One Page before upload",
+                ],
+                [
+                    "Rate Limit & Retention Policy",
+                    "5 conversions / minute / IP; 0-second disk retention",
+                    "Processed strictly in ephemeral container RAM and discarded on response close",
+                ],
+            ],
+        },
+    },
 ];
 
 const HOW_TO = [

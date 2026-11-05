@@ -42,7 +42,7 @@ export default function BackgroundRemover() {
         upload: { en: "Select Image", cn: "选择图片" },
         processing: { en: "Removing Background...", cn: "正在智能抠图..." },
         download: { en: "Download PNG", cn: "下载透明 PNG" },
-        tips: { en: "Note: The first run may take a few seconds to download the AI models (~20MB).", cn: "说明：首次运行需要下载 AI 模型（约 20MB），可能需要几秒钟时间。" },
+        tips: { en: "Note: The first run downloads the self-hosted ONNX segmentation model (~88.2 MB medium / ~44.3 MB small) and caches it in your browser.", cn: "说明：首次运行需要下载本地托管的 AI 分割模型（并缓存于浏览器中），可能需要几秒钟时间。" },
         compare: { en: "Drag to Compare", cn: "拖动滑块对比" }
     };
 

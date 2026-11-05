@@ -28,7 +28,7 @@ export default function WordToPdfClient() {
         desc: { en: "Fast, precise, and secure conversion of Word documents (.doc, .docx) to PDF format.", cn: "快速、精准、安全地将 Word 文档 (.doc, .docx) 转换为 PDF 格式。" },
         drop: { en: "Drop document here", cn: "释放以添文加档" },
         drag: { en: "Drag & drop or click to upload", cn: "点击或拖拽上传文档" },
-        limit: { en: "Supported formats: .doc, .docx (Max 50MB)", cn: "支持格式: .doc, .docx (最大 50MB)" },
+        limit: { en: "Supported formats: .doc, .docx (Max 30MB)", cn: "支持格式: .doc, .docx (最大 30MB)" },
         secure: { en: "Secure Cloud Processing. Files are never stored.", cn: "云端安全处理。文件阅后即焚，绝不永久存储。" },
         converting: { en: "Converting to PDF...", cn: "正在转换为 PDF..." },
         success: { en: "Conversion Successful! Download starting...", cn: "转换成功！即将开始下载..." },
@@ -42,9 +42,9 @@ export default function WordToPdfClient() {
             setErrorMessage(language === "en" ? "Only .doc and .docx files are supported." : "仅支持 .doc 和 .docx 格式。");
             return;
         }
-        if (selectedFile.size > 50 * 1024 * 1024) {
+        if (selectedFile.size > 30 * 1024 * 1024) {
             setStatus("error");
-            setErrorMessage(language === "en" ? "File size exceeds 50MB limit." : "文件大小超过 50MB 限制。");
+            setErrorMessage(language === "en" ? "File size exceeds 30MB limit." : "文件大小超过 30MB 限制。");
             return;
         }
 
@@ -84,8 +84,8 @@ export default function WordToPdfClient() {
                 // Specific handler for 429 Rate Limiting
                 if (response.status === 429) {
                     throw new Error(language === "en"
-                        ? "You have reached the conversion limit (3 per minute). Please wait a moment."
-                        : "转换已达上限 (每分钟 3 次)。请稍后再试。");
+                        ? "You have reached the conversion limit (5 per minute). Please wait a moment."
+                        : "转换已达上限 (每分钟 5 次)。请稍后再试。");
                 }
 
                 throw new Error(errData.error || `HTTP error! status: ${response.status}`);
@@ -225,34 +225,6 @@ export default function WordToPdfClient() {
                     </div>
                 )}
             </div>
-
-            {/* SEO Content Section */}
-            <section className="w-full max-w-3xl mt-20 py-10 border-t border-zinc-800">
-                <div className="prose prose-invert">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "How it works" : "工作原理"}
-                    </h2>
-                    <p className="text-zinc-400 mb-6">
-                        {language === "en"
-                            ? "This tool is powered by a secure, containerized LibreOffice engine (Gotenberg). When you upload a Word document, it is securely transmitted to our isolated cloud worker. The worker performs a high-fidelity conversion preserving all fonts, layouts, and tables, returns the PDF, and immediately destroys the original file from memory."
-                            : "本工具底层的转换引擎基于安全的容器化 LibreOffice (Gotenberg)。您上传 Word 文档后，会通过加密传输发送至我们独立的云节点。云节点将进行高保真转换（完美保留字体、排版和表格），并将 PDF 返回给您，随后立即从内存中销毁原始文件。"}
-                    </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Data Privacy First" : "数据隐私至上"}
-                    </h2>
-                    <ul className="text-zinc-400 mb-6 list-disc pl-5">
-                        <li>
-                            <strong>{language === "en" ? "No Storage: " : "不存储文件："}</strong>
-                            {language === "en" ? "We do not store your documents. All data is processed in ephemeral memory and discarded upon completion." : "我们绝对不会存储您的任何文档。所有处理均在内存中进行，完成后即刻销毁数据。"}
-                        </li>
-                        <li>
-                            <strong>{language === "en" ? "Format Retention: " : "完美保留格式："}</strong>
-                            {language === "en" ? "State-of-the-art rendering engine guarantees identical pagination and styling as Microsoft Word." : "行业顶尖的渲染引擎，保证 PDF 的分页和排版与 Microsoft Word 中的效果如出一辙。"}
-                        </li>
-                    </ul>
-                </div>
-            </section>
         </div>
     );
 }

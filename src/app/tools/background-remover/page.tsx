@@ -47,25 +47,72 @@ const SECTIONS = [
     {
         heading: "AI background removal that runs on your device",
         paragraphs: [
-            "Most background removers ask you to upload your photo to their cloud, process it there and hand it back — fine for a product shot, less fine for a family picture or an unreleased design. This tool takes the other route: an AI segmentation model runs directly in your browser, finds the subject, and cuts it out as a transparent PNG. The photo itself never leaves your device, so there is no upload queue and nothing of yours sitting on a server afterwards.",
-            "The trade-off is a one-time download: on first use the browser fetches the model files (roughly 20 MB, served with this site) and the open-source background-removal library, which loads from the esm.sh content delivery network. After that first load, cutting out a background typically takes a few seconds depending on your device, and repeat uses are faster because the model is cached.",
+            "Most cloud background removers ask you to upload your photo to their servers, process it remotely, and charge credits for full-resolution downloads. This tool takes the local route: an open-source neural segmentation model (@imgly/background-removal 1.4.5 powered by ONNX Runtime Web) runs directly inside your browser tab, isolates the foreground subject, and exports a full-resolution transparent PNG. Your photo never leaves your device, so there is no upload queue, no server retention, and no account wall.",
+            "The trade-off is a one-time initial model download: on first use, your browser fetches the self-hosted segmentation model chunks from our same-origin /models/ directory (88.19 MB / 84.10 MiB across 22 content-addressed 4 MiB chunks for the default medium IS-Net model, plus ~10.65 MB for the SIMD-threaded ONNX Runtime WebAssembly binary) and the @imgly/background-removal@1.4.5 JavaScript wrapper from esm.sh. Once cached in browser storage, repeat cutouts initialize immediately and run entirely in local memory.",
+        ],
+        table: {
+            caption: "Measured self-hosted model & WebAssembly runtime assets in /public/models/resources.json served from same-origin /models/*.",
+            headers: [
+                "Self-Hosted Asset (/public/models/)",
+                "Chunk Count (4 MiB Blobs)",
+                "Exact Byte Size",
+                "Size (MiB / MB)",
+                "Role in Local Pipeline",
+            ],
+            rows: [
+                [
+                    "/models/medium (default IS-Net tier)",
+                    "22 chunks",
+                    "88,188,479 B",
+                    "84.10 MiB / 88.19 MB",
+                    "High-precision 1024×1024 alpha-matting segmentation model",
+                ],
+                [
+                    "/models/small (compact tier)",
+                    "11 chunks",
+                    "44,342,436 B",
+                    "42.29 MiB / 44.34 MB",
+                    "Lightweight segmentation model stored in bundle",
+                ],
+                [
+                    "/onnxruntime-web/ort-wasm-simd-threaded.wasm",
+                    "3 chunks",
+                    "10,646,108 B",
+                    "10.15 MiB / 10.65 MB",
+                    "Multi-threaded SIMD WebAssembly execution engine (COOP/COEP active)",
+                ],
+                [
+                    "/onnxruntime-web/ort-wasm-simd.wasm",
+                    "3 chunks",
+                    "10,549,605 B",
+                    "10.06 MiB / 10.55 MB",
+                    "Single-threaded SIMD WebAssembly fallback engine",
+                ],
+            ],
+        },
+    },
+    {
+        heading: "How YuliusBox compares to nobg.online, Clipout, NearBG, and CachePlex",
+        paragraphs: [
+            "Running background removal in the browser is no longer rare — nobg.online, Clipout (clipout.io), NearBG (nearbg.com), and CachePlex (cacheplex.com/background-remover/) all execute segmentation models locally on your device. On the basic privacy promise of zero image upload, all five tools tie.",
+            "Where competitors have an edge: Clipout runs the 115 MB BiRefNet model with WebGPU support and allows dropping up to 50 images in a batch. NearBG and CachePlex use the compact U²-Netp model (~4–5 MB download) for near-instant initial startup and include manual Erase/Restore touch-up brushes and solid-color backdrop pickers directly inside the widget.",
+            "Where YuliusBox differs: First, NearBG and CachePlex compute their saliency mask on a tiny 320×320 pixel grid via U²-Netp and upscale that low-resolution mask to your photo's dimensions, which softens hair strands, fur, and product contours. YuliusBox serves the full 88.19 MB medium IS-Net model from same-origin /models/ storage, preserving multi-megapixel edge transitions without requiring manual brush cleanup on every portrait. Second, unlike CachePlex — which caps users at '15 of 15 free today' and transmits a daily usage counter to its server — YuliusBox has zero daily usage limits and sends no usage count to any quota endpoint. Third, once your transparent PNG is generated, a built-in Compress handoff button passes the cutout Blob directly in memory to /tools/image-compressor so you can convert or shrink the cutout without saving and re-uploading.",
         ],
     },
     {
-        heading: "Getting a clean cutout",
+        heading: "Getting a clean cutout & verifying zero-upload execution in DevTools",
         paragraphs: [
-            "The model works best when the subject is clearly separated from its background — a person, product, pet or object in reasonable focus, with some contrast against what is behind it. Busy scenes, hair-thin details against similar colours and heavy blur are harder for any automatic tool; those edges are where a quick manual tidy-up in an image editor still earns its keep. The built-in comparison slider lets you drag across the before and after to inspect the edges before you download.",
-            "The result is a PNG with a real transparent background, ready to drop onto a new backdrop, a marketplace listing, a presentation slide or a thumbnail. If you need a different size or format afterwards, the image editor linked below can resize, crop and convert the cutout — also locally, in the same browser.",
+            "The segmentation model performs best when the foreground subject has distinct lighting or depth separation from the background — portraits, e-commerce products, vehicles, and pets. Extremely cluttered scenes, motion blur, or hair strands against identically colored backdrops remain challenging for any automated matting network. Use the interactive before/after drag slider to inspect fine edges at full width before downloading.",
+            "How to verify local execution in Browser DevTools: Open DevTools (F12) -> Network tab before selecting a photo. On your first run, you will see GET requests to /models/resources.json and the 4 MiB content-addressed model chunks from /models/<sha256>, plus the cross-origin isolation header Cross-Origin-Embedder-Policy: credentialless that unlocks multi-threaded SIMD WebAssembly (SharedArrayBuffer). Clear the Network log and select a second photo: zero network requests are made while the cutout is computed in local RAM.",
         ],
     },
 ];
 
 const HOW_TO = [
     "Click \u201CSelect Image\u201D and choose a JPG, PNG or WebP photo from your device.",
-    "Wait a few seconds while the AI model processes the image in your browser; first use includes a one-time model download of about 20 MB.",
-    "Drag the comparison slider to check the cutout against the original, especially around hair, fur and edges.",
-    "Click \u201CDownload PNG\u201D to save the subject with a transparent background.",
-    "Optionally open the PNG in the image editor to resize, crop or place it on a new background colour.",
+    "Wait a few seconds while the ONNX segmentation model runs in your browser; first use downloads and caches the self-hosted model chunks (~88.2 MB medium model + ~10.6 MB SIMD WASM runtime).",
+    "Drag the interactive comparison slider across the image to inspect edge matting around hair, fur, and product contours.",
+    "Click \u201CDownload PNG\u201D to save the full-resolution transparent PNG, or click \u201CCompress\u201D to hand the cutout directly to the local Image Compressor in memory.",
 ];
 
 const USE_CASES = [
@@ -79,7 +126,7 @@ const USE_CASES = [
 const FAQS = [
     {
         question: "Is my photo uploaded to a server?",
-        answer: "No. The AI model runs in your browser and your image is processed on your device; the image data is not uploaded. The only downloads are the tool's own files: the model (about 20 MB, served with this site) on first use, and the open-source processing library, which is loaded from the esm.sh CDN.",
+        answer: "No. The segmentation model executes locally in your browser via ONNX Runtime WebAssembly and your image pixels never leave your device. The only network traffic on first use is downloading the static model chunks (88.19 MB for the default medium model and 10.65 MB for the SIMD WebAssembly runtime, served from /models/) and the open-source @imgly/background-removal library from esm.sh.",
     },
     {
         question: "Why does the first removal take longer?",

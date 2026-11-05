@@ -51,6 +51,28 @@ export function HubBody({
                     : "Processed 100% locally in your browser — files never leave your device."}
             </p>
 
+            {/* Quick-jump preset bar for hub child scenarios */}
+            {longTailLinks && longTailLinks.length > 0 && (
+                <section aria-label="Preset scenario shortcuts" className="w-full max-w-3xl mx-auto rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-5">
+                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+                        Popular {content.crumb} Presets &amp; Scenarios
+                    </p>
+                    <ul className="flex flex-wrap gap-2">
+                        {longTailLinks.map((link) => (
+                            <li key={link.href}>
+                                <Link
+                                    href={link.href}
+                                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-zinc-800 bg-zinc-900/70 text-xs sm:text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
+                                >
+                                    <span>{link.label}</span>
+                                    <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
             {/* Content sections */}
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-10">
                 {content.sections.map((section) => (
@@ -61,6 +83,37 @@ export function HubBody({
                                 {p}
                             </p>
                         ))}
+                        {section.table && (
+                            <div className="mt-5 overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/40">
+                                <table className="w-full text-left border-collapse text-sm">
+                                    {section.table.caption && (
+                                        <caption className="px-4 py-2.5 text-xs text-zinc-500 text-left border-b border-zinc-800/80 bg-zinc-900/60">
+                                            {section.table.caption}
+                                        </caption>
+                                    )}
+                                    <thead>
+                                        <tr className="border-b border-zinc-800 bg-zinc-900/80 text-zinc-200">
+                                            {section.table.headers.map((h, hi) => (
+                                                <th key={hi} className="px-4 py-3 font-semibold whitespace-nowrap">
+                                                    {h}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+                                        {section.table.rows.map((row, ri) => (
+                                            <tr key={ri} className="hover:bg-zinc-800/30">
+                                                {row.map((cell, ci) => (
+                                                    <td key={ci} className="px-4 py-2.5 align-top">
+                                                        {cell}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </section>
                 ))}
             </div>

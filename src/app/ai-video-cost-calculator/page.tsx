@@ -98,6 +98,78 @@ export default function VideoCostCalculatorPage() {
                 </Suspense>
             </div>
 
+            {/* Verified Rate Card & Billing Architecture Section */}
+            <div className="w-full flex flex-col gap-6 mb-16 pt-8 border-t border-zinc-900 text-sm text-zinc-400">
+                <h2 className="text-2xl font-bold text-white tracking-tight">
+                    Verified API Rate Card &amp; Per-Second vs. Token Billing Architecture
+                </h2>
+                <p className="leading-relaxed">
+                    Commercial AI video endpoints on serverless GPU aggregators such as fal.ai use two distinct metering formulas: flat per-second output duration billing (<code className="text-zinc-200">duration_seconds × rate_per_second</code>) and resolution-scaled latent video token billing. This calculator evaluates every model directly from our static, version-controlled dataset (<code className="text-zinc-200">data/video-model-pricing.json</code>, verified on {PRICING_LAST_UPDATED}) inside your browser tab without making external API calls.
+                </p>
+                <div className="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/40">
+                    <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                        <caption className="px-4 py-2.5 text-xs text-zinc-400 bg-zinc-900/70 border-b border-zinc-800 text-left">
+                            Official fal.ai serverless video generation rates verified on {PRICING_LAST_UPDATED} (24 fps baseline).
+                        </caption>
+                        <thead>
+                            <tr className="border-b border-zinc-800 bg-zinc-900/90 text-zinc-200">
+                                <th className="px-3.5 py-2.5 font-semibold">Model Endpoint</th>
+                                <th className="px-3.5 py-2.5 font-semibold">Provider</th>
+                                <th className="px-3.5 py-2.5 font-semibold">Standard Rate / Sec</th>
+                                <th className="px-3.5 py-2.5 font-semibold">Promo Rate (Until 2026-11-07)</th>
+                                <th className="px-3.5 py-2.5 font-semibold">5s Clip / 60s Minute Cost</th>
+                                <th className="px-3.5 py-2.5 font-semibold">Cost per Frame (24 fps)</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-800/70 text-zinc-300">
+                            <tr>
+                                <td className="px-3.5 py-2.5 font-medium text-white">FLUX 3 Max (720p)</td>
+                                <td className="px-3.5 py-2.5">Black Forest Labs</td>
+                                <td className="px-3.5 py-2.5">$0.1700 / s</td>
+                                <td className="px-3.5 py-2.5 text-emerald-400">$0.0425 / s (-75%)</td>
+                                <td className="px-3.5 py-2.5">$0.2125 (promo) / $2.55 min</td>
+                                <td className="px-3.5 py-2.5">$0.00177 (promo) / $0.00708 std</td>
+                            </tr>
+                            <tr>
+                                <td className="px-3.5 py-2.5 font-medium text-white">MiniMax H3 (768p)</td>
+                                <td className="px-3.5 py-2.5">MiniMax</td>
+                                <td className="px-3.5 py-2.5">$0.0800 / s</td>
+                                <td className="px-3.5 py-2.5">—</td>
+                                <td className="px-3.5 py-2.5">$0.4000 / $4.80 min</td>
+                                <td className="px-3.5 py-2.5">$0.00333 / frame</td>
+                            </tr>
+                            <tr>
+                                <td className="px-3.5 py-2.5 font-medium text-white">Google Veo 3.1 Fast (720p)</td>
+                                <td className="px-3.5 py-2.5">Google DeepMind</td>
+                                <td className="px-3.5 py-2.5">$0.1000 / s</td>
+                                <td className="px-3.5 py-2.5">—</td>
+                                <td className="px-3.5 py-2.5">$0.5000 / $6.00 min</td>
+                                <td className="px-3.5 py-2.5">$0.00417 / frame</td>
+                            </tr>
+                            <tr>
+                                <td className="px-3.5 py-2.5 font-medium text-white">Kling Video v3 Standard (720p)</td>
+                                <td className="px-3.5 py-2.5">Kling AI</td>
+                                <td className="px-3.5 py-2.5">$0.1400 / s</td>
+                                <td className="px-3.5 py-2.5">—</td>
+                                <td className="px-3.5 py-2.5">$0.7000 / $8.40 min</td>
+                                <td className="px-3.5 py-2.5">$0.00583 / frame</td>
+                            </tr>
+                            <tr>
+                                <td className="px-3.5 py-2.5 font-medium text-white">Seedance 2.5 (720p)</td>
+                                <td className="px-3.5 py-2.5">ByteDance</td>
+                                <td className="px-3.5 py-2.5">$0.4730 / s ($0.0214/1k tok)</td>
+                                <td className="px-3.5 py-2.5">—</td>
+                                <td className="px-3.5 py-2.5">$2.3650 / $28.38 min</td>
+                                <td className="px-3.5 py-2.5">$0.01971 / frame</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p className="leading-relaxed">
+                    <strong className="text-white">Budgeting for production retakes (the 4x–8x prompt iteration multiplier):</strong> In real creative pipelines, a 5-second shot rarely ships on the first seed. Storyboard studios typically budget a 4x to 8x generation multiplier to account for motion-prompt tuning, camera seed exploration, and temporal consistency fixes. When estimating a 60-second commercial spot (twelve 5-second clips), multiply the single-pass 60-second column above by your expected take ratio—and verify in Browser DevTools (<code className="text-zinc-200">F12 → Network</code>) that adjusting sliders and shareable URL parameters on this page runs 100% locally in JavaScript.
+                </p>
+            </div>
+
             {/* FAQs Section */}
             <div className="w-full flex flex-col gap-6 mb-16 pt-8 border-t border-zinc-900">
                 <div className="flex items-center gap-2.5">

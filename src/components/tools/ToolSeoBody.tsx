@@ -1,6 +1,13 @@
+export interface ToolSeoTable {
+    caption?: string;
+    headers: string[];
+    rows: string[][];
+}
+
 export interface ToolSeoSection {
     heading: string;
     paragraphs: string[];
+    table?: ToolSeoTable;
 }
 
 export interface ToolFaq {
@@ -55,6 +62,37 @@ export function ToolSeoBody({
                                 {p}
                             </p>
                         ))}
+                        {section.table && (
+                            <div className="mt-5 overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/40">
+                                <table className="w-full text-left border-collapse text-sm">
+                                    {section.table.caption && (
+                                        <caption className="px-4 py-2.5 text-xs text-zinc-500 text-left border-b border-zinc-800/80 bg-zinc-900/60">
+                                            {section.table.caption}
+                                        </caption>
+                                    )}
+                                    <thead>
+                                        <tr className="border-b border-zinc-800 bg-zinc-900/80 text-zinc-200">
+                                            {section.table.headers.map((h, hi) => (
+                                                <th key={hi} className="px-4 py-3 font-semibold whitespace-nowrap">
+                                                    {h}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-zinc-800/60 text-zinc-300">
+                                        {section.table.rows.map((row, ri) => (
+                                            <tr key={ri} className="hover:bg-zinc-800/30">
+                                                {row.map((cell, ci) => (
+                                                    <td key={ci} className="px-4 py-2.5 align-top">
+                                                        {cell}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </section>
                 ))}
             </div>
