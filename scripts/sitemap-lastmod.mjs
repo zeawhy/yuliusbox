@@ -50,6 +50,15 @@ function gitLastMod(...candidates) {
     return finalTs > 0 ? new Date(finalTs * 1000).toISOString() : null;
 }
 
+const HUB_SLUGS = [
+    "image-compressor",
+    "pdf-kit",
+    "video-to-gif",
+    "excel-formula-bot",
+    "audio-to-text",
+    "id-watermark",
+];
+
 function sourceFilesFor(routePath) {
     const cands =
         routePath === "/"
@@ -59,6 +68,11 @@ function sourceFilesFor(routePath) {
     if (parts[0] === "tools" && parts.length >= 2) {
         cands.push(`src/app/tools/${parts[1]}/page.tsx`);
         cands.push(`src/lib/long-tail/${parts[1]}.ts`);
+        // Hub routes: include hub-content and long-tail-content so copy updates refresh lastmod
+        if (parts.length === 2 && HUB_SLUGS.includes(parts[1])) {
+            cands.push("src/lib/hub-content.ts");
+            cands.push("src/lib/long-tail-content.ts");
+        }
     }
     return cands;
 }
