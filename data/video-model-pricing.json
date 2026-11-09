@@ -5,12 +5,12 @@
     "provider": "Black Forest Labs (fal.ai)",
     "resolution": "720p",
     "price_per_second": 0.17,
-    "promo_price_per_second": 0.0425,
-    "promo_until": "2026-11-07",
+    "promo_price_per_second": 0.085,
+    "promo_until": "2026-11-21",
     "source_url": "https://fal.ai/flux-3-max",
     "source_type": "official",
-    "checked_at": "2026-11-08",
-    "notes": "Official fal.ai launch promo: 75% off ($0.0425/s) through 2026-11-07. Standard rate $0.17/s for 720p. Re-verified 2026-11-08: fal page moved to https://fal.ai/flux-3-max (old /models/ URLs now 404); page still displays promo $0.0425/s with 'ends November 7' (no timezone stated) and list $0.17/s; no 1080p price listed. 1080p excluded due to unverified official endpoint rate."
+    "checked_at": "2026-11-09",
+    "notes": "Official fal.ai promo: 50% off ($0.085/s) through 2026-11-21; list $0.17/s for 720p. Launch promo 75% off ($0.0425/s) ended 2026-11-07. Re-verified 2026-11-09: fal page https://fal.ai/flux-3-max reads 'FLUX 3 Max is 50% off until November 21' (no timezone stated); pricing table lists 720p only, $0.085/s, list $0.17/s; no 1080p price listed. 1080p excluded due to unverified official endpoint rate."
   },
   {
     "id": "minimax-h3-768p",
