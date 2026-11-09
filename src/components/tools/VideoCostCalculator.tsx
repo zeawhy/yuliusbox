@@ -126,7 +126,7 @@ export function VideoCostCalculator() {
                         <div>
                             <div className="flex items-center gap-2 flex-wrap">
                                 <span className="font-semibold text-white text-base sm:text-lg">
-                                    FLUX 3 Max Launch Promotion: 75% OFF
+                                    FLUX 3 Max Promotion: 50% OFF
                                 </span>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                                     {isFluxPromoActive ? "Active Now" : "Promotion Ended"}
@@ -136,15 +136,15 @@ export function VideoCostCalculator() {
                                 {isFluxPromoActive ? (
                                     <>
                                         Special launch rate of{" "}
-                                        <strong className="text-amber-400 font-mono">$0.0425/sec</strong>{" "}
+                                        <strong className="text-amber-400 font-mono">$0.085/sec</strong>{" "}
                                         (standard rate is{" "}
                                         <span className="line-through text-zinc-400 font-mono">$0.1700/sec</span>
                                         ) valid through{" "}
-                                        <span className="text-zinc-200 font-medium">November 7, 2026</span>.
+                                        <span className="text-zinc-200 font-medium">November 21, 2026</span>.
                                     </>
                                 ) : (
                                     <>
-                                        The 75% launch promo ended on November 7, 2026. Generations are now calculated at the standard{" "}
+                                        The 50% promo ended on November 21, 2026. Generations are now calculated at the standard{" "}
                                         <span className="font-mono text-zinc-200 font-medium">$0.1700/sec</span> rate.
                                     </>
                                 )}
@@ -468,7 +468,7 @@ export function VideoCostCalculator() {
                                         ) : item.isPromoActive ? (
                                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">
                                                 <Flame className="w-3 h-3" />
-                                                75% Launch Promo
+                                                {item.savingsPercent}% Promo
                                             </span>
                                         ) : item.isPromoExpired ? (
                                             <span className="text-[11px] text-zinc-400">
@@ -582,7 +582,8 @@ export function VideoCostCalculator() {
                                         <td className="py-3.5 px-4">
                                             {isPromo ? (
                                                 <span className="text-amber-400 font-bold">
-                                                    ${m.promo_price_per_second!.toFixed(4)}/s (-75%)
+                                                    ${m.promo_price_per_second!.toFixed(4)}/s (-
+                                                    ${Math.round((1 - m.promo_price_per_second! / m.price_per_second) * 100)}%)
                                                 </span>
                                             ) : (
                                                 <span className="text-zinc-400">None</span>
@@ -658,7 +659,7 @@ export function VideoCostCalculator() {
                                 FLUX 3 Max Pricing Deep Dive
                             </h3>
                             <p className="text-xs text-zinc-400 mt-1">
-                                Full breakdown of the 75% launch promo, pay-as-you-go economics, and cost-per-minute analysis.
+                                Full breakdown of the 50% promo, pay-as-you-go economics, and cost-per-minute analysis.
                             </p>
                         </div>
                         <span className="text-[11px] text-blue-400 font-medium">Read on YuliusWiki →</span>

@@ -13,8 +13,8 @@ const FAQS = [
         answer: "Most modern AI video models hosted on serverless platforms like fal.ai bill strictly on a pay-as-you-go, per-second basis for the generated video output. For instance, FLUX 3 Max (720p) and MiniMax H3 charge a fixed price per second of rendered footage. ByteDance's Seedance 2.5 uses latent video tokens scaled to resolution and duration (approximating ~$0.4730/s at 720p 24fps). There are no mandatory monthly subscriptions, credit expirations, or minimum seat fees.",
     },
     {
-        question: "What is the FLUX 3 Max launch promotional pricing?",
-        answer: "Through November 7, 2026, Black Forest Labs and fal.ai offer a 75% launch discount on FLUX 3 Max 720p generations. The rate is reduced from the standard $0.1700 per second down to $0.0425 per second. Once the promotional deadline passes, pricing automatically reverts to standard rates. This calculator dynamically tracks the remaining days and adjusts calculations automatically.",
+        question: "What is the current FLUX 3 Max promotional pricing?",
+        answer: "Through November 21, 2026, fal.ai offers a 50% discount on FLUX 3 Max 720p generations. The rate is reduced from the standard $0.1700 per second down to $0.0850 per second. This replaces the 75% launch discount ($0.0425 per second), which ended November 7, 2026. Once the promotional deadline passes, pricing automatically reverts to standard rates. This calculator dynamically tracks the remaining days and adjusts calculations automatically.",
     },
     {
         question: "Why is FLUX 3 Max 1080p excluded from this calculator?",
@@ -26,7 +26,7 @@ const FAQS = [
     },
     {
         question: "How does MiniMax H3 compare with Seedance 2.5 and FLUX 3 Max?",
-        answer: "During the promotional window, FLUX 3 Max (720p at $0.0425/s) is the most budget-friendly frontier option. Once standard pricing resumes, MiniMax H3 (768p at $0.0800/s) offers the lowest sustained unit cost, while Seedance 2.5 ($0.4730/s) caters to complex multi-subject interactions and director-level camera transitions with native audio.",
+        answer: "During the current 50%-off promotional window, FLUX 3 Max (720p at $0.0850/s) is no longer the cheapest frontier option — MiniMax H3 (768p at $0.0800/s) undercuts it slightly, while Seedance 2.5 ($0.4730/s) caters to complex multi-subject interactions and director-level camera transitions with native audio. FLUX 3 Max still wins on render speed.",
     },
 ];
 
@@ -116,7 +116,7 @@ export default function VideoCostCalculatorPage() {
                                 <th className="px-3.5 py-2.5 font-semibold">Model Endpoint</th>
                                 <th className="px-3.5 py-2.5 font-semibold">Provider</th>
                                 <th className="px-3.5 py-2.5 font-semibold">Standard Rate / Sec</th>
-                                <th className="px-3.5 py-2.5 font-semibold">Promo Rate (Until 2026-11-07)</th>
+                                <th className="px-3.5 py-2.5 font-semibold">Promo Rate (Until 2026-11-21)</th>
                                 <th className="px-3.5 py-2.5 font-semibold">5s Clip / 60s Minute Cost</th>
                                 <th className="px-3.5 py-2.5 font-semibold">Cost per Frame (24 fps)</th>
                             </tr>
@@ -126,9 +126,9 @@ export default function VideoCostCalculatorPage() {
                                 <td className="px-3.5 py-2.5 font-medium text-white">FLUX 3 Max (720p)</td>
                                 <td className="px-3.5 py-2.5">Black Forest Labs</td>
                                 <td className="px-3.5 py-2.5">$0.1700 / s</td>
-                                <td className="px-3.5 py-2.5 text-emerald-400">$0.0425 / s (-75%)</td>
-                                <td className="px-3.5 py-2.5">$0.2125 (promo) / $2.55 min</td>
-                                <td className="px-3.5 py-2.5">$0.00177 (promo) / $0.00708 std</td>
+                                <td className="px-3.5 py-2.5 text-emerald-400">$0.0850 / s (-50%)</td>
+                                <td className="px-3.5 py-2.5">$0.4250 (promo) / $5.10 min</td>
+                                <td className="px-3.5 py-2.5">$0.00354 (promo) / $0.00708 std</td>
                             </tr>
                             <tr>
                                 <td className="px-3.5 py-2.5 font-medium text-white">MiniMax H3 (768p)</td>

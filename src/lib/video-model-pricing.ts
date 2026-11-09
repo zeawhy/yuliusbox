@@ -16,7 +16,7 @@ export interface VideoModelPricing {
 
 export const VIDEO_MODELS: VideoModelPricing[] = pricingDataJson as VideoModelPricing[];
 
-export const PRICING_LAST_UPDATED = "2026-10-21";
+export const PRICING_LAST_UPDATED = "2026-11-09";
 
 export interface ModelCalculationResult {
     model: VideoModelPricing;
