@@ -35,7 +35,7 @@ const jsonLd = {
     "name": "YouTube Title Optimizer",
     "url": "https://www.yuliusbox.com/tools/youtube-optimizer",
     "description": "Generate video title ideas and SEO tags for YouTube using AI.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

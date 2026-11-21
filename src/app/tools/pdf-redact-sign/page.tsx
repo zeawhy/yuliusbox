@@ -2,6 +2,7 @@
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
+import { ToolSchemaScript } from "@/lib/schema";
 import { PdfRedactSignTool } from "@/components/tools/PdfRedactSignTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -34,6 +35,12 @@ const FAQS = [
 export default function PdfRedactSignPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/pdf-redact-sign"
+                name="PDF Redact & Sign"
+                description="Black out sensitive text in PDFs (true rasterized redaction) and add handwritten or image signatures. 100% in-browser."
+                applicationCategory="UtilitiesApplication"
+            />
             <Header />
             <Breadcrumbs
                 trail={[

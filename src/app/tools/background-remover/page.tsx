@@ -29,19 +29,14 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "AI Online Background Remover",
-    "description": "Automatically remove image backgrounds in the browser using AI.",
-    "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
+import { buildToolSoftwareSchema } from "@/lib/schema";
+
+const jsonLd = buildToolSoftwareSchema({
+    path: "/tools/background-remover",
+    name: "AI Online Background Remover",
+    description: "Automatically remove image backgrounds in the browser using AI.",
+    applicationCategory: "MultimediaApplication",
+});
 
 const SECTIONS = [
     {

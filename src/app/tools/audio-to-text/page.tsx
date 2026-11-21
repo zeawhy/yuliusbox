@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
+import { ToolSchemaScript } from "@/lib/schema";
 import { hubContent } from "@/lib/hub-content";
 import { longTailPages } from "@/lib/long-tail-content";
 import { AudioToTextTool } from "@/components/tools/AudioToTextTool";
@@ -12,6 +13,12 @@ export default function AudioToTextPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/audio-to-text"
+                name="Local AI Audio Transcription"
+                description="Convert audio to text offline using OpenAI Whisper model in your browser. Unlimited free transcription."
+                applicationCategory="MultimediaApplication"
+            />
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 

@@ -28,7 +28,7 @@ const jsonLd = {
     "name": "Word to PDF Converter",
     "url": "https://www.yuliusbox.com/tools/word-to-pdf",
     "description": "Convert Word documents (.doc, .docx) to PDF format securely in the cloud. Fast, free, and precise formatting retention.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

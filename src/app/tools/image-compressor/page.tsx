@@ -2,6 +2,7 @@
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
+import { ToolSchemaScript } from "@/lib/schema";
 import { hubContent } from "@/lib/hub-content";
 import { longTailPages } from "@/lib/long-tail-content";
 import { ImageCompressorTool } from "@/components/tools/ImageCompressorTool";
@@ -14,7 +15,13 @@ export default function ImageCompressorPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
-                        <Header />
+            <ToolSchemaScript
+                path="/tools/image-compressor"
+                name="Bulk Image Compressor"
+                description="Free unlimited bulk image compression. Reduce file size locally in your browser without losing quality."
+                applicationCategory="MultimediaApplication"
+            />
+            <Header />
 <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 
             <div className="w-full flex flex-col gap-8">

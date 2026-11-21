@@ -49,33 +49,48 @@ export const metadata: Metadata = {
 import { LanguageProvider } from "@/context/LanguageContext";
 import Script from "next/script";
 
-// Site-wide structured data: WebSite + Organization (tool hub layouts carry
-// their own per-tool SoftwareApplication JSON-LD; do not duplicate those here).
+// Site-wide structured data: WebSite + Organization + Founder Person with stable @id graph
+// (tool pages carry their own per-page SoftwareApplication JSON-LD).
 const siteJsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebSite",
+      "@id": "https://www.yuliusbox.com/#website",
       name: "YuliusBox",
       url: "https://www.yuliusbox.com",
       description:
         "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
       inLanguage: "en",
+      publisher: {
+        "@id": "https://www.yuliusbox.com/#organization",
+      },
     },
     {
       "@type": "Organization",
+      "@id": "https://www.yuliusbox.com/#organization",
       name: "YuliusBox",
       url: "https://www.yuliusbox.com",
       logo: "https://www.yuliusbox.com/og/home.png",
       description:
         "Most tools run entirely in your browser — a few server-powered tools are the exception, and each one is clearly labeled.",
       sameAs: ["https://github.com/zeawhy/yuliusbox"],
+      founder: {
+        "@id": "https://www.yuliusbox.com/#founder",
+      },
       contactPoint: {
         "@type": "ContactPoint",
         email: "support@yuliusbox.com",
         contactType: "customer support",
         availableLanguage: "English",
       },
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.yuliusbox.com/#founder",
+      name: "Yulius Zhang",
+      url: "https://www.yuliusbox.com/about",
+      sameAs: ["https://github.com/zeawhy"],
     },
   ],
 };

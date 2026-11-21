@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { ToolSchemaScript } from "@/lib/schema";
 import { PrivacyBadge } from "@/components/tools/PrivacyBadge";
 import { ToolSeoBody } from "@/components/tools/ToolSeoBody";
 import { RelatedTools } from "@/components/tools/RelatedTools";
@@ -110,6 +111,12 @@ const FAQS = [
 export default function ImageGridSplitterPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/image-grid-splitter"
+                name="Image Grid Splitter"
+                description="Split a single image into a grid of smaller pieces instantly. 100% free, private browser-based processing."
+                applicationCategory="MultimediaApplication"
+            />
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: "/tools/image-grid-splitter", label: "Image Grid Splitter" }]} />
             <div className="w-full flex flex-col gap-8">

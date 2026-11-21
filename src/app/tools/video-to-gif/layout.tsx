@@ -23,33 +23,10 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Video to GIF Converter",
-    "url": "https://www.yuliusbox.com/tools/video-to-gif",
-    "description": "Convert MP4/MOV to animated GIF instantly. Powered by FFmpeg WASM for browser-based processing.",
-    "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
-
 export default function Layout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            {children}
-        </>
-    );
+    return <>{children}</>;
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToolSchemaScript } from "@/lib/schema";
 
 export const metadata: Metadata = {
     title: "AI Video Cost Calculator | YuliusBox",
@@ -32,22 +33,6 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "AI Video Generation Cost Calculator",
-    url: "https://www.yuliusbox.com/ai-video-cost-calculator",
-    description:
-        "Free client-side calculator comparing video generation rates for FLUX 3 Max, Seedance 2.5, MiniMax H3, and Veo with promo countdowns.",
-    applicationCategory: "UtilityApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function Layout({
     children,
 }: Readonly<{
@@ -55,9 +40,11 @@ export default function Layout({
 }>) {
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            <ToolSchemaScript
+                path="/ai-video-cost-calculator"
+                name="AI Video Generation Cost Calculator"
+                description="Free client-side calculator comparing video generation rates for FLUX 3 Max, Seedance 2.5, MiniMax H3, and Veo with promo countdowns."
+                applicationCategory="UtilitiesApplication"
             />
             {children}
         </>

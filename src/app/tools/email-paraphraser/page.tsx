@@ -31,7 +31,7 @@ const jsonLd = {
     "name": "Polite Email Paraphraser",
     "url": "https://www.yuliusbox.com/tools/email-paraphraser",
     "description": "Rewrite your emails to be professional, polite, and persuasive using AI.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

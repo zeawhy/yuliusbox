@@ -965,34 +965,6 @@ function IDWatermarkContent() {
                         <strong>{language === "en" ? "never uploaded" : "从未"}</strong>
                         {language === "en" ? " to our servers. All watermarking happens locally on your device, ensuring maximum security." : "上传到我们的服务器。所有水印处理均在您设备本地完成，确保最高安全性。"}
                     </p>
-
-                    <h2 className="text-2xl font-bold mb-4">
-                        {language === "en" ? "Frequently Asked Questions" : "常见问题"}
-                    </h2>
-                    <div className="space-y-4">
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "Are photos uploaded?" : "照片会被上传吗？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "Absolutely not. You can disconnect your internet and this tool will still work perfectly. That is the best proof of privacy."
-                                    : "绝对不会。您可以断开网络连接，此工具仍能完美运行。这就是隐私保护的最佳证明。"}
-                            </p>
-                        </details>
-                        <details className="group bg-zinc-900/50 p-4 rounded-xl cursor-pointer">
-                            <summary className="font-medium text-zinc-200 list-none flex items-center justify-between">
-                                {language === "en" ? "What text should I write?" : "我应该写什么文字？"}
-                                <span className="transition group-open:rotate-180">▼</span>
-                            </summary>
-                            <p className="text-zinc-400 mt-2 text-sm">
-                                {language === "en"
-                                    ? "Be specific. Include the purpose and date. Example: \"Only for House Rental Application 2026. Invalid for other uses.\""
-                                    : "请具体一点。包括用途和日期。例如：“仅供 2026 年租房申请使用。他用无效。”"}
-                            </p>
-                        </details>
-                    </div>
                 </div>
             </section>
         </div>

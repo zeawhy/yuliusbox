@@ -42,7 +42,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                 )}>
                     {language === "en" ? tool.name.en : tool.name.cn}
                 </h3>
-                <p className="text-sm text-zinc-400 leading-relaxed line-clamp-2">
+                <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3">
                     {language === "en" ? tool.description.en : tool.description.cn}
                 </p>
             </div>
@@ -78,6 +78,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
     return (
         <Link
             href={tool.href}
+            prefetch={false}
             target={tool.href.startsWith("http") ? "_blank" : undefined}
             rel={tool.href.startsWith("http") ? "noopener noreferrer" : undefined}
             className={containerClasses}

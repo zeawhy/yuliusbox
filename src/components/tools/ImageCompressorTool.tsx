@@ -133,7 +133,7 @@ export function ImageCompressorTool({ targetSizeMB, targetSizeBytes, outputForma
             return `${Math.round(targetSizeBytes / 1000)} KB`;
         }
         if (targetSizeMB != null) {
-            return targetSizeMB < 1 ? `${Math.round(targetSizeMB * 1024)} KB` : `${targetSizeMB} MB`;
+            return targetSizeMB < 1 ? `${Math.round(targetSizeMB * 1000)} KB` : `${targetSizeMB} MB`;
         }
         return null;
     })();

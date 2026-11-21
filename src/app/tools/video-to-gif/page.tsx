@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
+import { ToolSchemaScript } from "@/lib/schema";
 import { hubContent } from "@/lib/hub-content";
 import { longTailPages } from "@/lib/long-tail-content";
 import { VideoToGifTool } from "@/components/tools/VideoToGifTool";
@@ -12,6 +13,12 @@ export default function VideoToGifPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/video-to-gif"
+                name="Video to GIF Converter"
+                description="Convert MP4/MOV to animated GIF instantly. Powered by FFmpeg WASM for browser-based processing."
+                applicationCategory="MultimediaApplication"
+            />
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 

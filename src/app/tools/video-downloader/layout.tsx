@@ -20,7 +20,7 @@ const jsonLd = {
     "name": "Social Media Video Downloader",
     "url": "https://www.yuliusbox.com/tools/video-downloader",
     "description": "Download videos from YouTube, TikTok, Instagram, Twitter, and more without watermarks.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

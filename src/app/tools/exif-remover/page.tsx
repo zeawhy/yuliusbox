@@ -1,8 +1,10 @@
 "use client";
 
 import { Suspense } from "react";
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
+import { ToolSchemaScript } from "@/lib/schema";
 import { ExifRemoverTool } from "@/components/tools/ExifRemoverTool";
 import { ExifRemoverScenario } from "@/components/tools/ExifRemoverScenario";
 import { Header } from "@/components/layout/Header";
@@ -53,6 +55,12 @@ export default function ExifRemoverPage() {
 
     return (
         <main className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/exif-remover"
+                name="EXIF Remover — Photo Metadata Cleaner"
+                description="View hidden EXIF, IPTC and XMP metadata in photos and remove it from the downloaded copy. Processed entirely in the browser — nothing is uploaded."
+                applicationCategory="UtilitiesApplication"
+            />
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: "/tools/exif-remover", label: "EXIF Remover" }]} />
 
@@ -96,6 +104,17 @@ export default function ExifRemoverPage() {
                         so the downloaded copy carries no EXIF, GPS, IPTC or XMP metadata. Removing metadata
                         can&apos;t hide landmarks, faces or text visible in the photo itself.
                     </p>
+                    <div className="not-prose pt-4 border-t border-zinc-800">
+                        <p className="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-2">Dedicated Preset Guide</p>
+                        <Link
+                            href="/tools/exif-remover/remove-image-metadata"
+                            prefetch={false}
+                            className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                        >
+                            <span>Remove Image Metadata Online Free — Strip GPS &amp; Camera EXIF Before Posting</span>
+                            <span>→</span>
+                        </Link>
+                    </div>
                 </div>
 
                 <FaqSection items={FAQS} />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 import { slugifyHeading, type HubContent, type RelatedLink } from "@/lib/hub-content";
+import { ToolSchemaScript } from "@/lib/schema";
 
 /**
  * Shared body for tool-family hub pages, rendered AFTER the interactive
@@ -36,8 +37,21 @@ export function HubBody({
         })),
     };
 
+    const isSubpage = content.href.split("/").filter(Boolean).length >= 3;
+
     return (
         <div className="w-full flex flex-col gap-12 sm:gap-16 mt-12 sm:mt-16">
+            {isSubpage && (
+                <ToolSchemaScript
+                    path={content.href}
+                    name={content.h1}
+                    description={
+                        "metaDescription" in content && typeof content.metaDescription === "string"
+                            ? content.metaDescription
+                            : content.subtitle
+                    }
+                />
+            )}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
@@ -62,6 +76,7 @@ export function HubBody({
                             <li key={link.href}>
                                 <Link
                                     href={link.href}
+                                    prefetch={false}
                                     className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-zinc-800 bg-zinc-900/70 text-xs sm:text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
                                 >
                                     <span>{link.label}</span>
@@ -167,6 +182,7 @@ export function HubBody({
                             <li key={link.href}>
                                 <Link
                                     href={link.href}
+                                    prefetch={false}
                                     className="group flex items-center justify-between gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-600 hover:bg-zinc-900 transition-all"
                                 >
                                     <span className="text-zinc-300 group-hover:text-white font-medium text-[15px]">
@@ -201,6 +217,7 @@ export function HubBody({
                             ) : (
                                 <Link
                                     href={link.href}
+                                    prefetch={false}
                                     className="group flex items-center justify-between gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-600 hover:bg-zinc-900 transition-all"
                                 >
                                     <span className="text-zinc-300 group-hover:text-white font-medium text-[15px]">

@@ -31,7 +31,7 @@ const jsonLd = {
     "name": "AI Regex Generator & Explainer",
     "url": "https://www.yuliusbox.com/tools/regex-generator",
     "description": "Generate regular expressions from plain English or explain complex regex patterns instantly.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

@@ -93,6 +93,10 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains",
+          },
+          {
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
@@ -107,6 +111,21 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(self), geolocation=()",
+          },
+          {
+            key: "Content-Security-Policy-Report-Only",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://stats.yuliusbox.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://www.googletagservices.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google blob:",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://stats.yuliusbox.com https://assets.zypass.dpdns.org https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://cloudflareinsights.com https://rdap.org https://*.rdap.org data: blob:",
+              "worker-src 'self' blob:",
+              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://ep2.adtrafficquality.google https://www.google.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+            ].join("; "),
           },
         ],
       },

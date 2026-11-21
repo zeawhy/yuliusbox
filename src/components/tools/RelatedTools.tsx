@@ -33,6 +33,7 @@ export function RelatedTools({ slug, limit = 6 }: { slug: string; limit?: number
                         <li key={tool.id}>
                             <Link
                                 href={tool.href}
+                                prefetch={false}
                                 className="group flex items-start gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-600 hover:bg-zinc-900 transition-all h-full"
                             >
                                 <Icon className="w-5 h-5 text-zinc-400 group-hover:text-white shrink-0 mt-0.5" />

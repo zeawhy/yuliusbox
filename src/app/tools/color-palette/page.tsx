@@ -31,7 +31,7 @@ const jsonLd = {
     "name": "Color Palette Generator",
     "url": "https://www.yuliusbox.com/tools/color-palette",
     "description": "Upload any image to extract the dominant color palette. Get HEX, RGB, and Tailwind CSS codes instantly.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",
