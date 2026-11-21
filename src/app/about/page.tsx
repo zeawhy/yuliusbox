@@ -3,7 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-    title: "About | YuliusBox",
+    title: "About YuliusBox — Free Privacy-First Browser Tools",
     description: "About YuliusBox: free online tools that run in your browser, built for files that should never be uploaded. Open source, no accounts, and nothing to install.",
     alternates: { canonical: "/about" },
     openGraph: {

@@ -30,21 +30,6 @@ export const metadata: Metadata = {
     },
 };
 
-const appJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Unix Timestamp Converter",
-    url: "https://www.yuliusbox.com/tools/codec-toolbox/unix-timestamp-converter",
-    description: "Convert Unix epoch timestamps to human-readable dates and back in your browser.",
-    applicationCategory: "DeveloperApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function UnixTimestampConverterPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
@@ -55,10 +40,6 @@ export default function UnixTimestampConverterPage() {
                     { href: "/tools/codec-toolbox", label: "Codec Toolbox" },
                     { href: content.href, label: content.crumb },
                 ]}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }}
             />
 
             <div className="w-full flex flex-col gap-8">

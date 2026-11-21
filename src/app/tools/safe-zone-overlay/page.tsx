@@ -31,7 +31,7 @@ const jsonLd = {
     "name": "Social Media Safe Zone Overlay",
     "url": "https://www.yuliusbox.com/tools/safe-zone-overlay",
     "description": "Check if your subtitles are blocked by UI icons. Free safe zone overlay tool for TikTok, Instagram Reels, and YouTube Shorts.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

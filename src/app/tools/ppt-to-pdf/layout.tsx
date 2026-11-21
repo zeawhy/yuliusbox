@@ -28,7 +28,7 @@ const jsonLd = {
     "name": "PowerPoint to PDF Converter",
     "url": "https://www.yuliusbox.com/tools/ppt-to-pdf",
     "description": "Convert PowerPoint presentations (.pptx, .ppt) to PDF format securely in the cloud. Fast, free, and precise formatting retention.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

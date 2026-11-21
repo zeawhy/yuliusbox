@@ -22,33 +22,10 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Image Grid Splitter",
-    "url": "https://www.yuliusbox.com/tools/image-grid-splitter",
-    "description": "Split a single image into a grid of smaller pieces instantly. 100% free, private browser-based processing.",
-    "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
-
 export default function Layout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            {children}
-        </>
-    );
+    return <>{children}</>;
 }

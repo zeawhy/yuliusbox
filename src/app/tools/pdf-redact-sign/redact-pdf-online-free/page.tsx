@@ -30,21 +30,6 @@ export const metadata: Metadata = {
     },
 };
 
-const appJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Redact PDF Online Free",
-    url: "https://www.yuliusbox.com/tools/pdf-redact-sign/redact-pdf-online-free",
-    description: "Permanently black out sensitive text in PDF documents with true rasterization.",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function RedactPdfOnlineFreePage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
@@ -55,10 +40,6 @@ export default function RedactPdfOnlineFreePage() {
                     { href: "/tools/pdf-redact-sign", label: "PDF Redact & Sign" },
                     { href: content.href, label: content.crumb },
                 ]}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }}
             />
 
             <div className="w-full flex flex-col gap-8">

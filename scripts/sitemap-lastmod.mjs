@@ -65,14 +65,15 @@ function sourceFilesFor(routePath) {
             ? ["src/app/page.tsx"]
             : [`src/app${routePath}/page.tsx`];
     const parts = routePath.split("/").filter(Boolean);
-    if (parts[0] === "tools" && parts.length >= 2) {
-        cands.push(`src/app/tools/${parts[1]}/page.tsx`);
-        cands.push(`src/lib/long-tail/${parts[1]}.ts`);
-        // Hub routes: include hub-content and long-tail-content so copy updates refresh lastmod
-        if (parts.length === 2 && HUB_SLUGS.includes(parts[1])) {
+    if (parts[0] === "tools" && parts.length === 2) {
+        // Hub routes: track their own page + layout + hub-content (not long-tail-content registry)
+        cands.push(`src/app/tools/${parts[1]}/layout.tsx`);
+        if (HUB_SLUGS.includes(parts[1])) {
             cands.push("src/lib/hub-content.ts");
-            cands.push("src/lib/long-tail-content.ts");
         }
+    } else if (parts[0] === "tools" && parts.length >= 3) {
+        // Long-tail subpages: track their own page file + their family's long-tail data file only
+        cands.push(`src/lib/long-tail/${parts[1]}.ts`);
     }
     return cands;
 }

@@ -36,7 +36,7 @@ const jsonLd = {
     url: "https://www.yuliusbox.com/tools/domain-lookup",
     description:
         "Free domain WHOIS/RDAP lookup: registrar, creation and expiry dates, name servers, plus bulk availability checks across popular extensions.",
-    applicationCategory: "Utility",
+    applicationCategory: "UtilitiesApplication",
     operatingSystem: "Web",
     offers: {
         "@type": "Offer",

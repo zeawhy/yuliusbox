@@ -30,21 +30,6 @@ export const metadata: Metadata = {
     },
 };
 
-const appJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Passport Photo Compressor",
-    url: "https://www.yuliusbox.com/tools/image-compressor/compress-passport-photo",
-    description: "Compress passport and visa photos to under 240KB in your browser.",
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function CompressPassportPhotoPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
@@ -55,10 +40,6 @@ export default function CompressPassportPhotoPage() {
                     { href: "/tools/image-compressor", label: "Image Compressor" },
                     { href: content.href, label: content.crumb },
                 ]}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }}
             />
 
             <div className="w-full flex flex-col gap-8">

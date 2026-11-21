@@ -36,7 +36,7 @@ const jsonLd = {
     "name": "Excel Formula Bot",
     "url": "https://www.yuliusbox.com/tools/excel-formula-bot",
     "description": "Convert plain English to Excel and Google Sheets formulas instantly with AI.",
-    "applicationCategory": "Utility",
+    "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
         "@type": "Offer",

@@ -21,19 +21,14 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Online Internet Speed Test",
-    "description": "Measure your internet speed including download, upload, and latency.",
-    "applicationCategory": "UtilityApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
+import { buildToolSoftwareSchema } from "@/lib/schema";
+
+const jsonLd = buildToolSoftwareSchema({
+    path: "/tools/speed-test",
+    name: "Online Internet Speed Test",
+    description: "Measure your internet speed including download, upload, and latency.",
+    applicationCategory: "UtilitiesApplication",
+});
 
 const SECTIONS = [
     {

@@ -29,19 +29,14 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Free Privacy Policy Generator",
-    "description": "Generate standard Privacy Policy and Terms of Service for your iOS/Android app or website instantly.",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
+import { buildToolSoftwareSchema } from "@/lib/schema";
+
+const jsonLd = buildToolSoftwareSchema({
+    path: "/tools/privacy-generator",
+    name: "Free Privacy Policy Generator",
+    description: "Generate standard Privacy Policy and Terms of Service for your iOS/Android app or website instantly.",
+    applicationCategory: "DeveloperApplication",
+});
 
 const SECTIONS = [
     {

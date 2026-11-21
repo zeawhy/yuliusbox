@@ -30,21 +30,6 @@ export const metadata: Metadata = {
     },
 };
 
-const appJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "20KB Image Compressor",
-    url: "https://www.yuliusbox.com/tools/image-compressor/compress-image-to-20kb",
-    description: "Compress photos and signatures under 20KB for portal uploads.",
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function CompressImageTo20kbPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
@@ -55,10 +40,6 @@ export default function CompressImageTo20kbPage() {
                     { href: "/tools/image-compressor", label: "Image Compressor" },
                     { href: content.href, label: content.crumb },
                 ]}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }}
             />
 
             <div className="w-full flex flex-col gap-8">

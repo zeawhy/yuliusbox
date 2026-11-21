@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToolSchemaScript } from "@/lib/schema";
 
 export const metadata: Metadata = {
     title: "Image to SVG Converter — PNG & JPG to Vector Free",
@@ -37,22 +38,6 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "Free Image to SVG Converter",
-    url: "https://www.yuliusbox.com/tools/image-to-svg",
-    description:
-        "Convert PNG, JPG, and WebP images to clean SVG vector graphics in your browser using WebAssembly. Processed in your browser — images are never uploaded.",
-    applicationCategory: "DesignApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function Layout({
     children,
 }: Readonly<{
@@ -60,9 +45,11 @@ export default function Layout({
 }>) {
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            <ToolSchemaScript
+                path="/tools/image-to-svg"
+                name="Free Image to SVG Converter"
+                description="Convert PNG, JPG, and WebP images to clean SVG vector graphics in your browser using WebAssembly. Processed in your browser — images are never uploaded."
+                applicationCategory="DesignApplication"
             />
             {children}
         </>

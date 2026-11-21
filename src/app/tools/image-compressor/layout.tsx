@@ -23,33 +23,10 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Bulk Image Compressor",
-    "url": "https://www.yuliusbox.com/tools/image-compressor",
-    "description": "Free unlimited bulk image compression. Reduce file size locally in your browser without losing quality.",
-    "applicationCategory": "Utility",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
-
 export default function Layout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            {children}
-        </>
-    );
+    return <>{children}</>;
 }

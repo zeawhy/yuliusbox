@@ -159,6 +159,7 @@ export default function Home() {
                     </p>
                     <Link
                         href="/tools/id-watermark"
+                        prefetch={false}
                         className="group inline-flex items-center gap-3 self-start rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 hover:border-amber-500/60 hover:bg-amber-500/15 transition-all"
                     >
                         <ShieldCheck className="w-6 h-6 text-amber-400 shrink-0" />
@@ -184,7 +185,7 @@ export default function Home() {
                                     key={family.id}
                                     className="group rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6 hover:border-zinc-600 hover:bg-zinc-900 transition-all flex flex-col"
                                 >
-                                    <Link href={family.href} className="flex items-start gap-4 mb-3">
+                                    <Link href={family.href} prefetch={false} className="flex items-start gap-4 mb-3">
                                         <span className="p-2.5 rounded-xl bg-zinc-800 border border-zinc-700 shrink-0">
                                             <Icon className="w-5 h-5 text-zinc-200" />
                                         </span>
@@ -202,6 +203,7 @@ export default function Home() {
                                             <li key={sub.label}>
                                                 <Link
                                                     href={sub.href}
+                                                    prefetch={false}
                                                     className="text-sm text-zinc-500 hover:text-white transition-colors"
                                                 >
                                                     {sub.label}
@@ -236,6 +238,7 @@ export default function Home() {
                                 <li key={link.label}>
                                     <Link
                                         href={link.href}
+                                        prefetch={false}
                                         className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
                                     >
                                         {link.label}
@@ -265,6 +268,7 @@ export default function Home() {
                     </p>
                     <Link
                         href="/tools"
+                        prefetch={false}
                         className="group inline-flex items-center gap-2 px-5 py-3 rounded-full border border-zinc-800 bg-zinc-900/40 text-sm font-medium text-zinc-200 hover:text-white hover:border-zinc-600 transition-all min-h-[44px]"
                     >
                         Browse all 34 tools in the directory
@@ -277,10 +281,10 @@ export default function Home() {
                     <div>
                         <h2 className="text-2xl font-bold text-white mb-4">How to choose between general hubs and preset tools</h2>
                         <p className="text-zinc-400 leading-relaxed mb-4">
-                            Every flagship tool family on YuliusBox offers both a flexible main workspace and dedicated scenario presets. If you are tuning settings manually — such as comparing JPG versus WebP quality across a folder of blog illustrations, or merging and reordering a custom packet of PDFs — start directly on the main hub page (<Link href="/tools/image-compressor" className="text-zinc-200 underline underline-offset-4 hover:text-white">Image Compressor</Link>, <Link href="/tools/pdf-kit" className="text-zinc-200 underline underline-offset-4 hover:text-white">PDF Kit</Link>, or <Link href="/tools/video-to-gif" className="text-zinc-200 underline underline-offset-4 hover:text-white">Video to GIF</Link>).
+                            Every flagship tool family on YuliusBox offers both a flexible main workspace and dedicated scenario presets. If you are tuning settings manually — such as comparing JPG versus WebP quality across a folder of blog illustrations, or merging and reordering a custom packet of PDFs — start directly on the main hub page (<Link href="/tools/image-compressor" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Image Compressor</Link>, <Link href="/tools/pdf-kit" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">PDF Kit</Link>, or <Link href="/tools/video-to-gif" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Video to GIF</Link>).
                         </p>
                         <p className="text-zinc-400 leading-relaxed">
-                            When you are working against a strict upload rule, jump straight to a pre-configured scenario page instead. Portal-specific presets like <Link href="/tools/image-compressor/compress-image-to-20kb" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress Image to 20KB</Link> (for signature and civil-service portals), <Link href="/tools/image-compressor/compress-jpg-to-50kb" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress JPG to 50KB</Link> (for visa and exam ID photos), and <Link href="/tools/video-to-gif/video-to-gif-for-discord" className="text-zinc-200 underline underline-offset-4 hover:text-white">Video to GIF for Discord</Link> (480 px at 10 fps) initialize the encoder with the exact target ceiling, dimensions, or tab already selected.
+                            When you are working against a strict upload rule, jump straight to a pre-configured scenario page instead. Portal-specific presets like <Link href="/tools/image-compressor/compress-image-to-20kb" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress Image to 20KB</Link> (for signature and civil-service portals), <Link href="/tools/image-compressor/compress-jpg-to-50kb" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress JPG to 50KB</Link> (for visa and exam ID photos), and <Link href="/tools/video-to-gif/video-to-gif-for-discord" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Video to GIF for Discord</Link> (480 px at 10 fps) initialize the encoder with the exact target ceiling, dimensions, or tab already selected.
                         </p>
                     </div>
 
@@ -288,13 +292,13 @@ export default function Home() {
                         <h2 className="text-2xl font-bold text-white mb-4">Typical multi-tool workflows</h2>
                         <div className="space-y-4 text-zinc-400 leading-relaxed">
                             <p>
-                                <strong className="text-zinc-200">Job, visa, and university applications:</strong> Convert your resume or statement of purpose from <code className="text-zinc-300">.docx</code> using <Link href="/tools/word-to-pdf" className="text-zinc-200 underline underline-offset-4 hover:text-white">Word to PDF</Link>, merge it with scanned transcripts in <Link href="/tools/pdf-kit" className="text-zinc-200 underline underline-offset-4 hover:text-white">PDF Kit</Link>, shrink the combined packet under portal limits with <Link href="/tools/pdf-kit/compress-pdf-online" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress PDF Online</Link>, and stamp your passport or national ID scan with <Link href="/tools/id-watermark" className="text-zinc-200 underline underline-offset-4 hover:text-white">ID Watermark Protector</Link> before submitting.
+                                <strong className="text-zinc-200">Job, visa, and university applications:</strong> Convert your resume or statement of purpose from <code className="text-zinc-300">.docx</code> using <Link href="/tools/word-to-pdf" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Word to PDF</Link>, merge it with scanned transcripts in <Link href="/tools/pdf-kit" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">PDF Kit</Link>, shrink the combined packet under portal limits with <Link href="/tools/pdf-kit/compress-pdf-online" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress PDF Online</Link>, and stamp your passport or national ID scan with <Link href="/tools/id-watermark" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">ID Watermark Protector</Link> before submitting.
                             </p>
                             <p>
-                                <strong className="text-zinc-200">Confidential legal and financial handoffs:</strong> Use <Link href="/tools/pdf-kit/extract-pages-from-pdf" className="text-zinc-200 underline underline-offset-4 hover:text-white">Extract Pages from PDF</Link> to isolate only the relevant exhibits from a larger statement, permanently destroy sensitive account numbers and personal addresses using rasterized redaction in <Link href="/tools/pdf-redact-sign/redact-pdf-online-free" className="text-zinc-200 underline underline-offset-4 hover:text-white">Redact PDF Online Free</Link>, and add your signature locally without exposing the file to cloud storage.
+                                <strong className="text-zinc-200">Confidential legal and financial handoffs:</strong> Use <Link href="/tools/pdf-kit/extract-pages-from-pdf" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Extract Pages from PDF</Link> to isolate only the relevant exhibits from a larger statement, permanently destroy sensitive account numbers and personal addresses using rasterized redaction in <Link href="/tools/pdf-redact-sign/redact-pdf-online-free" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Redact PDF Online Free</Link>, and add your signature locally without exposing the file to cloud storage.
                             </p>
                             <p>
-                                <strong className="text-zinc-200">Product documentation and release notes:</strong> Record a short screen capture, convert it into a lightweight looping animation with <Link href="/tools/video-to-gif/webm-to-gif-converter" className="text-zinc-200 underline underline-offset-4 hover:text-white">WebM to GIF Converter</Link>, and optimize accompanying screenshots using <Link href="/tools/image-compressor/convert-image-to-webp" className="text-zinc-200 underline underline-offset-4 hover:text-white">Convert Image to WebP</Link> or <Link href="/tools/image-compressor/compress-png-online" className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress PNG Online</Link> for fast page loads.
+                                <strong className="text-zinc-200">Product documentation and release notes:</strong> Record a short screen capture, convert it into a lightweight looping animation with <Link href="/tools/video-to-gif/webm-to-gif-converter" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">WebM to GIF Converter</Link>, and optimize accompanying screenshots using <Link href="/tools/image-compressor/convert-image-to-webp" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Convert Image to WebP</Link> or <Link href="/tools/image-compressor/compress-png-online" prefetch={false} className="text-zinc-200 underline underline-offset-4 hover:text-white">Compress PNG Online</Link> for fast page loads.
                             </p>
                         </div>
                     </div>

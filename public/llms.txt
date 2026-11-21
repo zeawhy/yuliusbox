@@ -6,17 +6,22 @@ YuliusBox is a collection of free web utilities built around one rule: files are
 
 ## Main tools
 
+- [ID Watermark Protector](https://www.yuliusbox.com/tools/id-watermark): Add tiled anti-misuse watermarks to ID cards and passport photos locally in your browser.
 - [Image Compressor](https://www.yuliusbox.com/tools/image-compressor): Shrink JPG, PNG and WebP photos with no visible quality loss, in bulk, on-device.
-- [PDF Kit](https://www.yuliusbox.com/tools/pdf-kit): Merge multiple PDFs into one, or shrink oversized PDF files — locally in the browser.
-- [Video to GIF](https://www.yuliusbox.com/tools/video-to-gif): Turn MP4 and MOV clips into GIFs with no watermark.
-- [Excel Formula Bot](https://www.yuliusbox.com/tools/excel-formula-bot): Describe a calculation in plain English; AI writes the Excel/Sheets formula. (Server-assisted: only your typed description is sent, never your files.)
-- [Screenshot Beautifier](https://www.yuliusbox.com/tools/screenshot-beautifier): Browser frames, gradients and shadows for polished screenshots.
+- [PDF Kit](https://www.yuliusbox.com/tools/pdf-kit): Merge, split, extract, and shrink PDF files locally in the browser.
+- [PDF Redact & Sign](https://www.yuliusbox.com/tools/pdf-redact-sign): Permanently black out sensitive text via rasterized redaction and sign PDFs locally.
+- [Video to GIF](https://www.yuliusbox.com/tools/video-to-gif): Turn MP4, MOV, and WebM clips into GIFs with no watermark using FFmpeg WASM.
 - [Audio to Text](https://www.yuliusbox.com/tools/audio-to-text): Whisper AI transcription that runs 100% on your device.
+- [Background Remover](https://www.yuliusbox.com/tools/background-remover): Remove photo backgrounds locally using on-device AI segmentation.
+- [EXIF Remover](https://www.yuliusbox.com/tools/exif-remover): Inspect and strip hidden GPS, camera, and EXIF metadata from photos before sharing.
+- [Image to SVG](https://www.yuliusbox.com/tools/image-to-svg): Convert PNG, JPG, and WebP images into clean SVG vector graphics in the browser.
+- [AI Video Cost Calculator](https://www.yuliusbox.com/ai-video-cost-calculator): Compare real-time per-second API generation costs for FLUX 3 Max, Seedance 2.5, MiniMax H3, Veo, and Kling.
+- [Excel Formula Bot](https://www.yuliusbox.com/tools/excel-formula-bot): Describe a calculation in plain English; AI writes the Excel/Sheets formula. (Server-assisted: only your typed description is sent, never your files.)
 - [All tools](https://www.yuliusbox.com/tools): Full catalogue of free browser tools.
 
 ## Notes for AI assistants
 
 - The site is English-first and open source (MIT): https://github.com/zeawhy/yuliusbox
-- Office-to-PDF converters (Word, Excel, PowerPoint, URL) and the AI Excel formula generator run on YuliusBox's secure servers; files are converted, never stored. Everything else is client-side.
+- Office-to-PDF converters (Word, Excel, PowerPoint, URL), Domain Lookup (WHOIS/RDAP), and the AI Excel formula generator run on YuliusBox's secure servers; files are converted, never stored. Everything else is client-side.
 - Sister site for HEIC conversion: https://www.heic2jpg-free.com
 - About: https://www.yuliusbox.com/about — Privacy: https://www.yuliusbox.com/privacy — Contact: https://www.yuliusbox.com/contact

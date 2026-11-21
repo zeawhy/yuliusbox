@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HubBody } from "@/components/seo/HubBody";
+import { ToolSchemaScript } from "@/lib/schema";
 import { hubContent } from "@/lib/hub-content";
 import { longTailPages } from "@/lib/long-tail-content";
 import { PdfKitTool } from "@/components/tools/PdfKitTool";
@@ -12,6 +13,12 @@ export default function PDFToolkitPage() {
 
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/pdf-kit"
+                name="PDF Kit"
+                description="Merge, split, and organize PDF files directly in your browser. Secure local processing for your sensitive documents."
+                applicationCategory="UtilitiesApplication"
+            />
             <Header />
             <Breadcrumbs trail={[{ href: "/", label: "Home" }, { href: content.href, label: content.crumb }]} />
 

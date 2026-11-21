@@ -2,6 +2,7 @@
 
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
+import { ToolSchemaScript } from "@/lib/schema";
 import { CodecToolboxTool } from "@/components/tools/CodecToolboxTool";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -34,6 +35,12 @@ const FAQS = [
 export default function CodecToolboxPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
+            <ToolSchemaScript
+                path="/tools/codec-toolbox"
+                name="Codec Toolbox — Base64, Hash & Timestamp Converter"
+                description="Base64 encoder/decoder, cryptographic hashing (MD5, SHA-1, SHA-256, SHA-512), and Unix epoch timestamp converter running 100% client-side in the browser. Free, unlimited, 0 bytes uploaded."
+                applicationCategory="DeveloperApplication"
+            />
             <Header />
             <Breadcrumbs
                 trail={[

@@ -29,19 +29,14 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Online Image Resizer & Cropper",
-    "description": "Resize and crop images directly in your browser.",
-    "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
+import { buildToolSoftwareSchema } from "@/lib/schema";
+
+const jsonLd = buildToolSoftwareSchema({
+    path: "/tools/image-editor",
+    name: "Online Image Resizer & Cropper",
+    description: "Resize and crop images directly in your browser.",
+    applicationCategory: "MultimediaApplication",
+});
 
 const SECTIONS = [
     {

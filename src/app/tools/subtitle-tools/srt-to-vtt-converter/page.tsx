@@ -30,21 +30,6 @@ export const metadata: Metadata = {
     },
 };
 
-const appJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "SRT to VTT Converter",
-    url: "https://www.yuliusbox.com/tools/subtitle-tools/srt-to-vtt-converter",
-    description: "Convert SRT subtitles to WebVTT format for HTML5 video and web players.",
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function SrtToVttConverterPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
@@ -55,10 +40,6 @@ export default function SrtToVttConverterPage() {
                     { href: "/tools/subtitle-tools", label: "Subtitle Tools" },
                     { href: content.href, label: content.crumb },
                 ]}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }}
             />
 
             <div className="w-full flex flex-col gap-8">

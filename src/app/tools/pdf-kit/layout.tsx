@@ -23,33 +23,10 @@ export const metadata: Metadata = {
     },
 };
 
-const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "PDF Kit",
-    "url": "https://www.yuliusbox.com/tools/pdf-kit",
-    "description": "Merge, split, and organize PDF files directly in your browser. Secure local processing for your sensitive documents.",
-    "applicationCategory": "Utility",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    }
-};
-
 export default function Layout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            {children}
-        </>
-    );
+    return <>{children}</>;
 }

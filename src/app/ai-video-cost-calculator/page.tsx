@@ -72,7 +72,7 @@ export default function VideoCostCalculatorPage() {
 
                 <div className="space-y-3">
                     <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-                        AI video generation cost calculator
+                        AI Video Generation Cost Calculator
                     </h1>
                     <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
                         Compare real-time generation costs for FLUX 3 Max, Seedance 2.5, MiniMax H3, Google Veo 3.1, and Kling. Calculate per-second rendering expenses with active promotional discounts and countdown timers.

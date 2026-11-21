@@ -39,6 +39,7 @@ export function Header() {
                                     <Link
                                         key={id}
                                         href={hubContent[id].href}
+                                        prefetch={false}
                                         className="block px-3 py-2.5 rounded-lg text-sm text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
                                     >
                                         {hubContent[id].crumb}
@@ -47,6 +48,7 @@ export function Header() {
                                 <div className="border-t border-zinc-800 mt-1 pt-1">
                                     <Link
                                         href="/tools"
+                                        prefetch={false}
                                         className="block px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 hover:text-white hover:bg-zinc-800 transition-colors"
                                     >
                                         All tools →
@@ -92,6 +94,7 @@ export function Header() {
                         <Link
                             key={id}
                             href={hubContent[id].href}
+                            prefetch={false}
                             onClick={() => setMobileOpen(false)}
                             className="px-3 py-3 rounded-lg text-[15px] text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors min-h-[44px] flex items-center"
                         >
@@ -100,6 +103,7 @@ export function Header() {
                     ))}
                     <Link
                         href="/tools"
+                        prefetch={false}
                         onClick={() => setMobileOpen(false)}
                         className="px-3 py-3 rounded-lg text-[15px] font-medium text-indigo-300 hover:text-white hover:bg-zinc-900 transition-colors min-h-[44px] flex items-center"
                     >
@@ -112,6 +116,7 @@ export function Header() {
                         <Link
                             key={link.href}
                             href={link.href}
+                            prefetch={false}
                             onClick={() => setMobileOpen(false)}
                             className="px-3 py-3 rounded-lg text-[15px] text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors min-h-[44px] flex items-center"
                         >

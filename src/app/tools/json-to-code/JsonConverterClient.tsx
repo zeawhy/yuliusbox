@@ -168,7 +168,7 @@ export default function JsonConverterClient({
                         <FileJson className="w-8 h-8 text-yellow-500" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h1>
+                        <h2 className="text-3xl font-bold text-white tracking-tight">{language === "en" ? t.title.en : t.title.cn}</h2>
                         <p className="text-zinc-400 mt-1">{language === "en" ? t.subtitle.en : t.subtitle.cn}</p>
                     </div>
                 </div>

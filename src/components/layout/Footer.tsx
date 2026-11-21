@@ -45,6 +45,7 @@ export function Footer() {
                                         ) : (
                                             <Link
                                                 href={tool.href}
+                                                prefetch={false}
                                                 className="text-sm hover:text-white transition-colors"
                                             >
                                                 {tool.name.en}
@@ -67,6 +68,7 @@ export function Footer() {
                             <li key={link.href}>
                                 <Link
                                     href={link.href}
+                                    prefetch={false}
                                     className="text-sm hover:text-white transition-colors"
                                 >
                                     {link.label}
@@ -114,6 +116,7 @@ export function Footer() {
                     </a>
                     <Link
                         href="/contact"
+                        prefetch={false}
                         className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] -m-3 hover:text-white transition-colors"
                         aria-label="Contact YuliusBox"
                     >

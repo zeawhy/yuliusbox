@@ -30,21 +30,6 @@ export const metadata: Metadata = {
     },
 };
 
-const appJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Instagram 3x3 Grid Maker",
-    url: "https://www.yuliusbox.com/tools/image-grid-splitter/instagram-3x3-grid-maker",
-    description: "Split photos into 3x3, 3x2, or 3x1 tiles for Instagram profile grids.",
-    applicationCategory: "MultimediaApplication",
-    operatingSystem: "Web",
-    offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-    },
-};
-
 export default function Instagram3x3GridMakerPage() {
     return (
         <div className="min-h-screen p-4 sm:p-8 flex flex-col items-center max-w-5xl mx-auto">
@@ -55,10 +40,6 @@ export default function Instagram3x3GridMakerPage() {
                     { href: "/tools/image-grid-splitter", label: "Image Grid Splitter" },
                     { href: content.href, label: content.crumb },
                 ]}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(appJsonLd) }}
             />
 
             <div className="w-full flex flex-col gap-8">
