@@ -14,7 +14,7 @@ const FAQS = [
     },
     {
         question: "What is the current FLUX 3 Max promotional pricing?",
-        answer: "Through November 21, 2026, fal.ai offers a 50% discount on FLUX 3 Max 720p generations. The rate is reduced from the standard $0.1700 per second down to $0.0850 per second. This replaces the 75% launch discount ($0.0425 per second), which ended November 7, 2026. Once the promotional deadline passes, pricing automatically reverts to standard rates. This calculator dynamically tracks the remaining days and adjusts calculations automatically.",
+        answer: "Through December 7, 2026, fal.ai offers a 40% discount on FLUX 3 Max 720p generations. The rate is reduced from the standard $0.1700 per second down to $0.1020 per second. This replaces the 50% discount ($0.0850 per second), which ended November 21, 2026; the 75% launch discount ($0.0425 per second) ended November 7, 2026. Once the promotional deadline passes, pricing automatically reverts to standard rates. This calculator dynamically tracks the remaining days and adjusts calculations automatically.",
     },
     {
         question: "Why is FLUX 3 Max 1080p excluded from this calculator?",
@@ -26,7 +26,7 @@ const FAQS = [
     },
     {
         question: "How does MiniMax H3 compare with Seedance 2.5 and FLUX 3 Max?",
-        answer: "During the current 50%-off promotional window, FLUX 3 Max (720p at $0.0850/s) is no longer the cheapest frontier option — MiniMax H3 (768p at $0.0800/s) undercuts it slightly, while Seedance 2.5 ($0.4730/s) caters to complex multi-subject interactions and director-level camera transitions with native audio. FLUX 3 Max still wins on render speed.",
+        answer: "During the current 40%-off promotional window, FLUX 3 Max (720p at $0.1020/s) is no longer the cheapest frontier option — MiniMax H3 (768p at $0.0800/s) undercuts it, while Seedance 2.5 ($0.4730/s) caters to complex multi-subject interactions and director-level camera transitions with native audio. FLUX 3 Max still wins on render speed.",
     },
 ];
 
@@ -116,7 +116,7 @@ export default function VideoCostCalculatorPage() {
                                 <th className="px-3.5 py-2.5 font-semibold">Model Endpoint</th>
                                 <th className="px-3.5 py-2.5 font-semibold">Provider</th>
                                 <th className="px-3.5 py-2.5 font-semibold">Standard Rate / Sec</th>
-                                <th className="px-3.5 py-2.5 font-semibold">Promo Rate (Until 2026-11-21)</th>
+                                <th className="px-3.5 py-2.5 font-semibold">Promo Rate (Until 2026-12-07)</th>
                                 <th className="px-3.5 py-2.5 font-semibold">5s Clip / 60s Minute Cost</th>
                                 <th className="px-3.5 py-2.5 font-semibold">Cost per Frame (24 fps)</th>
                             </tr>
@@ -126,9 +126,9 @@ export default function VideoCostCalculatorPage() {
                                 <td className="px-3.5 py-2.5 font-medium text-white">FLUX 3 Max (720p)</td>
                                 <td className="px-3.5 py-2.5">Black Forest Labs</td>
                                 <td className="px-3.5 py-2.5">$0.1700 / s</td>
-                                <td className="px-3.5 py-2.5 text-emerald-400">$0.0850 / s (-50%)</td>
-                                <td className="px-3.5 py-2.5">$0.4250 (promo) / $5.10 min</td>
-                                <td className="px-3.5 py-2.5">$0.00354 (promo) / $0.00708 std</td>
+                                <td className="px-3.5 py-2.5 text-emerald-400">$0.1020 / s (-40%)</td>
+                                <td className="px-3.5 py-2.5">$0.5100 (promo) / $6.12 min</td>
+                                <td className="px-3.5 py-2.5">$0.00425 (promo) / $0.00708 std</td>
                             </tr>
                             <tr>
                                 <td className="px-3.5 py-2.5 font-medium text-white">MiniMax H3 (768p)</td>

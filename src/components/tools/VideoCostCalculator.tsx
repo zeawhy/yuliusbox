@@ -126,7 +126,7 @@ export function VideoCostCalculator() {
                         <div>
                             <div className="flex items-center gap-2 flex-wrap">
                                 <span className="font-semibold text-white text-base sm:text-lg">
-                                    FLUX 3 Max Promotion: 50% OFF
+                                    FLUX 3 Max Promotion: 40% OFF
                                 </span>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                                     {isFluxPromoActive ? "Active Now" : "Promotion Ended"}
@@ -136,15 +136,15 @@ export function VideoCostCalculator() {
                                 {isFluxPromoActive ? (
                                     <>
                                         Special launch rate of{" "}
-                                        <strong className="text-amber-400 font-mono">$0.085/sec</strong>{" "}
+                                        <strong className="text-amber-400 font-mono">$0.102/sec</strong>{" "}
                                         (standard rate is{" "}
                                         <span className="line-through text-zinc-400 font-mono">$0.1700/sec</span>
                                         ) valid through{" "}
-                                        <span className="text-zinc-200 font-medium">November 21, 2026</span>.
+                                        <span className="text-zinc-200 font-medium">December 7, 2026</span>.
                                     </>
                                 ) : (
                                     <>
-                                        The 50% promo ended on November 21, 2026. Generations are now calculated at the standard{" "}
+                                        The 40% promo ended on December 7, 2026. Generations are now calculated at the standard{" "}
                                         <span className="font-mono text-zinc-200 font-medium">$0.1700/sec</span> rate.
                                     </>
                                 )}
@@ -516,7 +516,7 @@ export function VideoCostCalculator() {
                                 {/* Promo Status Note */}
                                 {item.isPromoActive && item.daysRemaining !== null && (
                                     <div className="text-[11px] text-amber-300/90 bg-amber-950/30 rounded-lg p-2 border border-amber-800/40">
-                                        Promo ends in <strong>{item.daysRemaining} days</strong> (Nov 7, 2026). Reverts to standard rate afterwards.
+                                        Promo ends in <strong>{item.daysRemaining} days</strong>{item.model.promo_until ? ` (${new Date(`${item.model.promo_until}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })})` : ""}. Reverts to standard rate afterwards.
                                     </div>
                                 )}
                                 {item.isPromoExpired && (
@@ -659,7 +659,7 @@ export function VideoCostCalculator() {
                                 FLUX 3 Max Pricing Deep Dive
                             </h3>
                             <p className="text-xs text-zinc-400 mt-1">
-                                Full breakdown of the 50% promo, pay-as-you-go economics, and cost-per-minute analysis.
+                                Full breakdown of the 40% promo, pay-as-you-go economics, and cost-per-minute analysis.
                             </p>
                         </div>
                         <span className="text-[11px] text-blue-400 font-medium">Read on YuliusWiki →</span>
